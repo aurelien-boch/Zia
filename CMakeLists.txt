@@ -7,6 +7,11 @@ add_subdirectory(include/)
 add_subdirectory(libs/)
 add_subdirectory(src/)
 
+if (DEFINED ENABLE_TESTING AND "${ENABLE_TESTING}" STREQUAL "yes")
+    message(STATUS "ENABLE_TESTING=yes detected, enabling testing")
+    add_subdirectory(tests)
+endif()
+
 add_executable(
     zia
         ${INCLUDES}
@@ -18,4 +23,9 @@ target_include_directories(
     zia
         PRIVATE
         include/
+)
+
+target_link_libraries(
+    zia
+        api
 )

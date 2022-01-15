@@ -1,3 +1,5 @@
 build/
 cmake-build-debug/
-doc/
+doc/html/
+.vscode/
+.idea/
