@@ -15,6 +15,7 @@ endif()
 
 if(EXISTS ${CONAN_CMAKE_OUTPUT})
     include(${CONAN_CMAKE_OUTPUT})
+    conan_basic_setup(TARGETS)
 else()
     message(FATAL_ERROR "conanbuildinfo.cmake not found.")
 endif()
