@@ -3,6 +3,7 @@ project(ZIA CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CONAN_CMAKE_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/conanbuildinfo.cmake")
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
 add_subdirectory(include/)
 add_subdirectory(libs/)
@@ -20,6 +21,8 @@ else()
     message(FATAL_ERROR "conanbuildinfo.cmake not found.")
 endif()
 
+find_package(ziapi)
+
 add_executable(
     zia
         ${INCLUDES}
@@ -35,5 +38,5 @@ target_include_directories(
 
 target_link_libraries(
     zia
-        api
+        ziapi
 )
