@@ -1,5 +1,16 @@
-build/
-cmake-build-debug/
-doc/html/
-.vscode/
+# Editors Files and Folders
+
 .idea/
+.vscode/
+*.swp
+*~
+\#*#
+
+# CMake Build Folder
+
+*build*/
+
+# Documentation Generated Files
+
+doc/latex
+doc/html
