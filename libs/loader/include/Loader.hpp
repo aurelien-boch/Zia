@@ -4,6 +4,7 @@
 #include <string>
 #include <functional>
 #include <stdexcept>
+#include <iostream>
 
 #ifdef _WIN32
     #include "Windows.h"
@@ -23,10 +24,10 @@ namespace loader
             * @param path[in] This parameter refers to the path of the library to load.
             */
 #ifdef _WIN32
-            explicit Loader(const std::string &path) :
+            explicit Loader(std::string const &path) :
                 _handle(LoadLibrary(TEXT(path.c_str())))
 #else
-            explicit Loader(const std::string &path; int flags = RTLD_LAZY) :
+            explicit Loader(std::string const &path; int flags = RTLD_LAZY) :
                 _handle(dlopen(path.c_str(), RTLD_LAZY))
 #endif
             {
@@ -63,7 +64,7 @@ namespace loader
              * @return A std::function containing the symbol.
              */
             template <typename T>
-            std::function<T> getSymbol(const std::string &name)
+            std::function<T> getSymbol(std::string const &name)
             {
 #ifdef _WIN32
                 auto fun = reinterpret_cast<T *>(GetProcAddress(_handle, name.c_str()));
