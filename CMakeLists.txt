@@ -1,9 +1,11 @@
-cmake_minimum_required(VERSION 3.21)
+cmake_minimum_required(VERSION 3.18)
 project(ZIA CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CONAN_CMAKE_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/conanbuildinfo.cmake")
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+
+set(NAME zia)
 
 add_subdirectory(include/)
 add_subdirectory(libs/)
@@ -23,20 +25,30 @@ endif()
 
 find_package(ziapi)
 
+set_property(DIRECTORY
+    PROPERTY ADDITIONAL_CLEAN_FILES
+        "${PROJECT_SOURCE_DIR}/${NAME}"
+)
+
 add_executable(
-    zia
+    ${NAME}
         ${INCLUDES}
         ${SRCS}
         main.cpp
 )
 
 target_include_directories(
-    zia
+    ${NAME}
         PRIVATE
         include/
 )
 
 target_link_libraries(
-    zia
+    ${NAME}
         ziapi
+)
+
+add_custom_command(
+        TARGET ${NAME}
+        COMMAND cp bin/zia ${PROJECT_SOURCE_DIR}
 )
