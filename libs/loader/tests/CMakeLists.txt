@@ -25,9 +25,3 @@ set_target_properties(
         PROPERTIES
         CXX_STANDARD 20
 )
-
-target_compile_options(
-    loader_tests
-        PRIVATE
-        "/utf-8"
-)

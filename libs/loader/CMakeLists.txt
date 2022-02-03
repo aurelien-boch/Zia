@@ -20,3 +20,11 @@ set_target_properties(
         PROPERTIES
         CXX_STANDARD 20
 )
+
+if (UNIX)
+    target_link_libraries(
+        loader
+            INTERFACE
+            dl
+    )
+endif()

@@ -27,7 +27,7 @@ namespace loader
             explicit Loader(std::string const &path) :
                 _handle(LoadLibrary(TEXT(path.c_str())))
 #else
-            explicit Loader(std::string const &path; int flags = RTLD_LAZY) :
+            explicit Loader(std::string const &path, int flags = RTLD_LAZY) :
                 _handle(dlopen(path.c_str(), RTLD_LAZY))
 #endif
             {
