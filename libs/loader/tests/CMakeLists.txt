@@ -16,6 +16,12 @@ target_link_libraries(
         loader
 )
 
+target_link_libraries(
+    mock_lib
+        PRIVATE
+        loader
+)
+
 add_dependencies(loader_tests mock_lib)
 
 add_compile_definitions(MOCK_LIB_PATH="$<TARGET_FILE:mock_lib>")

@@ -1,5 +1,7 @@
+#include <Loader.hpp>
+
 extern "C" {
-    int symbol()
+    DllExport int symbol()
     {
         return 12345;
     }
