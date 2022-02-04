@@ -73,7 +73,7 @@ namespace loader
 #endif
 
                 if (fun == nullptr)
-                    throw std::runtime_error("Symbol not found");
+                    throw std::runtime_error("Symbol not found: " + name);
                 return (std::function<T>(fun));
             }
 
