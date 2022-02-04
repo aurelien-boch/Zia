@@ -1,6 +1,7 @@
-add_library(config_parser SHARED
-    ConfigParser.hpp
-    ConfigParser.cpp
+add_library(
+    config_parser SHARED
+        include/ConfigParser.hpp
+        src/ConfigParser.cpp
 )
 
 target_include_directories(
