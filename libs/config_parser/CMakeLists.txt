@@ -16,7 +16,11 @@ set_target_properties(
 )
 
 target_link_libraries(
-    ziapi
+    config_parser
+        ziapi
 )
 
-conan_target_link_libraries(config_parser CONAN_PKG::yaml-cpp)
+conan_target_link_libraries(
+    config_parser
+        CONAN_PKG::yaml-cpp
+)
