@@ -15,4 +15,8 @@ set_target_properties(
         CXX_STANDARD 20
 )
 
+target_link_libraries(
+    ziapi
+)
+
 conan_target_link_libraries(config_parser CONAN_PKG::yaml-cpp)

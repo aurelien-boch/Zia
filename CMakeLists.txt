@@ -25,7 +25,6 @@ if (DEFINED ENABLE_TESTING AND "${ENABLE_TESTING}" STREQUAL "yes")
     add_subdirectory(tests)
 endif()
 
-
 add_executable(
     ${NAME}
         ${INCLUDES}

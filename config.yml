@@ -1,4 +1,4 @@
-modules:
+module:
     phpCGI:
         foo: bar
         bar: baz
