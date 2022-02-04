@@ -7,6 +7,15 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
 set(NAME zia)
 
+if(EXISTS ${CONAN_CMAKE_OUTPUT})
+    include(${CONAN_CMAKE_OUTPUT})
+    conan_basic_setup(TARGETS)
+else()
+    message(FATAL_ERROR "conanbuildinfo.cmake not found.")
+endif()
+
+find_package(ziapi)
+
 add_subdirectory(include/)
 add_subdirectory(libs/)
 add_subdirectory(src/)
@@ -16,14 +25,6 @@ if (DEFINED ENABLE_TESTING AND "${ENABLE_TESTING}" STREQUAL "yes")
     add_subdirectory(tests)
 endif()
 
-if(EXISTS ${CONAN_CMAKE_OUTPUT})
-    include(${CONAN_CMAKE_OUTPUT})
-    conan_basic_setup(TARGETS)
-else()
-    message(FATAL_ERROR "conanbuildinfo.cmake not found.")
-endif()
-
-find_package(ziapi)
 
 add_executable(
     ${NAME}
@@ -42,4 +43,5 @@ target_link_libraries(
     ${NAME}
         ziapi
         loader
+        config_parser
 )
