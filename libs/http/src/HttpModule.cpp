@@ -47,4 +47,14 @@ namespace modules
     {
         _run = false;
     }
+
+    void HttpModule::_listen(ziapi::http::IRequestOutputQueue &requests)
+    {
+
+    }
+
+    void HttpModule::_send(ziapi::http::IResponseInputQueue &requests)
+    {
+
+    }
 }

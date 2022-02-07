@@ -36,6 +36,10 @@ namespace modules
             std::string _name;
             std::string _description;
 
+            void _listen(ziapi::http::IRequestOutputQueue &requests);
+
+            void _send(ziapi::http::IResponseInputQueue &requests);
+
     };
 }
 
