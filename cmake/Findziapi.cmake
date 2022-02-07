@@ -3,7 +3,7 @@ if (NOT ziapi_found)
     ExternalProject_Add(
             ziapi_git
             GIT_REPOSITORY  https://github.com/martin-olivier/ZiAPI.git
-            GIT_TAG         v2.0.0
+            GIT_TAG         v2.2.0
             INSTALL_COMMAND ""
             TEST_COMMAND    ""
     )
