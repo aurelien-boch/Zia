@@ -60,7 +60,7 @@ namespace loader
             /**
              * @brief This method loads a symbol from the shared library
              * @tparam T The prototype of the symbol to load
-             * @param name[in] The name of the symbol to load
+             * @param[in] name The name of the symbol to load
              * @return A std::function containing the symbol.
              */
             template <typename T>
