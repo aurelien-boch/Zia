@@ -25,11 +25,6 @@ endif()
 
 find_package(ziapi)
 
-set_property(DIRECTORY
-    PROPERTY ADDITIONAL_CLEAN_FILES
-        "${PROJECT_SOURCE_DIR}/${NAME}"
-)
-
 add_executable(
     ${NAME}
         ${INCLUDES}
@@ -46,9 +41,4 @@ target_include_directories(
 target_link_libraries(
     ${NAME}
         ziapi
-)
-
-add_custom_command(
-        TARGET ${NAME}
-        COMMAND cp bin/zia ${PROJECT_SOURCE_DIR}
 )
