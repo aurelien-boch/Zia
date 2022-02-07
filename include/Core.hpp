@@ -10,6 +10,9 @@
 #include <Loader.hpp>
 #include <ConfigParser.hpp>
 
+#include <ziapi/Config.hpp>
+#include <ziapi/Module.hpp>
+
 namespace core
 {
     class Core
