@@ -14,7 +14,6 @@ namespace modules
         response = _responses.front();
         _responses.pop();
         return std::optional<std::pair<ziapi::http::Response, ziapi::http::Context>>(response);
-
     }
 
     std::size_t ResponseInputQueue::Size() const noexcept
