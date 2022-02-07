@@ -21,7 +21,7 @@ namespace loader
         public:
 
             /**
-            * @param path[in] This parameter refers to the path of the library to load.
+            * @param[in] path This parameter refers to the path of the library to load.
             */
 #ifdef _WIN32
             explicit Loader(std::string const &path) :
