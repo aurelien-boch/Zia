@@ -2,8 +2,11 @@
 #define HTTPMODULE_HPP
 
 #include <string>
+#include <asio.hpp>
 
 #include <ziapi/Module.hpp>
+
+#include "AsioTcpListener.hpp"
 
 namespace modules
 {
@@ -11,7 +14,7 @@ namespace modules
     {
         public:
 
-            HttpModule();
+            explicit HttpModule(std::uint16_t port);
 
             ~HttpModule();
 
@@ -35,6 +38,12 @@ namespace modules
             ziapi::Version _compatibleApiVersion;
             std::string _name;
             std::string _description;
+            std::uint16_t _port;
+            asio::io_service _service;
+            AsioTCPListener<int> _listener;
+//            asio::io_context _context;
+//            asio::ip::tcp::acceptor _acceptor;
+
 
             void _listen(ziapi::http::IRequestOutputQueue &requests);
 

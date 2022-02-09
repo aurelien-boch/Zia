@@ -1,13 +1,19 @@
+#include <iostream>
+
 #include "HttpModule.hpp"
 
 namespace modules
 {
-    HttpModule::HttpModule() : ziapi::INetworkModule(),
+    HttpModule::HttpModule(std::uint16_t port) :
+        ziapi::INetworkModule(),
         _run(true),
-        _version(1, 1),
-        _compatibleApiVersion(1, 1),
+        _version(1, 0, 0),
+        _compatibleApiVersion(3, 0, 0),
         _name("http"),
-        _description("")
+        _description("A Http module."),
+        _port(port),
+        _service(),
+        _listener(_service, port)
     {}
 
     HttpModule::~HttpModule()
@@ -38,8 +44,15 @@ namespace modules
 
     void HttpModule::Run(ziapi::http::IRequestOutputQueue &requests, ziapi::http::IResponseInputQueue &responses)
     {
+//        _context.run();
         while (_run) {
+            try {
 
+            } catch (const std::exception &e) {
+                std::cerr << "ERROR " << e.what() << std::endl;
+            } catch (...) {
+                std::cerr << "ERROR Unknown error" << std::endl;
+            }
         }
     }
 
