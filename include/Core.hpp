@@ -4,6 +4,7 @@
 #include <memory>
 #include <ziapi/Config.hpp>
 #include <ziapi/Module.hpp>
+#include <string>
 
 namespace core
 {
@@ -14,12 +15,12 @@ namespace core
              * todo
              * @param filepath
              */
-            Core(std::string &&filepath) noexcept;
+            explicit Core(std::string &&filepath) noexcept;
 
             /**
              * todo
              */
-            void run();
+            [[noreturn]] void run();
 
             /**
              * todo
@@ -28,9 +29,12 @@ namespace core
 
         private:
 
-            static void _config() noexcept;
+            void _config() noexcept;
 
-            std::shared_ptr<ziapi::INetworkModule> network;
+            bool _running;
+            bool _configLoaded;
+
+            std::shared_ptr<ziapi::INetworkModule> _networkModule;
             std::vector<std::shared_ptr<ziapi::IHandlerModule>> _modules;
             std::vector<std::shared_ptr<ziapi::IPreProcessorModule>> _preProcessors;
             std::vector<std::shared_ptr<ziapi::IPostProcessorModule>> _postProcessors;
