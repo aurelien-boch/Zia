@@ -4,6 +4,20 @@
 
 #include "Core.hpp"
 
+class A : public ziapi::http::IResponseInputQueue {
+    public:
+        std::pair<ziapi::http::Request, ziapi::http::Context> Pop() override
+        {
+            return {};
+        }
+
+        [[nodiscard]] std::size_t Size() const noexcept
+        {
+            return 0;
+        }
+};
+class B : public ziapi::http::IRequestOutputQueue {};
+
 namespace core
 {
     Core::Core(std::string &filepath) noexcept :

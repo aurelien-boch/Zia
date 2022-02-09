@@ -12,6 +12,7 @@
 
 #include <ziapi/Config.hpp>
 #include <ziapi/Module.hpp>
+#include <string>
 
 namespace core
 {
@@ -27,7 +28,7 @@ namespace core
             /**
              * todo
              */
-            void run();
+            [[noreturn]] void run();
 
             /**
              * todo
