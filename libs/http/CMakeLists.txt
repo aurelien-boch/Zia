@@ -41,4 +41,5 @@ conan_target_link_libraries(
 target_link_libraries(
         ${NAME}
         ziapi
+        network
 )
