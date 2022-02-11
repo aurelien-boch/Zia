@@ -1,10 +1,10 @@
 #ifndef ITCPCLIENT_HPP
 #define ITCPCLIENT_HPP
 
-#include "socket/Errors.hpp"
-#include "socket/Utility.hpp"
+#include "Errors.hpp"
+#include "Utility.hpp"
 
-namespace network::socket
+namespace network
 {
     /**
      * @brief This class represents a TCP Client

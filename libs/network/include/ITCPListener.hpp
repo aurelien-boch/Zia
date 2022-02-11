@@ -5,7 +5,7 @@
 
 #include "ITCPClient.hpp"
 
-namespace network::socket
+namespace network
 {
     /**
      * @brief This class represents a TCP server listening for new connections

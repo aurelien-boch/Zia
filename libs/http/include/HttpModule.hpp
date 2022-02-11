@@ -6,8 +6,7 @@
 
 #include <ziapi/Module.hpp>
 
-//#include "../../network/include/socket/tcp/AsioTcpListener.hpp"
-#include "../../network/include/socket/tcp/AsioTCPListener.hpp"
+#include "../../network/include/http/AsioHttpListener.hpp"
 
 namespace modules
 {
@@ -41,7 +40,7 @@ namespace modules
             std::string _description;
             std::uint16_t _port;
             asio::io_service _service;
-            network::socket::AsioTCPListener<ziapi::http::Request, ziapi::http::Response> _listener;
+            network::http::AsioHttpListener _listener;
 
             void _listen(ziapi::http::IRequestOutputQueue &requests);
 

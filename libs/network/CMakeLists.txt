@@ -1,4 +1,5 @@
 add_subdirectory(include/)
+add_subdirectory(src/)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -7,6 +8,7 @@ set(CMAKE_AUTOUIC ON)
 add_library(
     network
         ${INCLUDES}
+        ${HTTP_SRCS}
 )
 
 target_include_directories(

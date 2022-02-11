@@ -45,29 +45,19 @@ namespace modules
     void HttpModule::Run([[maybe_unused]] ziapi::http::IRequestOutputQueue &requests, [[maybe_unused]] ziapi::http::IResponseInputQueue &responses)
     {
 //        _context.run();
-        while (_run) {
-            try {
-
-            } catch (const std::exception &e) {
-                std::cerr << "ERROR " << e.what() << std::endl;
-            } catch (...) {
-                std::cerr << "ERROR Unknown error" << std::endl;
-            }
-        }
+//        while (_run) {
+//            try {
+//
+//            } catch (const std::exception &e) {
+//                std::cerr << "ERROR " << e.what() << std::endl;
+//            } catch (...) {
+//                std::cerr << "ERROR Unknown error" << std::endl;
+//            }
+//        }
     }
 
     void HttpModule::Terminate()
     {
         _run = false;
-    }
-
-    void HttpModule::_listen([[maybe_unused]] ziapi::http::IRequestOutputQueue &requests)
-    {
-
-    }
-
-    void HttpModule::_send([[maybe_unused]] ziapi::http::IResponseInputQueue &requests)
-    {
-
     }
 }

@@ -1,15 +1,11 @@
-set(
-    SOCKET
-        ${CMAKE_CURRENT_LIST_DIR}/socket/tcp/ITCPListener.hpp
-        ${CMAKE_CURRENT_LIST_DIR}/socket/tcp/ITCPClient.hpp
-        ${CMAKE_CURRENT_LIST_DIR}/socket/tcp/AsioTCPClient.hpp
-        ${CMAKE_CURRENT_LIST_DIR}/socket/tcp/AsioTCPListener.hpp
-)
+add_subdirectory(http)
 
 set(
     INCLUDES
-        ${SOCKET}
-        ${CMAKE_CURRENT_LIST_DIR}/socket/Utility.hpp
-        ${CMAKE_CURRENT_LIST_DIR}/socket/Errors.hpp
+        ${HTTP_INCLUDES}
+        ${CMAKE_CURRENT_SOURCE_DIR}/ITCPListener.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/ITCPClient.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/Utility.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/Errors.hpp
         PARENT_SCOPE
 )
