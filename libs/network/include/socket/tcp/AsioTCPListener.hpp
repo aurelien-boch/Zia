@@ -17,8 +17,8 @@
 
 namespace network::socket
 {
-    template <typename T>
-    class AsioTCPListener : public ITCPListener<T>
+    template <typename Request, typename Response>
+    class AsioTCPListener : public ITCPListener<Request, Response>
     {
         public:
             explicit AsioTCPListener(asio::io_service &ctx, std::uint16_t port) :
@@ -38,7 +38,7 @@ namespace network::socket
 
             void run(const std::function<void(
                 const error::ErrorSocket &,
-                std::shared_ptr<ITCPClient<T>>)> &callback) noexcept override
+                std::shared_ptr<ITCPClient<Request, Response>>)> &callback) noexcept override
                 {
                     this->_acceptor.async_accept(
                         this->_io_context,
@@ -51,7 +51,7 @@ namespace network::socket
                                 else
                                     callback(it->second, nullptr);
                             } else {
-                                auto res = std::make_unique<AsioTCPClient<T>>(peer);
+                                auto res = std::make_unique<AsioTCPClient<Request, Response>>(peer);
 
                                 callback(error::SOCKET_NO_ERROR, std::move(res));
                             }

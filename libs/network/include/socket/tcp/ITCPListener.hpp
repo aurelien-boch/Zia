@@ -10,7 +10,7 @@ namespace network::socket
     /**
      * @brief This class represents a TCP server listening for new connections
      */
-     template <typename T>
+     template <typename Request, typename Response>
     class ITCPListener
     {
         public:
@@ -22,7 +22,7 @@ namespace network::socket
              * ITCPClient which corresponds to the caller and the error_code of the operation
              */
             virtual void run(
-                const std::function<void (const error::ErrorSocket &, std::shared_ptr<ITCPClient<T>>)> &callback) noexcept = 0;
+                const std::function<void (const error::ErrorSocket &, std::shared_ptr<ITCPClient<Request, Response>>)> &callback) noexcept = 0;
     };
 }
 

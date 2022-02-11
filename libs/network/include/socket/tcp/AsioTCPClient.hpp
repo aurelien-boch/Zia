@@ -18,17 +18,19 @@
 
 namespace network::socket
 {
-    template <typename T>
-    class AsioTCPClient : public ITCPClient<T>
+    template <typename Request, typename Response>
+    class AsioTCPClient : public ITCPClient<Request, Response>
     {
         public:
             explicit AsioTCPClient(asio::io_context &io_context):
-                _socket(asio::ip::tcp::socket(io_context))
+                _socket(asio::ip::tcp::socket(io_context)),
+                _packet()
             {}
 
             explicit AsioTCPClient(asio::ip::tcp::socket &socket) :
                     // ITCPClient(),
-                    _socket(std::move(socket))
+                    _socket(std::move(socket)),
+                    _packet()
             {}
 
             ~AsioTCPClient() override
@@ -43,7 +45,7 @@ namespace network::socket
                 this->_socket.connect(endpoint);
             }
 
-            std::size_t send(const T &data) noexcept override
+            std::size_t send(const Response &data) noexcept override
             {
                 try {
                     return this->_socket.send(asio::buffer(&data, sizeof(data)));
@@ -53,16 +55,16 @@ namespace network::socket
                 }
             }
 
-            [[nodiscard]] T receive() noexcept override
+            [[nodiscard]] Request receive() noexcept override
             {
-                T p{};
+                Request p{};
 
                 this->_socket.receive(asio::buffer(&p, sizeof(p)));
                 return p;
             }
 
             void asyncSend(
-                const T &packet,
+                const Response &packet,
                 const std::function<void(const error::ErrorSocket &)> &callback) noexcept override
             {
                 auto cb = [&callback] (const asio::error_code &ec, std::size_t) {
@@ -80,7 +82,7 @@ namespace network::socket
             }
 
             void asyncRead(
-                const std::function<void(const error::ErrorSocket &, T &)> &callback
+                const std::function<void(const error::ErrorSocket &, Request &)> &callback
             ) noexcept override
             {
                 this->_socket.async_receive(
@@ -102,7 +104,7 @@ namespace network::socket
 
         private:
             asio::ip::tcp::socket _socket;
-            T _packet{};
+            Request _packet;
     };
 
 }

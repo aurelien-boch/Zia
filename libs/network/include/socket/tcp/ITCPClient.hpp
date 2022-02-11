@@ -9,7 +9,7 @@ namespace network::socket
     /**
      * @brief This class represents a TCP Client
      */
-     template <typename T>
+     template <typename Request, typename Response>
     class ITCPClient
     {
         public:
@@ -26,13 +26,13 @@ namespace network::socket
              * @brief Method that sends a packet over TCP
              * @param data This parameter refers to the data to be send over tcp
              */
-            virtual std::size_t send(const T &data) noexcept = 0;
+            virtual std::size_t send(const Response &data) noexcept = 0;
 
             /**
              * @brief Methods that blocks until a message is received
              * @return Returns the received packet
              */
-            [[nodiscard]] virtual T receive() noexcept = 0;
+            [[nodiscard]] virtual Request receive() noexcept = 0;
 
             /**
              * @brief Method that sends data asynchronously
@@ -40,7 +40,7 @@ namespace network::socket
              * @param callback This parameter refers to the function to be called when a packet is successfully sent
              */
             virtual void asyncSend(
-                const T &packet,
+                const Response &packet,
                 const std::function<void (const error::ErrorSocket &)> &callback) noexcept = 0;
 
             /**
@@ -48,7 +48,7 @@ namespace network::socket
              * @param callback This parameter refers to the function to be called each time a message is received
              */
             virtual void asyncRead(
-                const std::function<void(const error::ErrorSocket &, T &)> &callback) noexcept = 0;
+                const std::function<void(const error::ErrorSocket &, Request &)> &callback) noexcept = 0;
     };
 }
 

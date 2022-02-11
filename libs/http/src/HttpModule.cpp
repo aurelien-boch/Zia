@@ -19,7 +19,7 @@ namespace modules
     HttpModule::~HttpModule()
     {}
 
-    void HttpModule::Init(const ziapi::config::Node &cfg)
+    void HttpModule::Init([[maybe_unused]] const ziapi::config::Node &cfg)
     {}
 
     ziapi::Version HttpModule::GetVersion() const noexcept
@@ -42,7 +42,7 @@ namespace modules
         return _description.c_str();
     }
 
-    void HttpModule::Run(ziapi::http::IRequestOutputQueue &requests, ziapi::http::IResponseInputQueue &responses)
+    void HttpModule::Run([[maybe_unused]] ziapi::http::IRequestOutputQueue &requests, [[maybe_unused]] ziapi::http::IResponseInputQueue &responses)
     {
 //        _context.run();
         while (_run) {
@@ -61,12 +61,12 @@ namespace modules
         _run = false;
     }
 
-    void HttpModule::_listen(ziapi::http::IRequestOutputQueue &requests)
+    void HttpModule::_listen([[maybe_unused]] ziapi::http::IRequestOutputQueue &requests)
     {
 
     }
 
-    void HttpModule::_send(ziapi::http::IResponseInputQueue &requests)
+    void HttpModule::_send([[maybe_unused]] ziapi::http::IResponseInputQueue &requests)
     {
 
     }

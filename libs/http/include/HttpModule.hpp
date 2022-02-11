@@ -41,7 +41,7 @@ namespace modules
             std::string _description;
             std::uint16_t _port;
             asio::io_service _service;
-            network::socket::AsioTCPListener<int> _listener;
+            network::socket::AsioTCPListener<ziapi::http::Request, ziapi::http::Response> _listener;
 
             void _listen(ziapi::http::IRequestOutputQueue &requests);
 
