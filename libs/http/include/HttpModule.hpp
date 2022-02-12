@@ -2,6 +2,9 @@
 #define HTTPMODULE_HPP
 
 #include <string>
+#include <vector>
+#include <memory>
+
 #include <asio.hpp>
 
 #include <ziapi/Module.hpp>
@@ -33,6 +36,9 @@ namespace modules
             void Terminate();
 
         private:
+
+            using IClient = std::shared_ptr<network::ITCPClient<std::string, std::string>>;
+
             bool _run;
             ziapi::Version _version;
             ziapi::Version _compatibleApiVersion;
@@ -41,11 +47,16 @@ namespace modules
             std::uint16_t _port;
             asio::io_service _service;
             network::http::AsioHttpListener _listener;
+            std::vector<IClient> _clients;
 
-            void _listen(ziapi::http::IRequestOutputQueue &requests);
+            void _onConnect(
+                    const error::ErrorSocket &err,
+                    IClient client);
 
-            void _send(ziapi::http::IResponseInputQueue &requests);
-
+            void _onPacket(
+                    const error::ErrorSocket &err,
+                    std::string &packet,
+                    IClient &client);
     };
 }
 
