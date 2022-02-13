@@ -57,7 +57,7 @@ namespace network::http
                 auto it = error::AsioErrorTranslator.find(ec);
 
                 if (it == error::AsioErrorTranslator.end()) {
-                    std::cerr << "Asio error: " << ec << std::endl;
+                    std::cerr << "ERROR(network/AsioHttpClient): " << ec << std::endl;
                 } else
                     callback(it->second);
             } else
@@ -80,7 +80,7 @@ namespace network::http
                     auto it = error::AsioErrorTranslator.find(ec);
 
                     if (it == error::AsioErrorTranslator.end())
-                        std::cerr << "ASIO ERROR: " << ec << std::endl;
+                        std::cerr << "ERROR(network/AsioHttpClient): " << ec << std::endl;
                     else
                         callback(it->second, _packet);
                 } else if (_packet.find("\r\n") != std::string::npos) {

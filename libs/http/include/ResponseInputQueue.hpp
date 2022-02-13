@@ -23,7 +23,6 @@ namespace modules
 
             void Push(std::pair<ziapi::http::Response, ziapi::http::Context> &&response) noexcept;
 
-
         private:
             std::queue<std::pair<ziapi::http::Response, ziapi::http::Context>> _responses;
     };

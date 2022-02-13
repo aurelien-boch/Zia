@@ -25,7 +25,7 @@ namespace network::http
                     auto it = error::AsioErrorTranslator.find(error);
 
                     if (it == error::AsioErrorTranslator.end())
-                        std::cerr << "Asio error: " << error << std::endl;
+                        std::cerr << "ERROR(network/AsioHttpListener): " << error << std::endl;
                     else
                         callback(it->second, nullptr);
                 } else {

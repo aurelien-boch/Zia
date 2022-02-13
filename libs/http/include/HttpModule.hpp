@@ -11,6 +11,8 @@
 
 #include "../../network/include/http/AsioHttpListener.hpp"
 
+#include "ResponseInputQueue.hpp"
+
 namespace modules
 {
     class HttpModule : public ziapi::INetworkModule
@@ -23,17 +25,17 @@ namespace modules
 
             void Init(const ziapi::config::Node &cfg);
 
-            [[nodiscard]] ziapi::Version GetVersion() const noexcept;
+            [[nodiscard]] ziapi::Version GetVersion() const noexcept override;
 
-            [[nodiscard]] ziapi::Version GetCompatibleApiVersion() const noexcept;
+            [[nodiscard]] ziapi::Version GetCompatibleApiVersion() const noexcept override;
 
-            [[nodiscard]] const char *GetName() const noexcept;
+            [[nodiscard]] const char *GetName() const noexcept override;
 
-            [[nodiscard]] const char *GetDescription() const noexcept;
+            [[nodiscard]] const char *GetDescription() const noexcept override;
 
-            void Run(ziapi::http::IRequestOutputQueue &requests, ziapi::http::IResponseInputQueue &responses);
+            void Run(ziapi::http::IRequestOutputQueue &requests, ziapi::http::IResponseInputQueue &responses) override;
 
-            void Terminate();
+            void Terminate() override;
 
         private:
 
@@ -57,6 +59,8 @@ namespace modules
                     const error::ErrorSocket &err,
                     std::string &packet,
                     IClient &client);
+
+            void _sendResponses(ResponseInputQueue &responses);
     };
 }
 

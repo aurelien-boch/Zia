@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "HttpModule.hpp"
+#include "ResponseInputQueue.hpp"
 
 namespace modules
 {
@@ -43,8 +44,9 @@ namespace modules
         return _description.c_str();
     }
 
-    void HttpModule::Run([[maybe_unused]] ziapi::http::IRequestOutputQueue &requests, [[maybe_unused]] ziapi::http::IResponseInputQueue &responses)
+    void HttpModule::Run([[maybe_unused]] ziapi::http::IRequestOutputQueue &requests, ziapi::http::IResponseInputQueue &responses)
     {
+        ResponseInputQueue &res = static_cast<ResponseInputQueue &>(responses);
         _listener.run(
             [this](const error::ErrorSocket &err, IClient client)
             {
@@ -52,6 +54,15 @@ namespace modules
             }
         );
         _service.run();
+        while (_run) {
+            try {
+                _sendResponses(res);
+            } catch(const std::runtime_error &e) {
+                std::cerr << "ERROR(modules/http): " << e.what() << std::endl;
+            } catch (...) {
+                std::cerr << "ERROR(modules/http): Unknown error" << std::endl;
+            }
+        }
     }
 
     void HttpModule::Terminate()
@@ -90,13 +101,25 @@ namespace modules
             auto errIt = error::errorMessage.find(err);
 
             if (errIt == error::errorMessage.end())
-                std::cerr << "ERROR: Unknown error occurred" << err << std::endl;
+                std::cerr << "ERROR(modules/Http): Unknown error occurred" << err << std::endl;
             else
-                std::cerr << "ERROR: " << err << std::endl;
+                std::cerr << "ERROR(modules/Http): " << err << std::endl;
         } else {
             // TODO:
             // Call parser
-            // Add Packet in queue
+            // Add Packet in queue with client as Context
+        }
+    }
+
+    void HttpModule::_sendResponses(ResponseInputQueue &responses)
+    {
+        while (!responses.Empty()) {
+            auto res = responses.Pop().value();
+            auto client = res.second.find("client");
+            
+            if (client == res.second.end())
+                throw std::runtime_error("No client specified");
+            // TODO: send response to client using http formatter
         }
     }
 }
