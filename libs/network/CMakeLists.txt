@@ -1,25 +1,45 @@
-add_subdirectory(include/)
-add_subdirectory(src/)
+project(http_module LANGUAGES CXX)
 
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC ON)
+set(NAME network)
+
+add_subdirectory(src/)
+add_subdirectory(include/)
 
 add_library(
-    network
+        ${NAME}
+        SHARED
+        ${SRCS}
         ${INCLUDES}
-        ${HTTP_SRCS}
 )
 
 target_include_directories(
-    network
+        ${NAME}
         PUBLIC
         include/
 )
 
-set_target_properties(network PROPERTIES LINKER_LANGUAGE CXX)
+if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+    set(COMPILE_FLAGS  "/W3")
+elseif (
+(CMAKE_CXX_COMPILER_ID MATCHES "GNU") OR
+(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+)
+    set(COMPILE_FLAGS -Wall -Wextra -Weffc++ -g) # TODO: remove -g
+endif()
+
+target_compile_options(
+        ${NAME}
+        PRIVATE
+        ${COMPILE_FLAGS}
+)
 
 conan_target_link_libraries(
-    network
+        ${NAME}
         CONAN_PKG::asio
+)
+
+target_link_libraries(
+        ${NAME}
+        ziapi
+        network
 )

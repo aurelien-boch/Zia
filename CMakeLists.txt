@@ -41,6 +41,10 @@ target_include_directories(
 target_link_libraries(
     ${NAME}
         ziapi
+<<<<<<< HEAD
         loader
         config_parser
+=======
+        http
+>>>>>>> 6e4f741 (fix(libs/network): Fix shared libraries in CMakeLists)
 )

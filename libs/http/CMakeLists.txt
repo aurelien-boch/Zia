@@ -24,7 +24,7 @@ elseif (
 (CMAKE_CXX_COMPILER_ID MATCHES "GNU") OR
 (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 )
-    set(COMPILE_FLAGS -Wall -Wextra -Weffc++)
+    set(COMPILE_FLAGS -Wall -Wextra -Weffc++ -g) # TODO: remove -g
 endif()
 
 target_compile_options(
@@ -43,3 +43,30 @@ target_link_libraries(
         ziapi
         network
 )
+
+#add_subdirectory(include/)
+#add_subdirectory(src/)
+#
+#set(CMAKE_AUTOMOC ON)
+#set(CMAKE_AUTORCC ON)
+#set(CMAKE_AUTOUIC ON)
+#
+#add_library(
+#        http
+#        ${INCLUDES}
+#        ${SRCS}
+#)
+#
+#target_include_directories(
+#        http
+#        PUBLIC
+#        include/
+#)
+#
+##set_target_properties(http PROPERTIES LINKER_LANGUAGE CXX)
+#
+#conan_target_link_libraries(
+#        http
+#        ziapi
+#        network
+#)

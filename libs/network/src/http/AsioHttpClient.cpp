@@ -13,7 +13,7 @@ namespace network::http
         _packet()
     {}
 
-    AsioHttpClient::~AsioHttpClient() override
+    AsioHttpClient::~AsioHttpClient()
     {
         this->_socket.close();
     }

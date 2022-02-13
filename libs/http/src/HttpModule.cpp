@@ -1,7 +1,10 @@
 #include <iostream>
 
+#include "../../../libs/network/include/http/AsioHttpListener.hpp"
+
 #include "HttpModule.hpp"
 #include "ResponseInputQueue.hpp"
+#include "RequestOutputQueue.hpp"
 
 namespace modules
 {
@@ -13,8 +16,8 @@ namespace modules
         _name("http"),
         _description("A Http module."),
         _port(port),
-        _service(),
-        _listener(_service, port),
+        _service{},
+        _listener(std::make_unique<network::http::AsioHttpListener>(_service, port)),
         _clients{}
     {}
 
@@ -47,7 +50,7 @@ namespace modules
     void HttpModule::Run([[maybe_unused]] ziapi::http::IRequestOutputQueue &requests, ziapi::http::IResponseInputQueue &responses)
     {
         ResponseInputQueue &res = static_cast<ResponseInputQueue &>(responses);
-        _listener.run(
+        _listener->run(
             [this](const error::ErrorSocket &err, IClient client)
             {
                 _onConnect(err, std::move(client));
@@ -87,6 +90,7 @@ namespace modules
             c->asyncRead([c, this] (error::ErrorSocket err, std::string &request) mutable {
                 _onPacket(err, request, c);
             });
+            c->asyncSend("CONNECTED\n", [] (const error::ErrorSocket &) { std::cout << "message sent" << std::endl;}); // TODO: remove line
         }
         std::cout << "CLIENT CONNECTED" << std::endl; // TODO: remove line
     }
@@ -105,6 +109,7 @@ namespace modules
             else
                 std::cerr << "ERROR(modules/Http): " << err << std::endl;
         } else {
+            std::cout << "RECEIVED PACKET: "<< packet << std::endl; // TODO: Remove line
             // TODO:
             // Call parser
             // Add Packet in queue with client as Context
@@ -116,7 +121,7 @@ namespace modules
         while (!responses.Empty()) {
             auto res = responses.Pop().value();
             auto client = res.second.find("client");
-            
+
             if (client == res.second.end())
                 throw std::runtime_error("No client specified");
             // TODO: send response to client using http formatter

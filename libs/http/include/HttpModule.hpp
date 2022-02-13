@@ -9,7 +9,7 @@
 
 #include <ziapi/Module.hpp>
 
-#include "../../network/include/http/AsioHttpListener.hpp"
+#include "../../network/include/ITCPListener.hpp"
 
 #include "ResponseInputQueue.hpp"
 
@@ -48,7 +48,7 @@ namespace modules
             std::string _description;
             std::uint16_t _port;
             asio::io_service _service;
-            network::http::AsioHttpListener _listener;
+            std::unique_ptr<network::ITCPListener<std::string, std::string>> _listener;
             std::vector<IClient> _clients;
 
             void _onConnect(

@@ -1,5 +1,5 @@
-#ifndef RESPONSEINPUTQUEUE_HPP
-#define RESPONSEINPUTQUEUE_HPP
+#ifndef REQUESTOUTPUTQUEUE_HPP
+#define REQUESTOUTPUTQUEUE_HPP
 
 #include <queue>
 
@@ -28,4 +28,4 @@ namespace modules
     };
 }
 
-#endif //RESPONSEINPUTQUEUE_HPP
+#endif //REQUESTOUTPUTQUEUE_HPP
