@@ -13,10 +13,15 @@ add_library(
     ziaHttpParser
         include/HttpParser.hpp
         src/HttpParser.cpp
-)
+        include/Exception.hpp)
 
 target_include_directories(
     ziaHttpParser
         PUBLIC
         include/
+)
+
+target_link_libraries(
+    ziaHttpParser
+        ziapi
 )
