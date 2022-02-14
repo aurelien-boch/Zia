@@ -3,6 +3,7 @@
 namespace network::http
 {
     AsioHttpListener::AsioHttpListener(asio::io_service &ctx, std::uint16_t port) :
+        ITCPListener(),
         _io_context(ctx),
         _acceptor(asio::ip::tcp::acceptor(ctx))
     {

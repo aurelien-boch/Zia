@@ -24,7 +24,7 @@ elseif (
 (CMAKE_CXX_COMPILER_ID MATCHES "GNU") OR
 (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 )
-    set(COMPILE_FLAGS -Wall -Wextra -Weffc++ -g) # TODO: remove -g
+    set(COMPILE_FLAGS -Wall -Wextra -Weffc++ -g -ggdb) # TODO: remove -g
 endif()
 
 target_compile_options(

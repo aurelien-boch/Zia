@@ -41,7 +41,7 @@ namespace network
              */
             virtual void asyncSend(
                 const Response &packet,
-                const std::function<void (const error::ErrorSocket &)> &callback) noexcept = 0;
+                std::function<void (const error::ErrorSocket &)> &&callback) noexcept = 0;
 
             /**
              * @brief Method that asynchronously received a message

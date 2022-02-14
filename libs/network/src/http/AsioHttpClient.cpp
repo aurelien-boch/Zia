@@ -1,9 +1,12 @@
+#include <cstring>
+
 #include "http/AsioHttpClient.hpp"
 
 namespace network::http
 {
 
-    AsioHttpClient::AsioHttpClient(asio::io_context &io_context):
+    AsioHttpClient::AsioHttpClient(asio::io_context &io_context) :
+        ITCPClient(),
         _socket(asio::ip::tcp::socket(io_context)),
         _packet()
     {}
@@ -30,7 +33,7 @@ namespace network::http
         try {
             return this->_socket.send(asio::buffer(data.c_str(), sizeof(char) * data.size()));
         } catch (std::system_error &err) {
-            std::cerr << err.what() << std::endl;
+            std::cerr << "ERROR(network/AsioHttpClient): " << err.what() << std::endl;
             return (-1);
         }
     }
@@ -50,20 +53,32 @@ namespace network::http
 
     void AsioHttpClient::asyncSend(
         const std::string &packet,
-        const std::function<void(const error::ErrorSocket &)> &callback) noexcept
+        std::function<void(const error::ErrorSocket &)> &&cb) noexcept
     {
-        auto cb = [&callback] (const asio::error_code &ec, std::size_t) {
+//        auto cb = [&callback] (const asio::error_code &ec, std::size_t) {
+//            if (ec) {
+//                auto it = error::AsioErrorTranslator.find(ec);
+//
+//                if (it == error::AsioErrorTranslator.end()) {
+//                    std::cerr << "ERROR(network/AsioHttpClient): " << ec << std::endl;
+//                } else
+//                    callback(it->second);
+//            } else // CRASH HERE
+//                 callback(error::SOCKET_NO_ERROR);
+//        };
+        this->_socket.async_send(asio::buffer(packet.c_str(), sizeof(char) * packet.size()),
+            [cb = std::forward<std::function<void (const error::ErrorSocket &)>>(cb)] (const asio::error_code &ec, std::size_t) {
             if (ec) {
                 auto it = error::AsioErrorTranslator.find(ec);
 
                 if (it == error::AsioErrorTranslator.end()) {
                     std::cerr << "ERROR(network/AsioHttpClient): " << ec << std::endl;
                 } else
-                    callback(it->second);
-            } else
-                callback(error::SOCKET_NO_ERROR);
-        };
-        this->_socket.async_send(asio::buffer(packet.c_str(), sizeof(char) * packet.size()), cb);
+                    cb(it->second);
+            } else // CRASH HERE
+                 cb(error::SOCKET_NO_ERROR);
+        });
+
     }
 
     void AsioHttpClient::asyncRead(

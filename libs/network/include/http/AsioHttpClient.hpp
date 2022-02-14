@@ -35,7 +35,7 @@ namespace network::http
 
             void asyncSend(
                 const std::string &packet,
-                const std::function<void(const error::ErrorSocket &)> &callback) noexcept override;
+                std::function<void(const error::ErrorSocket &)> &&callback) noexcept override;
 
             void asyncRead(
                 const std::function<void(const error::ErrorSocket &, std::string &)> &callback
