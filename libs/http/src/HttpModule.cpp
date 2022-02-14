@@ -59,7 +59,6 @@ namespace modules
         _service.run();
         while (_run) {
             try {
-                // std::cout << "loop" << std::endl;
                 _sendResponses(res);
             } catch(const std::runtime_error &e) {
                 std::cerr << "ERROR(modules/http): " << e.what() << std::endl;
@@ -91,9 +90,7 @@ namespace modules
             c->asyncRead([c, this] (error::ErrorSocket err, std::string &request) mutable {
                 _onPacket(err, request, c);
             });
-             c->asyncSend("CONNECTED\n", [] (const error::ErrorSocket &) { std::cout << "message sent" << std::endl;}); // TODO: remove line
         }
-        std::cout << "CLIENT CONNECTED" << std::endl; // TODO: remove line
     }
     
     void HttpModule::_onPacket(
@@ -101,7 +98,6 @@ namespace modules
         std::string &packet,
         IClient &client)
     {
-        std::cout << "GOT DATA" << std::endl; // TODO: remove line
         if (err != error::ErrorSocket::SOCKET_NO_ERROR) {
             auto errIt = error::errorMessage.find(err);
 
@@ -110,7 +106,6 @@ namespace modules
             else
                 std::cerr << "ERROR(modules/Http): " << err << std::endl;
         } else {
-            std::cout << "RECEIVED PACKET: "<< packet << std::endl; // TODO: Remove line
             // TODO:
             // Call parser
             // Add Packet in queue with client as Context

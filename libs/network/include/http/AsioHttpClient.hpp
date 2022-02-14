@@ -38,14 +38,14 @@ namespace network::http
                 std::function<void(const error::ErrorSocket &)> &&callback) noexcept override;
 
             void asyncRead(
-                const std::function<void(const error::ErrorSocket &, std::string &)> &callback
+                std::function<void(const error::ErrorSocket &, std::string &)> &&callback
             ) noexcept override;
 
         private:
             asio::ip::tcp::socket _socket;
             std::string _packet;
+            char _buffer[256];
     };
-
 }
 
 #endif /* !ASIOHTTPCLIENT_HPP_ */

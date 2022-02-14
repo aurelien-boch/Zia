@@ -48,7 +48,7 @@ namespace network
              * @param callback This parameter refers to the function to be called each time a message is received
              */
             virtual void asyncRead(
-                const std::function<void(const error::ErrorSocket &, Request &)> &callback) noexcept = 0;
+                std::function<void(const error::ErrorSocket &, Request &)> &&callback) noexcept = 0;
     };
 }
 

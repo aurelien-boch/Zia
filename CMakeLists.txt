@@ -25,6 +25,8 @@ if (DEFINED ENABLE_TESTING AND "${ENABLE_TESTING}" STREQUAL "yes")
     add_subdirectory(tests)
 endif()
 
+
+
 add_executable(
     ${NAME}
         ${INCLUDES}
@@ -41,10 +43,7 @@ target_include_directories(
 target_link_libraries(
     ${NAME}
         ziapi
-<<<<<<< HEAD
         loader
         config_parser
-=======
         http
->>>>>>> 6e4f741 (fix(libs/network): Fix shared libraries in CMakeLists)
 )
