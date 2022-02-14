@@ -4,12 +4,11 @@
 
 ziapi::http::Request HttpParser::HttpParser::parse(const std::string &requestString)
 {
-    ziapi::http::Request request{};
     std::size_t pos{};
-
-    request.method = parseRequestMethod(pos, requestString);
-
-    return request;
+    return {
+        .method{parseRequestMethod(pos, requestString)},
+        .target{parseRequestTarget(pos, requestString)},
+    };
 }
 
 inline std::string HttpParser::HttpParser::parseRequestMethod(std::size_t &pos, const std::string &requestString) const
@@ -26,4 +25,18 @@ inline std::string HttpParser::HttpParser::parseRequestMethod(std::size_t &pos, 
 
     pos += (*result).size() + 1;
     return std::string{*result};
+}
+
+inline std::string HttpParser::HttpParser::parseRequestTarget(std::size_t &pos, const std::string &requestString)
+{
+    char *target = new char;
+    requestString.copy(target, requestString.find_first_of(' '), pos);
+
+    if (target[0] != '/') {
+        throw InvalidTargetException{"Target must start with a '/'"};
+    }
+
+    std::string targetString{target};
+    pos += targetString.size() + 1;
+    return targetString;
 }

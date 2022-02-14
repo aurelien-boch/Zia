@@ -38,6 +38,14 @@ public:
 
 };
 
+class InvalidTargetException : public Exception {
+
+public:
+
+    explicit InvalidTargetException(const std::string &error) noexcept : Exception{"[Invalid Route]: " + error} {}
+
+};
+
 }
 
 #endif /* ZIA_EXCEPTION_HPP */

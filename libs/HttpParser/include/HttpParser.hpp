@@ -20,7 +20,7 @@ public:
 
 private:
 
-    std::array<std::string_view, 7> s_methods = {
+    static constexpr std::array<std::string_view, 7> s_methods = {
             ziapi::http::method::kGet,
             ziapi::http::method::kPost,
             ziapi::http::method::kPut,
@@ -30,14 +30,16 @@ private:
             ziapi::http::method::kHead,
     };
 
-    std::array<ziapi::http::Version, 4> s_versions = {
-            ziapi::http::Version::kV1,
-            ziapi::http::Version::kV1_1,
-            ziapi::http::Version::kV2,
-            ziapi::http::Version::kV3,
+    const std::map<std::string_view, ziapi::http::Version> s_versions = {
+            {"HTTP/1.0", ziapi::http::Version::kV1},
+            {"HTTP/1.1", ziapi::http::Version::kV1_1},
+            {"HTTP/2.0", ziapi::http::Version::kV2},
+            {"HTTP/3.0", ziapi::http::Version::kV3},
     };
 
     [[nodiscard]] inline std::string parseRequestMethod(std::size_t &pos, const std::string &requestString) const;
+
+    [[nodiscard]] static inline std::string parseRequestTarget(std::size_t &pos, const std::string &requestString);
 };
 
 }
