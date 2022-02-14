@@ -46,6 +46,14 @@ public:
 
 };
 
+class InvalidVersionException : public Exception {
+
+public:
+
+    explicit InvalidVersionException(const std::string &error) noexcept : Exception{"[Invalid Version]: " + error} {}
+
+};
+
 }
 
 #endif /* ZIA_EXCEPTION_HPP */

@@ -8,6 +8,7 @@ ziapi::http::Request HttpParser::HttpParser::parse(const std::string &requestStr
     return {
         .method{parseRequestMethod(pos, requestString)},
         .target{parseRequestTarget(pos, requestString)},
+        .version{parseRequestVersion(pos, requestString)},
     };
 }
 
@@ -39,4 +40,15 @@ inline std::string HttpParser::HttpParser::parseRequestTarget(std::size_t &pos, 
     std::string targetString{target};
     pos += targetString.size() + 1;
     return targetString;
+}
+
+ziapi::http::Version HttpParser::HttpParser::parseRequestVersion(size_t &pos, const std::string &requestString) const
+{
+    char *version = new char;
+    requestString.copy(version, requestString.find_first_of('\r'), pos);
+
+    if (s_versions.contains(version)) {
+        return s_versions.at(version);
+    }
+    throw InvalidVersionException{"Version is not supported or not valid"};
 }

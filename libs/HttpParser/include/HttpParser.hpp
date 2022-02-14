@@ -40,6 +40,9 @@ private:
     [[nodiscard]] inline std::string parseRequestMethod(std::size_t &pos, const std::string &requestString) const;
 
     [[nodiscard]] static inline std::string parseRequestTarget(std::size_t &pos, const std::string &requestString);
+
+    [[nodiscard]] inline ziapi::http::Version parseRequestVersion(std::size_t &pos, const std::string &requestString)
+    const;
 };
 
 }
