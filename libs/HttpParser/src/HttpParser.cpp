@@ -45,7 +45,8 @@ inline std::string HttpParser::HttpParser::parseRequestTarget(std::size_t &pos, 
     return targetString;
 }
 
-ziapi::http::Version HttpParser::HttpParser::parseRequestVersion(std::size_t &pos, const std::string &requestString) const
+ziapi::http::Version HttpParser::HttpParser::parseRequestVersion(std::size_t &pos,
+                                                                 const std::string &requestString) const
 {
     char *version = new char;
     requestString.copy(version, requestString.find_first_of('\r'), pos);
@@ -57,8 +58,9 @@ ziapi::http::Version HttpParser::HttpParser::parseRequestVersion(std::size_t &po
     throw InvalidVersionException{"Version is not supported or not valid"};
 }
 
-std::map<std::string, std::string> HttpParser::HttpParser::parseRequestHeaders(std::size_t &pos, const std::string
-&requestString, std::size_t &contentLength) const
+std::map<std::string, std::string> HttpParser::HttpParser::parseRequestHeaders(std::size_t &pos,
+                                                                               const std::string &requestString,
+                                                                               std::size_t &contentLength) const
 {
     std::map<std::string, std::string> headers;
 
@@ -85,4 +87,14 @@ std::map<std::string, std::string> HttpParser::HttpParser::parseRequestHeaders(s
     pos += 4;
 
     return headers;
+}
+
+std::string
+HttpParser::HttpParser::parseRequestBody(size_t &pos, const std::string &requestString, size_t &contentLength) const
+{
+    if (contentLength == 0) {
+        return {};
+    }
+
+    std::string body{requestString.substr(pos, contentLength)};
 }

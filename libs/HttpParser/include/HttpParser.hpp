@@ -123,8 +123,12 @@ private:
     [[nodiscard]] inline ziapi::http::Version parseRequestVersion(std::size_t &pos, const std::string &requestString)
     const;
 
-    [[nodiscard]] inline std::map<std::string, std::string> parseRequestHeaders(std::size_t &pos, const std::string
-    &requestString, std::size_t &contentLength) const;
+    [[nodiscard]] inline std::map<std::string, std::string> parseRequestHeaders(std::size_t &pos,
+                                                                                const std::string &requestString,
+                                                                                std::size_t &contentLength) const;
+
+    [[nodiscard]] inline std::string parseRequestBody(std::size_t &pos, const std::string &requestString,
+                                                      std::size_t &contentLength) const;
 };
 
 }
