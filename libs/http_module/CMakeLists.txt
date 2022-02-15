@@ -1,6 +1,6 @@
 project(http_module LANGUAGES CXX)
 
-set(NAME http)
+set(NAME http_module)
 
 add_subdirectory(src/)
 add_subdirectory(include/)
@@ -43,30 +43,3 @@ target_link_libraries(
         ziapi
         network
 )
-
-#add_subdirectory(include/)
-#add_subdirectory(src/)
-#
-#set(CMAKE_AUTOMOC ON)
-#set(CMAKE_AUTORCC ON)
-#set(CMAKE_AUTOUIC ON)
-#
-#add_library(
-#        http
-#        ${INCLUDES}
-#        ${SRCS}
-#)
-#
-#target_include_directories(
-#        http
-#        PUBLIC
-#        include/
-#)
-#
-##set_target_properties(http PROPERTIES LINKER_LANGUAGE CXX)
-#
-#conan_target_link_libraries(
-#        http
-#        ziapi
-#        network
-#)

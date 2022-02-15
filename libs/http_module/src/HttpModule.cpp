@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "../../../libs/network/include/http/AsioHttpListener.hpp"
+#include "http/AsioHttpListener.hpp"
 
 #include "HttpModule.hpp"
 #include "ResponseInputQueue.hpp"
@@ -51,7 +51,7 @@ namespace modules
     {
         ResponseInputQueue &res = static_cast<ResponseInputQueue &>(responses);
         _listener->run(
-            [this](const error::ErrorSocket &err, IClient client)
+            [this](const error::ErrorSocket &err, std::shared_ptr<IClient> client)
             {
                 _onConnect(err, std::move(client));
             }
@@ -75,7 +75,7 @@ namespace modules
 
     void HttpModule::_onConnect(
         const error::ErrorSocket &err,
-        IClient client)
+        std::shared_ptr<IClient> client)
     {
         if (err != error::ErrorSocket::SOCKET_NO_ERROR) {
             auto errIt = error::errorMessage.find(err);
@@ -85,7 +85,7 @@ namespace modules
             else
                 std::cerr << "Error occurred" << err << std::endl;
         } else {
-            IClient c = _clients.emplace_back(client);
+            std::shared_ptr<IClient> c = _clients.emplace_back(client);
 
             c->asyncRead([c, this] (error::ErrorSocket err, std::string &request) mutable {
                 _onPacket(err, request, c);
@@ -96,7 +96,7 @@ namespace modules
     void HttpModule::_onPacket(
         const error::ErrorSocket &err,
         std::string &packet,
-        IClient &client)
+        std::shared_ptr<IClient> &client)
     {
         if (err != error::ErrorSocket::SOCKET_NO_ERROR) {
             auto errIt = error::errorMessage.find(err);

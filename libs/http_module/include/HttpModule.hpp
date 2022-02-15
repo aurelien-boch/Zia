@@ -9,7 +9,7 @@
 
 #include <ziapi/Module.hpp>
 
-#include "../../network/include/ITCPListener.hpp"
+#include "ITCPListener.hpp"
 
 #include "ResponseInputQueue.hpp"
 
@@ -39,7 +39,7 @@ namespace modules
 
         private:
 
-            using IClient = std::shared_ptr<network::ITCPClient<std::string, std::string>>;
+            using IClient = network::ITCPClient<std::string, std::string>;
 
             bool _run;
             ziapi::Version _version;
@@ -49,16 +49,16 @@ namespace modules
             std::uint16_t _port;
             asio::io_service _service;
             std::unique_ptr<network::ITCPListener<std::string, std::string>> _listener;
-            std::vector<IClient> _clients;
+            std::vector<std::shared_ptr<IClient>> _clients;
 
             void _onConnect(
                     const error::ErrorSocket &err,
-                    IClient client);
+                    std::shared_ptr<IClient> client);
 
             void _onPacket(
                     const error::ErrorSocket &err,
                     std::string &packet,
-                    IClient &client);
+                    std::shared_ptr<IClient> &client);
 
             void _sendResponses(ResponseInputQueue &responses);
     };
