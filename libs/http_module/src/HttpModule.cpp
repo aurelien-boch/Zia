@@ -11,10 +11,6 @@ namespace modules
     HttpModule::HttpModule(std::uint16_t port) :
         ziapi::INetworkModule(),
         _run(true),
-        _version(1, 0, 0),
-        _compatibleApiVersion(3, 0, 0),
-        _name("http"),
-        _description("A Http module."),
         _port(port),
         _service{},
         _listener(std::make_unique<network::http::AsioHttpListener>(_service, port)),
@@ -29,22 +25,22 @@ namespace modules
 
     ziapi::Version HttpModule::GetVersion() const noexcept
     {
-        return _version;
+        return {1, 0, 0};
     }
 
     ziapi::Version HttpModule::GetCompatibleApiVersion() const noexcept
     {
-        return _compatibleApiVersion;
+        return {3, 0, 0};
     }
 
     const char *HttpModule::GetName() const noexcept
     {
-        return _name.c_str();
+        return "Http";
     }
 
     const char *HttpModule::GetDescription() const noexcept
     {
-        return _description.c_str();
+        return "A http module that implements HTTP1.1 protocol.";
     }
 
     void HttpModule::Run([[maybe_unused]] ziapi::http::IRequestOutputQueue &requests, ziapi::http::IResponseInputQueue &responses)
@@ -62,8 +58,6 @@ namespace modules
                 _sendResponses(res);
             } catch(const std::runtime_error &e) {
                 std::cerr << "ERROR(modules/http): " << e.what() << std::endl;
-            } catch (...) {
-                std::cerr << "ERROR(modules/http): Unknown error" << std::endl;
             }
         }
     }

@@ -42,10 +42,6 @@ namespace modules
             using IClient = network::ITCPClient<std::string, std::string>;
 
             bool _run;
-            ziapi::Version _version;
-            ziapi::Version _compatibleApiVersion;
-            std::string _name;
-            std::string _description;
             std::uint16_t _port;
             asio::io_service _service;
             std::unique_ptr<network::ITCPListener<std::string, std::string>> _listener;

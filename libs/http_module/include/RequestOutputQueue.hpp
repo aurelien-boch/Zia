@@ -10,12 +10,13 @@ namespace modules
     class RequestOutputQueue : public ziapi::http::IRequestOutputQueue
     {
         public:
+            using RequestPair = std::pair<ziapi::http::Request, ziapi::http::Context>;
 
             RequestOutputQueue();
 
             ~RequestOutputQueue() = default;
 
-            [[nodiscard]] std::optional<std::pair<ziapi::http::Request, ziapi::http::Context>> Pop();
+            [[nodiscard]] std::optional<RequestPair> Pop();
 
             [[nodiscard]] std::size_t Size() const noexcept;
 
@@ -24,7 +25,7 @@ namespace modules
             void Push(std::pair<ziapi::http::Request, ziapi::http::Context> &&req);
 
         private:
-            std::queue<std::pair<ziapi::http::Request, ziapi::http::Context>> _requests;
+            std::queue<RequestPair> _requests;
     };
 }
 

@@ -5,15 +5,15 @@ namespace modules
     RequestOutputQueue::RequestOutputQueue() : _requests{}
     {}
 
-    std::optional<std::pair<ziapi::http::Request, ziapi::http::Context>> RequestOutputQueue::Pop()
+    std::optional<RequestOutputQueue::RequestPair> RequestOutputQueue::Pop()
     {
-        std::pair<ziapi::http::Request, ziapi::http::Context> request = {};
+        RequestPair request{};
 
         if (_requests.empty())
             return std::nullopt;
         request = _requests.front();
         _requests.pop();
-        return std::optional<std::pair<ziapi::http::Request, ziapi::http::Context>>(request);
+        return request;
     }
 
     std::size_t RequestOutputQueue::Size() const noexcept
@@ -26,8 +26,8 @@ namespace modules
         return _requests.empty();
     }
 
-    void RequestOutputQueue::Push(std::pair<ziapi::http::Request, ziapi::http::Context> &&req)
+    void RequestOutputQueue::Push(RequestPair &&req)
     {
-        _requests.push(req);
+        _requests.push(std::forward<RequestPair>(req));
     }
 }
