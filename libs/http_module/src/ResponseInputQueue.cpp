@@ -5,15 +5,15 @@ namespace modules
     ResponseInputQueue::ResponseInputQueue() : _responses{}
     {}
 
-    std::optional<std::pair<ziapi::http::Response, ziapi::http::Context>> ResponseInputQueue::Pop()
+    std::optional<ResponseInputQueue::ResponsePair> ResponseInputQueue::Pop()
     {
-        std::pair<ziapi::http::Response, ziapi::http::Context> response = {};
+        ResponsePair response = {};
 
         if (_responses.empty())
             return std::nullopt;
         response = _responses.front();
         _responses.pop();
-        return std::optional<std::pair<ziapi::http::Response, ziapi::http::Context>>(response);
+        return response;
     }
 
     std::size_t ResponseInputQueue::Size() const noexcept
@@ -26,9 +26,9 @@ namespace modules
         return _responses.empty();
     }
 
-    void ResponseInputQueue::Push(std::pair<ziapi::http::Response, ziapi::http::Context> &&response) noexcept
+    void ResponseInputQueue::Push(ResponsePair &&response) noexcept
     {
-        _responses.push(response);
+        _responses.push(std::forward<ResponsePair>(response));
     }
 
 }

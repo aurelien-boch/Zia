@@ -11,20 +11,22 @@ namespace modules
     {
         public:
 
+            using ResponsePair = std::pair<ziapi::http::Response, ziapi::http::Context>;
+
             ResponseInputQueue();
 
             ~ResponseInputQueue() = default;
 
-            [[nodiscard]] std::optional<std::pair<ziapi::http::Response, ziapi::http::Context>> Pop();
+            [[nodiscard]] std::optional<ResponsePair> Pop();
 
             [[nodiscard]] std::size_t Size() const noexcept;
 
             [[nodiscard]] bool Empty() const noexcept;
 
-            void Push(std::pair<ziapi::http::Response, ziapi::http::Context> &&response) noexcept;
+            void Push(ResponsePair &&response) noexcept;
 
         private:
-            std::queue<std::pair<ziapi::http::Response, ziapi::http::Context>> _responses;
+            std::queue<ResponsePair> _responses;
     };
 }
 
