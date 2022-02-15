@@ -25,7 +25,7 @@ public:
      * @param requestString The string containing the HTTP request
      * @return The parsed HTTP request
      */
-    ziapi::http::Request parse(const std::string &requestString);
+    [[nodiscard]] ziapi::http::Request parse(const std::string &requestString);
 
 private:
 

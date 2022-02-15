@@ -15,13 +15,26 @@ class Exception : public std::exception {
 
 public:
 
+    /**
+     * Constructor
+     * @param message The message to display
+     */
     explicit Exception(const std::string &error) noexcept : s_error{error} {}
 
+    /**
+     * @return the error string
+     */
     [[nodiscard]] inline const char *what() const noexcept override
     {
         return s_error.c_str();
     }
 
+    /**
+     * Sends the error string to the specified output stream
+     *
+     * @param os the stream to send it to
+     * @return the stream taken as parameter
+     */
     std::ostream &operator<<(std::ostream &os) const noexcept
     {
         os << s_logsPrefix << s_error;
@@ -30,7 +43,9 @@ public:
 
 protected:
 
+    /// Prefix that is printed before the error message when using the operator `<<`
     std::string s_logsPrefix{"[Exception] "};
+    /// The error message
     const std::string &s_error;
 
 };

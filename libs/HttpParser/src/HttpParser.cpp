@@ -7,6 +7,7 @@ ziapi::http::Request HttpParser::HttpParser::parse(const std::string &requestStr
 {
     std::size_t pos{};
     std::size_t contentLength{};
+
     return {
         .method{parseRequestMethod(pos, requestString)},
         .target{parseRequestTarget(pos, requestString)},
