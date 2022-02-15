@@ -1,0 +1,60 @@
+name: Build ZIA
+
+on: push
+
+defaults:
+    run:
+        shell: bash
+
+jobs:
+    build:
+
+        strategy:
+            fail-fast: false
+            matrix:
+                os: [windows-latest, ubuntu-latest]
+                build_type: [Release]
+                include:
+                    - os: ubuntu-latest
+                      conan-cxx-version: libstdc++11
+
+        name: Build ZIA
+        runs-on: ${{ matrix.os }}
+
+        steps:
+            - uses: actions/checkout@v2
+            - uses: actions/setup-python@v2
+
+            - name: Install Required Dependencies on Ubuntu
+              if: ${{ matrix.os == 'ubuntu-latest' }}
+              run: |
+                sudo apt update
+                sudo apt install -y libgl-dev gcc-11 g++-11
+                sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 110 
+                sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-11 110
+
+            - name: Install & Setup Conan
+              run: |
+                pip install conan
+                conan profile new default --detect
+                conan remote add bincrafters https://bincrafters.jfrog.io/artifactory/api/conan/public-conan
+                conan config set general.revisions_enabled=1
+
+            - name: Set C++ Standard
+              if: ${{ matrix.os != 'windows-latest' }}
+              run: conan profile update settings.compiler.libcxx=${{ matrix.conan-cxx-version }} default
+
+            - name: Create Build Directory
+              run: mkdir build
+
+            - name: Install Dependencies with Conan
+              working-directory: build
+              run: conan install .. --build=missing
+
+            - name: Generate Project Files
+              working-directory: build
+              run: cmake .. -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+
+            - name: Build Project
+              working-directory: build
+              run: cmake --build .
