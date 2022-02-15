@@ -81,7 +81,7 @@ namespace modules
         } else {
             std::shared_ptr<IClient> c = _clients.emplace_back(client);
 
-            c->asyncRead([c, this] (error::ErrorSocket err, std::string &request) mutable {
+            c->asyncReceive([c, this] (error::ErrorSocket err, std::string &request) mutable {
                 _onPacket(err, request, c);
             });
         }

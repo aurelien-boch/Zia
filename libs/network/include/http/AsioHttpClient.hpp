@@ -27,18 +27,18 @@ namespace network::http
 
             ~AsioHttpClient() override;
 
-            void connect(const Address &peer) noexcept override;
+            void connect(Address const &peer) noexcept override;
 
-            std::size_t send(const std::string &data) noexcept override;
+            std::size_t send(std::string const &data) noexcept override;
 
             [[nodiscard]] std::string receive() noexcept override;
 
             void asyncSend(
-                const std::string &packet,
-                std::function<void(const error::ErrorSocket &)> &&callback) noexcept override;
+                std::string const &packet,
+                std::function<void(error::ErrorSocket const &)> &&callback) noexcept override;
 
-            void asyncRead(
-                std::function<void(const error::ErrorSocket &, std::string &)> &&callback
+            void asyncReceive(
+                std::function<void(error::ErrorSocket const &, std::string &)> &&callback
             ) noexcept override;
 
         private:

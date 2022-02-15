@@ -48,11 +48,11 @@ namespace modules
             std::vector<std::shared_ptr<IClient>> _clients;
 
             void _onConnect(
-                    const error::ErrorSocket &err,
+                    error::ErrorSocket const &err,
                     std::shared_ptr<IClient> client);
 
             void _onPacket(
-                    const error::ErrorSocket &err,
+                    error::ErrorSocket const &err,
                     std::string &packet,
                     std::shared_ptr<IClient> &client);
 

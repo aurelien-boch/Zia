@@ -15,15 +15,15 @@ namespace network::http
         _acceptor.listen();
     }
 
-    void AsioHttpListener::run(const std::function<void(
-        const error::ErrorSocket &,
-        std::shared_ptr<ITCPClient<std::string, std::string>>)> &callback) noexcept
+    void AsioHttpListener::run(
+            std::function<void (error::ErrorSocket const &, std::shared_ptr<IClient>)> &&callback) noexcept
     {
         this->_acceptor.async_accept(
             this->_io_context,
-            [this, callback] (const asio::error_code& error, asio::ip::tcp::socket peer) {
+            [this, callback = std::forward<std::function<void (error::ErrorSocket const &, std::shared_ptr<IClient>)>>(callback)]
+                    (asio::error_code const &error, asio::ip::tcp::socket peer) mutable {
                 if (error) {
-                    auto it = error::AsioErrorTranslator.find(error);
+                    const auto it = error::AsioErrorTranslator.find(error);
 
                     if (it == error::AsioErrorTranslator.end())
                         std::cerr << "ERROR(network/AsioHttpListener): " << error << std::endl;
@@ -34,7 +34,8 @@ namespace network::http
 
                     callback(error::SOCKET_NO_ERROR, std::move(res));
                 }
-                this->run(callback);
+                this->run(std::forward<std::function<void(error::ErrorSocket const &,
+                    std::shared_ptr<IClient>)>>(callback));
             }
         );
     }

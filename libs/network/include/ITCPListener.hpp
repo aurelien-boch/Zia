@@ -22,7 +22,7 @@ namespace network
              * ITCPClient which corresponds to the caller and the error_code of the operation
              */
             virtual void run(
-                const std::function<void (const error::ErrorSocket &, std::shared_ptr<ITCPClient<Request, Response>>)> &callback) noexcept = 0;
+                std::function<void (error::ErrorSocket const &, std::shared_ptr<ITCPClient<Request, Response>>)> &&callback) noexcept = 0;
     };
 }
 
