@@ -16,10 +16,7 @@ namespace modules
         _listener(std::make_unique<network::http::AsioHttpListener>(_service, port)),
         _clients{}
     {}
-
-    HttpModule::~HttpModule()
-    {}
-
+    
     void HttpModule::Init([[maybe_unused]] const ziapi::config::Node &cfg)
     {}
 

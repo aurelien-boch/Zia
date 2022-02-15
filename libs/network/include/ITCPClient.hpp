@@ -9,7 +9,7 @@ namespace network
     /**
      * @brief This class represents a TCP Client
      */
-     template <typename Request, typename Response>
+    template <typename Request, typename Response>
     class ITCPClient
     {
         public:
@@ -18,13 +18,13 @@ namespace network
 
             /**
              * @brief Method that connects to a TCP server
-             * @param peer This parameter refers to the address of the peer
+             * @param[in] peer This parameter refers to the address of the peer
              */
             virtual void connect(Address const &peer) noexcept = 0;
 
             /**
              * @brief Method that sends a packet over TCP
-             * @param data This parameter refers to the data to be send over tcp
+             * @param[in] data This parameter refers to the data to be send over tcp
              */
             virtual std::size_t send(Response const &data) noexcept = 0;
 
@@ -36,8 +36,8 @@ namespace network
 
             /**
              * @brief Method that sends data asynchronously
-             * @param packet This parameter refers to the data to be sent.
-             * @param callback This parameter refers to the function to be called when a packet is successfully sent
+             * @param[in] packet This parameter refers to the data to be sent.
+             * @param[in|out] callback This parameter refers to the function to be called when a packet is successfully sent
              */
             virtual void asyncSend(
                 Response const &packet,
@@ -45,7 +45,7 @@ namespace network
 
             /**
              * @brief Method that asynchronously received a message
-             * @param callback This parameter refers to the function to be called each time a message is received
+             * @param[in|out] callback This parameter refers to the function to be called each time a message is received
              */
             virtual void asyncReceive(
                 std::function<void(error::ErrorSocket const &, Request &)> &&callback) noexcept = 0;

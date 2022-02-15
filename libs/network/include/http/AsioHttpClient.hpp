@@ -1,11 +1,3 @@
-/*
-** EPITECH PROJECT, 2021
-** B-CPP-500-PAR-5-1-babel-aurelien.boch
-** File description:
-** AsioTCPClient
-*/
-
-
 #ifndef ASIOHTTPCLIENT_HPP_
 #define ASIOHTTPCLIENT_HPP_
 
@@ -18,6 +10,9 @@
 
 namespace network::http
 {
+    /**
+     * Implements a Http client using the Asio library
+     */
     class AsioHttpClient : public ITCPClient<std::string, std::string>
     {
         public:

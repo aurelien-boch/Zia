@@ -21,7 +21,7 @@ namespace modules
 
             explicit HttpModule(std::uint16_t port);
 
-            ~HttpModule();
+            ~HttpModule() = default;
 
             void Init(const ziapi::config::Node &cfg);
 

@@ -1,11 +1,3 @@
-/*
-** EPITECH PROJECT, 2021
-** B-CPP-500-PAR-5-1-babel-aurelien.boch
-** File description:
-** AsioTCPListener
-*/
-
-
 #ifndef ASIOHTTPLISTENER_HPP_
 #define ASIOHTTPLISTENER_HPP_
 
