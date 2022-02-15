@@ -7,6 +7,10 @@
 
 namespace HttpParser {
 
+/**
+ * Base Exception for the HttpParser module
+ * It is intended that exceptions used for this module are derived from this class
+ */
 class Exception : public std::exception {
 
 public:
@@ -31,6 +35,9 @@ protected:
 
 };
 
+/**
+ * To be thrown on invalid method name
+ */
 class InvalidMethodException : public Exception {
 
 public:
@@ -42,6 +49,9 @@ public:
 
 };
 
+/**
+ * To be thrown on invalid target name
+ */
 class InvalidTargetException : public Exception {
 
 public:
@@ -53,6 +63,9 @@ public:
 
 };
 
+/**
+ * To be thrown on invalid version name
+ */
 class InvalidVersionException : public Exception {
 
 public:
@@ -64,6 +77,9 @@ public:
 
 };
 
+/**
+ * To be thrown on invalid header name
+ */
 class InvalidHeaderException : public Exception {
 
 public:

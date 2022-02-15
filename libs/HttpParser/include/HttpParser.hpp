@@ -5,6 +5,9 @@
 
 namespace HttpParser {
 
+/**
+ * @brief Parses HTTP requests on each `parse` call
+ */
 class HttpParser {
 
 public:
@@ -16,10 +19,19 @@ public:
     HttpParser(HttpParser &&other) noexcept = delete;
     HttpParser operator=(HttpParser &other) = delete;
 
+    /**
+     * @brief Parse an HTTP request
+     *
+     * @param requestString The string containing the HTTP request
+     * @return The parsed HTTP request
+     */
     ziapi::http::Request parse(const std::string &requestString);
 
 private:
 
+    /**
+     * The HTTP request supported methods
+     */
     static constexpr std::array<std::string_view, 7> s_methods{
             ziapi::http::method::kGet,
             ziapi::http::method::kPost,
@@ -30,6 +42,9 @@ private:
             ziapi::http::method::kHead,
     };
 
+    /**
+     * The HTTP request supported versions
+     */
     const std::map<std::string_view, ziapi::http::Version> s_versions{
             {"HTTP/1.0", ziapi::http::Version::kV1},
             {"HTTP/1.1", ziapi::http::Version::kV1_1},
@@ -37,6 +52,9 @@ private:
             {"HTTP/3.0", ziapi::http::Version::kV3},
     };
 
+    /**
+     * The HTTP request supported headers
+     */
     static constexpr std::array<std::string_view, 76> s_headersNames{
             ziapi::http::header::kAIM,
             ziapi::http::header::kAccept,
@@ -116,19 +134,49 @@ private:
             ziapi::http::header::kXFrameOptions,
     };
 
+    /**
+     * Parses the method of the HTTP request
+     * @param pos the starting position of what's left to parse
+     * @param requestString the string containing the request
+     * @return the parsed method
+     */
     [[nodiscard]] inline std::string parseRequestMethod(std::size_t &pos, const std::string &requestString) const;
 
+    /**
+     * Parses the target of the HTTP request
+     * @param pos the starting position of what's left to parse
+     * @param requestString the string containing the request
+     * @return the parsed target
+     */
     [[nodiscard]] static inline std::string parseRequestTarget(std::size_t &pos, const std::string &requestString);
 
+    /**
+     * Parses the version of the HTTP request
+     * @param pos the starting position of what's left to parse
+     * @param requestString the string containing the request
+     * @return the parsed version
+     */
     [[nodiscard]] inline ziapi::http::Version parseRequestVersion(std::size_t &pos, const std::string &requestString)
     const;
 
+    /**
+     * Parses the headers of the HTTP request
+     * @param pos the starting position of what's left to parse
+     * @param requestString the string containing the request
+     * @return the parsed headers
+     */
     [[nodiscard]] inline std::map<std::string, std::string> parseRequestHeaders(std::size_t &pos,
                                                                                 const std::string &requestString,
                                                                                 std::size_t &contentLength) const;
 
-    [[nodiscard]] inline std::string parseRequestBody(std::size_t &pos, const std::string &requestString,
-                                                      std::size_t &contentLength) const;
+    /**
+     * Parses the body of the HTTP request
+     * @param pos the starting position of what's left to parse
+     * @param requestString the string containing the request
+     * @return the parsed body
+     */
+    [[nodiscard]] static inline std::string parseRequestBody(std::size_t &pos, const std::string &requestString,
+                                                                std::size_t &contentLength);
 };
 
 }

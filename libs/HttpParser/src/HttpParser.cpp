@@ -12,6 +12,7 @@ ziapi::http::Request HttpParser::HttpParser::parse(const std::string &requestStr
         .target{parseRequestTarget(pos, requestString)},
         .version{parseRequestVersion(pos, requestString)},
         .fields{parseRequestHeaders(pos, requestString, contentLength)},
+        .body{parseRequestBody(pos, requestString, contentLength)},
     };
 }
 
@@ -90,11 +91,11 @@ std::map<std::string, std::string> HttpParser::HttpParser::parseRequestHeaders(s
 }
 
 std::string
-HttpParser::HttpParser::parseRequestBody(size_t &pos, const std::string &requestString, size_t &contentLength) const
+HttpParser::HttpParser::parseRequestBody(size_t &pos, const std::string &requestString, size_t &contentLength)
 {
     if (contentLength == 0) {
         return {};
     }
 
-    std::string body{requestString.substr(pos, contentLength)};
+    return {requestString.substr(pos, contentLength)};
 }
