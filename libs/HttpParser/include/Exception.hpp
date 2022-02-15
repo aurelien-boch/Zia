@@ -20,12 +20,13 @@ public:
 
     std::ostream &operator<<(std::ostream &os) const noexcept
     {
-        os << s_error;
+        os << s_logsPrefix << s_error;
         return os;
     }
 
 protected:
 
+    std::string s_logsPrefix{"[Exception] "};
     const std::string &s_error;
 
 };
@@ -34,7 +35,10 @@ class InvalidMethodException : public Exception {
 
 public:
 
-    explicit InvalidMethodException(const std::string &error) noexcept : Exception{"[Invalid Method]: " + error} {}
+    explicit InvalidMethodException(const std::string &error) noexcept : Exception{error}
+    {
+        s_logsPrefix = "[Invalid Method] ";
+    }
 
 };
 
@@ -42,7 +46,10 @@ class InvalidTargetException : public Exception {
 
 public:
 
-    explicit InvalidTargetException(const std::string &error) noexcept : Exception{"[Invalid Route]: " + error} {}
+    explicit InvalidTargetException(const std::string &error) noexcept : Exception{error}
+    {
+        s_logsPrefix = "[Invalid Target] ";
+    }
 
 };
 
@@ -50,7 +57,21 @@ class InvalidVersionException : public Exception {
 
 public:
 
-    explicit InvalidVersionException(const std::string &error) noexcept : Exception{"[Invalid Version]: " + error} {}
+    explicit InvalidVersionException(const std::string &error) noexcept : Exception{error}
+    {
+        s_logsPrefix = "[Invalid Version] ";
+    }
+
+};
+
+class InvalidHeaderException : public Exception {
+
+public:
+
+    explicit InvalidHeaderException(const std::string &error) noexcept : Exception{error}
+    {
+        s_logsPrefix = "[Invalid Header] ";
+    }
 
 };
 

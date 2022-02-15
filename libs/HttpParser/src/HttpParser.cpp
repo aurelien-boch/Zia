@@ -1,14 +1,17 @@
-#include "HttpParser.hpp"
+#include <cstring>
 
+#include "HttpParser.hpp"
 #include "Exception.hpp"
 
 ziapi::http::Request HttpParser::HttpParser::parse(const std::string &requestString)
 {
     std::size_t pos{};
+    std::size_t contentLength{};
     return {
         .method{parseRequestMethod(pos, requestString)},
         .target{parseRequestTarget(pos, requestString)},
         .version{parseRequestVersion(pos, requestString)},
+        .fields{parseRequestHeaders(pos, requestString, contentLength)},
     };
 }
 
@@ -42,13 +45,44 @@ inline std::string HttpParser::HttpParser::parseRequestTarget(std::size_t &pos, 
     return targetString;
 }
 
-ziapi::http::Version HttpParser::HttpParser::parseRequestVersion(size_t &pos, const std::string &requestString) const
+ziapi::http::Version HttpParser::HttpParser::parseRequestVersion(std::size_t &pos, const std::string &requestString) const
 {
     char *version = new char;
     requestString.copy(version, requestString.find_first_of('\r'), pos);
 
     if (s_versions.contains(version)) {
+        pos += strlen(version) + 2;
         return s_versions.at(version);
     }
     throw InvalidVersionException{"Version is not supported or not valid"};
+}
+
+std::map<std::string, std::string> HttpParser::HttpParser::parseRequestHeaders(std::size_t &pos, const std::string
+&requestString, std::size_t &contentLength) const
+{
+    std::map<std::string, std::string> headers;
+
+    while (requestString.find_first_of("\r\n\r\n", pos) != pos) {
+        char *headerName = new char;
+        requestString.copy(headerName, requestString.find_first_of(':', pos), pos);
+        pos += strlen(headerName) + 2;
+        for (auto &headersName: s_headersNames) {
+            if (headersName == headerName) {
+                char *value = new char;
+                requestString.copy(value, requestString.find_first_of('\r', pos), pos);
+                pos += strlen(value) + 2;
+                if (headersName == "Content-Length") {
+                    contentLength = std::stoi(value);
+                }
+                break;
+            }
+        }
+        if (!headers.contains(headerName)) {
+            throw InvalidHeaderException{"Header `" + std::string(headerName) + "` is not supported or not valid"};
+        }
+    }
+
+    pos += 4;
+
+    return headers;
 }
