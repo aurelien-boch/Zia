@@ -17,9 +17,9 @@ namespace modules
 
             ~ResponseInputQueue() = default;
 
-            [[nodiscard]] std::optional<ResponsePair> Pop();
+            [[nodiscard]] std::optional<ResponsePair> Pop() override;
 
-            [[nodiscard]] std::size_t Size() const noexcept;
+            [[nodiscard]] std::size_t Size() const noexcept override;
 
             [[nodiscard]] bool Empty() const noexcept;
 

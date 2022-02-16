@@ -56,7 +56,7 @@ namespace modules
                     std::string &packet,
                     std::shared_ptr<IClient> &client);
 
-            void _sendResponses(ResponseInputQueue &responses);
+            void _sendResponses(ziapi::http::IResponseInputQueue &responses);
     };
 }
 

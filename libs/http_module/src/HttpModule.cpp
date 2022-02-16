@@ -16,7 +16,7 @@ namespace modules
         _listener(std::make_unique<network::http::AsioHttpListener>(_service, port)),
         _clients{}
     {}
-    
+
     void HttpModule::Init([[maybe_unused]] const ziapi::config::Node &cfg)
     {}
 
@@ -42,7 +42,6 @@ namespace modules
 
     void HttpModule::Run([[maybe_unused]] ziapi::http::IRequestOutputQueue &requests, ziapi::http::IResponseInputQueue &responses)
     {
-        ResponseInputQueue &res = static_cast<ResponseInputQueue &>(responses);
         _listener->run(
             [this](const error::ErrorSocket &err, std::shared_ptr<IClient> client)
             {
@@ -52,7 +51,7 @@ namespace modules
         _service.run();
         while (_run) {
             try {
-                _sendResponses(res);
+                _sendResponses(responses);
             } catch(const std::runtime_error &e) {
                 std::cerr << "ERROR(modules/http): " << e.what() << std::endl;
             }
@@ -65,11 +64,11 @@ namespace modules
     }
 
     void HttpModule::_onConnect(
-        const error::ErrorSocket &err,
+        error::ErrorSocket const &err,
         std::shared_ptr<IClient> client)
     {
         if (err != error::ErrorSocket::SOCKET_NO_ERROR) {
-            auto errIt = error::errorMessage.find(err);
+            const auto errIt = error::errorMessage.find(err);
 
             if (errIt == error::errorMessage.end())
                 std::cerr << "Unknown error occurred" << err << std::endl;
@@ -90,7 +89,7 @@ namespace modules
         std::shared_ptr<IClient> &client)
     {
         if (err != error::ErrorSocket::SOCKET_NO_ERROR) {
-            auto errIt = error::errorMessage.find(err);
+            const auto errIt = error::errorMessage.find(err);
 
             if (errIt == error::errorMessage.end())
                 std::cerr << "ERROR(modules/Http): Unknown error occurred" << err << std::endl;
@@ -103,10 +102,10 @@ namespace modules
         }
     }
 
-    void HttpModule::_sendResponses(ResponseInputQueue &responses)
+    void HttpModule::_sendResponses(ziapi::http::IResponseInputQueue &responses)
     {
-        while (!responses.Empty()) {
-            auto res = responses.Pop().value();
+        while (responses.Size()) {
+            const auto res = responses.Pop().value();
             auto client = res.second.find("client");
 
             if (client == res.second.end())

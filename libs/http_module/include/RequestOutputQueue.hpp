@@ -18,11 +18,11 @@ namespace modules
 
             [[nodiscard]] std::optional<RequestPair> Pop();
 
-            [[nodiscard]] std::size_t Size() const noexcept;
+            [[nodiscard]] std::size_t Size() const noexcept override;
 
             [[nodiscard]] bool Empty() const noexcept;
 
-            void Push(std::pair<ziapi::http::Request, ziapi::http::Context> &&req);
+            void Push(RequestPair &&req) override;
 
         private:
             std::queue<RequestPair> _requests;
