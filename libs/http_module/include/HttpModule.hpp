@@ -9,9 +9,7 @@
 
 #include <ziapi/Module.hpp>
 
-#include "ITCPListener.hpp"
-
-#include "ResponseInputQueue.hpp"
+#include <ITCPListener.hpp>
 
 namespace modules
 {

@@ -1,6 +1,6 @@
-project(http_module LANGUAGES CXX)
+project(queues LANGUAGES CXX)
 
-set(NAME http_module)
+set(NAME queues)
 
 add_subdirectory(src/)
 add_subdirectory(include/)
@@ -33,14 +33,7 @@ target_compile_options(
         ${COMPILE_FLAGS}
 )
 
-conan_target_link_libraries(
-        ${NAME}
-        CONAN_PKG::asio
-)
-
 target_link_libraries(
         ${NAME}
         ziapi
-        network
-        queues
 )
