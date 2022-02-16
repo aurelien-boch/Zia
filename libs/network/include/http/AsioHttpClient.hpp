@@ -39,7 +39,7 @@ namespace network::http
         private:
             asio::ip::tcp::socket _socket;
             std::string _packet;
-            char _buffer[256];
+            char _buffer[257];
     };
 }
 

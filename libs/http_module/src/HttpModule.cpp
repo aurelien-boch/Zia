@@ -1,4 +1,5 @@
 #include <iostream>
+#include <thread>
 
 #include "http/AsioHttpListener.hpp"
 
@@ -51,6 +52,9 @@ namespace modules
         _service.run();
         while (_run) {
             try {
+                do {
+                    std::this_thread::yield();
+                } while (!responses.Size());
                 _sendResponses(responses);
             } catch(const std::runtime_error &e) {
                 std::cerr << "ERROR(modules/http): " << e.what() << std::endl;
