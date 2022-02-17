@@ -15,12 +15,6 @@ target_include_directories(
         include/
 )
 
-set_target_properties(
-    loader
-        PROPERTIES
-        CXX_STANDARD 20
-)
-
 if (UNIX)
     target_link_libraries(
         loader
