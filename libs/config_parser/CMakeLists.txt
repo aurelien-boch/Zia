@@ -13,6 +13,7 @@ set_target_properties(
     config_parser
         PROPERTIES
         CXX_STANDARD 20
+        LINKER_LANGUAGE CXX
 )
 
 target_link_libraries(

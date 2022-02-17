@@ -1,12 +1,12 @@
-module:
-    phpCGI:
-        foo: bar
-        bar: baz
-        baz: qux
-        qux: quux
-        quux: quuz
-    networksTLS:
-        ip: plouf
-        location: /etc/nginx/certs
-        id: 1234
+modules:
+  phpCGI:
+    foo: bar
+    bar: baz
+    baz: qux
+    qux: quux
+    quux: quuz
+  networksTLS:
+    ip: plouf
+    location: /etc/nginx/certs
+    id: 1234
         
