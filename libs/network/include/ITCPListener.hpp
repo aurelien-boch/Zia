@@ -18,7 +18,7 @@ namespace network
 
             /**
              * @brief Method that accepts incoming connections and create a new ITCPClient instance on each connections.
-             * @param callback a callback function that will be call on each new connection. It takes as parameter an
+             * @param[in|out] callback a callback function that will be call on each new connection. It takes as parameter an
              * ITCPClient which corresponds to the caller and the error_code of the operation
              */
             virtual void run(

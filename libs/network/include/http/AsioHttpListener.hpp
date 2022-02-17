@@ -9,6 +9,10 @@
 
 namespace network::http
 {
+    /**
+     * A http listener using Asio library
+     * Enables to accept new clients connections on the server
+     */
     class AsioHttpListener : public ITCPListener<std::string, std::string>
     {
         public:
