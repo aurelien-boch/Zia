@@ -1,21 +1,21 @@
-project(http_module LANGUAGES CXX)
+project(network_helper LANGUAGES CXX)
 
-set(NAME http_module)
+set(NAME network_helper)
 
-add_subdirectory(src/)
 add_subdirectory(include/)
 
 add_library(
-        ${NAME}
+    ${NAME}
         SHARED
-            ${SRCS}
-            ${INCLUDES}
+        ${INCLUDES}
 )
+
+set_target_properties(${NAME} PROPERTIES LINKER_LANGUAGE CXX)
 
 target_include_directories(
         ${NAME}
-            PUBLIC
-            include/
+        PUBLIC
+        include/
 )
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
@@ -31,16 +31,4 @@ target_compile_options(
         ${NAME}
         PRIVATE
         ${COMPILE_FLAGS}
-)
-
-conan_target_link_libraries(
-        ${NAME}
-        CONAN_PKG::asio
-)
-
-target_link_libraries(
-        ${NAME}
-        ziapi
-        http_network
-        queues
 )

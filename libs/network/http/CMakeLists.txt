@@ -1,6 +1,6 @@
-project(http_module LANGUAGES CXX)
+project(http_network LANGUAGES CXX)
 
-set(NAME http_module)
+set(NAME http_network)
 
 add_subdirectory(src/)
 add_subdirectory(include/)
@@ -8,14 +8,14 @@ add_subdirectory(include/)
 add_library(
         ${NAME}
         SHARED
-            ${SRCS}
-            ${INCLUDES}
+        ${SRCS}
+        ${INCLUDES}
 )
 
 target_include_directories(
         ${NAME}
-            PUBLIC
-            include/
+        PUBLIC
+        include/
 )
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
@@ -40,7 +40,5 @@ conan_target_link_libraries(
 
 target_link_libraries(
         ${NAME}
-        ziapi
-        http_network
-        queues
+        network_helper
 )
