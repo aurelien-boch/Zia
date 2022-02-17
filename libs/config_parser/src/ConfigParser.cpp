@@ -4,30 +4,19 @@ namespace parser
 {
     ConfigParser::ConfigParser(std::string const &path) // doc missing
     {
+        parse(path);
+    }
+
+    void ConfigParser::parse(std::string const &newPath)
+    {
         try {
-            _config = YAML::LoadFile(path);
-        } catch(const std::exception& e) {
+            _config = YAML::LoadFile(newPath);
+        } catch(std::exception const &e) {
             std::cerr << "[ConfigParser] " << e.what() << std::endl;
+            throw std::runtime_error("[ConfigParser] Error while parsing the config file");
         }
         _checkConfig();
         _putConfigInMap();
-    }
-
-    void ConfigParser::printConfig()
-    {
-        for (const auto &[masterKey, masterValue] : _configMap) {
-            std::cout << masterKey << ": \n";
-            for (const auto &[key, value] : masterValue->AsDict()) {
-                std::cout << "\t"<< key << ": \n";
-                for (const auto &[parameterKey, parameterValue] : value->AsDict()) {
-                    if (parameterValue->index() == ziapi::config::Type::kInt) {
-                        std::cout << "\t\t" << parameterKey << ": " << parameterValue->AsInt() << std::endl; 
-                        continue;
-                    }
-                    std::cout << "\t\t" << parameterKey << ": " << parameterValue->AsString() << std::endl;
-                }
-            }
-        }
     }
 
     ziapi::config::Dict ConfigParser::operator[](const std::string &moduleName)
