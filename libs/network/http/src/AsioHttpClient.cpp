@@ -44,7 +44,7 @@ namespace network::http
         std::string request{};
 
         while(request.find("\r\n\r\n") == std::string::npos) {
-            char buff[257] = {};
+            char buff[257]{};
 
             this->_socket.receive(asio::buffer(&buff, sizeof(char) * 256));
             request += std::string(buff);

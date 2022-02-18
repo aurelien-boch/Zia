@@ -11,7 +11,7 @@
 namespace network::http
 {
     /**
-     * Implements a Http client using the Asio library
+     * Implements an Http client using the Asio library
      */
     class AsioHttpClient : public ITCPClient<std::string, std::string>
     {

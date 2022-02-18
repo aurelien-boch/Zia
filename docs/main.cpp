@@ -1,6 +1,6 @@
-#include "libs/http/include/HttpModule.hpp"
-#include "libs/http/include/RequestOutputQueue.hpp"
-#include "libs/http/include/ResponseInputQueue.hpp"
+#include <HttpModule.hpp>
+#include <RequestOutputQueue.hpp>
+#include <ResponseInputQueue.hpp>
 
 /**
  * Please note that this example will not be the same when the config parser will be
