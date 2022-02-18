@@ -41,8 +41,8 @@ inline std::string HttpParser::HttpParser::parseRequestTarget(std::size_t &pos, 
     if (target[0] != '/') {
         throw InvalidTargetException{"Target must start with a '/'"};
     }
-
     pos += target.size() + 1;
+
     return target;
 }
 
@@ -56,6 +56,7 @@ ziapi::http::Version HttpParser::HttpParser::parseRequestVersion(std::size_t &po
         pos += version.size() + 2;
         return s_versions.at(version);
     }
+
     throw InvalidVersionException{"Version is not supported or not valid"};
 }
 
