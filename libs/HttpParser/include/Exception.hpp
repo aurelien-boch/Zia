@@ -2,8 +2,8 @@
 #define ZIA_EXCEPTION_HPP
 
 #include <exception>
-#include <string_view>
 #include <ostream>
+#include <string_view>
 
 namespace HttpParser {
 
@@ -19,14 +19,17 @@ public:
      * Constructor
      * @param message The message to display
      */
-    explicit Exception(const std::string &error) noexcept : s_error{error} {}
+     Exception(const std::string_view &error, const std::string_view &logsPrefix = "[Exception] ") noexcept :
+        s_logsPrefix{logsPrefix},
+        s_error{error}
+        {}
 
     /**
      * @return the error string
      */
     [[nodiscard]] inline const char *what() const noexcept override
     {
-        return s_error.c_str();
+        return s_error.data();
     }
 
     /**
@@ -44,9 +47,9 @@ public:
 protected:
 
     /// Prefix that is printed before the error message when using the operator `<<`
-    std::string s_logsPrefix{"[Exception] "};
+    const std::string_view &s_logsPrefix;
     /// The error message
-    const std::string &s_error;
+    const std::string_view &s_error;
 
 };
 
@@ -57,10 +60,8 @@ class InvalidMethodException : public Exception {
 
 public:
 
-    explicit InvalidMethodException(const std::string &error) noexcept : Exception{error}
-    {
-        s_logsPrefix = "[Invalid Method] ";
-    }
+    explicit InvalidMethodException(const std::string_view &error) noexcept : Exception{error, "[Invalid Method] "}
+    {}
 
 };
 
@@ -71,10 +72,8 @@ class InvalidTargetException : public Exception {
 
 public:
 
-    explicit InvalidTargetException(const std::string &error) noexcept : Exception{error}
-    {
-        s_logsPrefix = "[Invalid Target] ";
-    }
+    explicit InvalidTargetException(const std::string_view &error) noexcept : Exception{error, "[Invalid Target] "}
+    {}
 
 };
 
@@ -85,10 +84,8 @@ class InvalidVersionException : public Exception {
 
 public:
 
-    explicit InvalidVersionException(const std::string &error) noexcept : Exception{error}
-    {
-        s_logsPrefix = "[Invalid Version] ";
-    }
+    explicit InvalidVersionException(const std::string_view &error) noexcept : Exception{error, "[Invalid Version] "}
+    {}
 
 };
 
@@ -99,10 +96,8 @@ class InvalidHeaderException : public Exception {
 
 public:
 
-    explicit InvalidHeaderException(const std::string &error) noexcept : Exception{error}
-    {
-        s_logsPrefix = "[Invalid Header] ";
-    }
+    explicit InvalidHeaderException(const std::string_view &error) noexcept : Exception{error, "[Invalid Header] "}
+    {}
 
 };
 
