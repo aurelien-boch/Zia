@@ -36,7 +36,7 @@ namespace parser
              * It works if the root contains a modules element otherwise it throws
              * @return std::unordered_map<std::string, std::shared_ptr<ziapi::config::Node>> of the module
              */
-            [[nodiscard]] ziapi::config::Dict operator[](const std::string &moduleName);
+            [[nodiscard]] ziapi::config::Dict operator[](std::string const &moduleName);
 
             /*
              * @brief Return the value of a parameter in the module
@@ -46,7 +46,7 @@ namespace parser
              * @param[in] param Parameter in the module int the root element of the config
              * @return A shared pointer to the parameter
              */
-            [[nodiscard]] std::shared_ptr<ziapi::config::Node> getValue(const std::string &root, const std::string &module, const std::string &param);
+            [[nodiscard]] std::shared_ptr<ziapi::config::Node> getValue(std::string const &root, std::string const &module, std::string const &param);
 
             /*
              * @brief Return a vector to the path for every config file

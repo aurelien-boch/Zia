@@ -11,7 +11,7 @@ namespace parser
     {
         try {
             _config = YAML::LoadFile(newPath);
-        } catch(std::exception const &e) {
+        } catch(YAML::BadFile const &e) {
             std::cerr << "[ConfigParser] " << e.what() << std::endl;
             throw std::runtime_error("[ConfigParser] Error while parsing the config file");
         }
@@ -19,14 +19,14 @@ namespace parser
         _putConfigInMap();
     }
 
-    ziapi::config::Dict ConfigParser::operator[](const std::string &moduleName)
+    ziapi::config::Dict ConfigParser::operator[](std::string const &moduleName)
     {
         if (_configMap["modules"]->AsDict().find(moduleName) == _configMap["modules"]->AsDict().end())
             throw std::range_error("[ConfigParser] not in [modules]");
         return (_configMap["modules"]->AsDict()[moduleName]->AsDict());
     }
 
-    std::shared_ptr<ziapi::config::Node> ConfigParser::getValue(const std::string &root, const std::string &module, const std::string &param) 
+    std::shared_ptr<ziapi::config::Node> ConfigParser::getValue(std::string const &root, std::string const &module, std::string const &param) 
     {
         if (_configMap.find(root) == _configMap.end())
             throw std::range_error("[ConfigParser] not in config");
