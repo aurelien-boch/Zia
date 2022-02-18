@@ -27,20 +27,20 @@ add_subdirectory(libs/)
 add_subdirectory(src/)
 
 add_executable(
-    ${NAME}
+    zia
         ${INCLUDES}
         ${SRCS}
         main.cpp
 )
 
 target_include_directories(
-    ${NAME}
+    zia
         PRIVATE
         include/
 )
 
 target_link_libraries(
-    ${NAME}
+    zia
         ziapi
         loader
         config_parser
