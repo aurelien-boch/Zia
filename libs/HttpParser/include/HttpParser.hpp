@@ -2,9 +2,9 @@
 #define ZIA_HTTPPARSER_HPP
 
 #include <array>
-#include <map>
 #include <string>
 #include <string_view>
+#include <unordered_map>
 
 #include "ziapi/Http.hpp"
 
@@ -50,7 +50,7 @@ private:
     /**
      * The HTTP request supported versions
      */
-    const std::map<std::string_view, ziapi::http::Version> s_versions{
+    const std::unordered_map<std::string_view, ziapi::http::Version> s_versions{
             {"HTTP/1.0", ziapi::http::Version::kV1},
             {"HTTP/1.1", ziapi::http::Version::kV1_1},
             {"HTTP/2.0", ziapi::http::Version::kV2},
@@ -171,8 +171,7 @@ private:
      * @return the parsed headers
      */
     [[nodiscard]] inline std::map<std::string, std::string> parseRequestHeaders(std::size_t &pos,
-                                                                                const std::string &requestString,
-                                                                                std::size_t &contentLength) const;
+                                                                                const std::string &requestString) const;
 
     /**
      * Parses the body of the HTTP request
@@ -180,8 +179,7 @@ private:
      * @param requestString the string containing the request
      * @return the parsed body
      */
-    [[nodiscard]] static inline std::string parseRequestBody(std::size_t &pos, const std::string &requestString,
-                                                                std::size_t &contentLength);
+    [[nodiscard]] static inline std::string parseRequestBody(std::size_t &pos, const std::string &requestString);
 };
 
 }

@@ -6,14 +6,13 @@
 ziapi::http::Request HttpParser::HttpParser::parse(const std::string &requestString)
 {
     std::size_t pos{};
-    std::size_t contentLength{};
 
     return {
         .method{parseRequestMethod(pos, requestString)},
         .target{parseRequestTarget(pos, requestString)},
         .version{parseRequestVersion(pos, requestString)},
-        .fields{parseRequestHeaders(pos, requestString, contentLength)},
-        .body{parseRequestBody(pos, requestString, contentLength)},
+        .fields{parseRequestHeaders(pos, requestString)},
+        .body{parseRequestBody(pos, requestString)},
     };
 }
 
@@ -46,7 +45,7 @@ inline std::string HttpParser::HttpParser::parseRequestTarget(std::size_t &pos, 
     return target;
 }
 
-ziapi::http::Version HttpParser::HttpParser::parseRequestVersion(std::size_t &pos,
+inline ziapi::http::Version HttpParser::HttpParser::parseRequestVersion(std::size_t &pos,
                                                                  const std::string &requestString) const
 {
     std::string version{};
@@ -60,9 +59,8 @@ ziapi::http::Version HttpParser::HttpParser::parseRequestVersion(std::size_t &po
     throw InvalidVersionException{"Version is not supported or not valid"};
 }
 
-std::map<std::string, std::string> HttpParser::HttpParser::parseRequestHeaders(std::size_t &pos,
-                                                                               const std::string &requestString,
-                                                                               std::size_t &contentLength) const
+inline std::map<std::string, std::string> HttpParser::HttpParser::parseRequestHeaders(std::size_t &pos,
+                                                                               const std::string &requestString) const
 {
     std::map<std::string, std::string> headers{};
     std::string headerName{};
@@ -76,10 +74,6 @@ std::map<std::string, std::string> HttpParser::HttpParser::parseRequestHeaders(s
             if (headersName == headerName) {
                 requestString.copy(value.data(), requestString.find_first_of('\r', pos), pos);
                 pos += value.size() + 2;
-
-                if (headersName == "Content-Length") {
-                    contentLength = std::stoi(value);
-                }
                 break;
             }
             value.clear();
@@ -96,12 +90,10 @@ std::map<std::string, std::string> HttpParser::HttpParser::parseRequestHeaders(s
     return headers;
 }
 
-std::string
-HttpParser::HttpParser::parseRequestBody(size_t &pos, const std::string &requestString, size_t &contentLength)
+inline std::string HttpParser::HttpParser::parseRequestBody(size_t &pos, const std::string &requestString)
 {
-    if (contentLength == 0) {
-        return {};
-    }
+    std::string body{};
+    requestString.copy(body.data(), requestString.size() - pos, pos);
 
-    return {requestString.substr(pos, contentLength)};
+    return body;
 }
