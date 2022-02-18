@@ -1,6 +1,11 @@
 #ifndef ZIA_HTTPPARSER_HPP
 #define ZIA_HTTPPARSER_HPP
 
+#include <array>
+#include <map>
+#include <string>
+#include <string_view>
+
 #include "ziapi/Http.hpp"
 
 namespace HttpParser {
