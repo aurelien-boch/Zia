@@ -20,7 +20,7 @@ namespace env
                 _msg {"Variable" + std::string(name) + " not found in environment Manager."}
             {}
 
-            [[nodiscard]] const char *what() const override
+            [[nodiscard]] const char *what() const noexcept override
             {
                 return _msg.c_str();
             }

@@ -8,6 +8,7 @@
     #include <Windows.h>
 #else
     #include <unistd.h>
+    #include <sys/wait.h>
 #endif
 
 #include <EnvManager.hpp>
@@ -24,19 +25,19 @@ namespace execution
 #endif
 
             Executor(
-                std::string const &binaryPath,
-                std::vector <std::string> const &args,
+                std::string binaryPath,
+                std::vector <std::string> args,
                 env::Manager const &environmentManager
             );
 
             Executor(
-                std::string const &binaryPath,
+                std::string binaryPath,
                 env::Manager const &environmentManager
             );
 
             Executor(
-                std::string const &binaryPath,
-                std::vector <std::string> const &args
+                std::string binaryPath,
+                std::vector <std::string> args
             );
 
             explicit Executor(std::string const &binaryPath);
@@ -51,9 +52,9 @@ namespace execution
 
             [[nodiscard]] bool isRunning() const;
 
-            std::uint32_t operator<<(std::string const &str);
+            std::uint32_t operator<<(std::string const &str) const;
 
-            void operator>>(std::string &str);
+            void operator>>(std::string &str) const;
 
         private:
 #if _WIN32
@@ -71,16 +72,16 @@ namespace execution
             PROCESS_INFORMATION _processInfo;
 
             static void _throwWindowsError();
-
+#else
+            pid _processPid;
+#endif
             void _invokeProcess(
                 pipeDescriptor stdinDescriptor,
                 pipeDescriptor stdoutDescriptor,
                 const env::Manager &env,
-                std::string &commandLine,
-                std::vector<std::string> const &args);
-#else
-            pid _processPid;
-#endif
+                std::string commandLine,
+                std::vector<std::string> args);
+
             static std::pair<Executor::pipeDescriptor, Executor::pipeDescriptor> _createPipe();
     };
 }

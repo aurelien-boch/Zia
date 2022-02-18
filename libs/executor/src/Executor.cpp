@@ -1,13 +1,14 @@
 #include <stdexcept>
 #include <filesystem>
-
+#include <cstring>
+#include <algorithm>
 #include "Executor.hpp"
 
 namespace execution
 {
     Executor::Executor(
-        std::string const &binaryPath,
-        std::vector<std::string> const &args,
+        std::string binaryPath,
+        std::vector<std::string> args,
         env::Manager const &environmentManager) :
 #ifdef _WIN32
         _processInfo {}
@@ -22,9 +23,9 @@ namespace execution
             stdinRead,
             stdoutWrite,
             environmentManager,
-            const_cast<std::string &>(binaryPath),
-            args
-        ); //TODO see if const cast is clean
+            std::move(binaryPath),
+            std::move(args)
+        );
         _childStdin = stdinWrite;
         _childStdout = stdoutRead;
         _childStdinClientDescriptor = stdinRead;
@@ -32,7 +33,7 @@ namespace execution
     }
 
     Executor::Executor(
-        const std::string &binaryPath,
+        std::string binaryPath,
         const env::Manager &environmentManager) :
 #ifdef _WIN32
         _processInfo {}
@@ -48,9 +49,9 @@ namespace execution
             stdinRead,
             stdoutWrite,
             environmentManager,
-            const_cast<std::string &>(binaryPath),
-            args
-        ); //TODO see if const cast is clean
+            std::move(binaryPath),
+            std::move(args)
+        );
         _childStdin = stdinWrite;
         _childStdout = stdoutRead;
         _childStdinClientDescriptor = stdinRead;
@@ -58,8 +59,8 @@ namespace execution
     }
 
     Executor::Executor(
-        const std::string &binaryPath,
-        const std::vector<std::string> &args) :
+        std::string binaryPath,
+        std::vector<std::string> args) :
 #ifdef _WIN32
         _processInfo {}
 #else
@@ -74,9 +75,9 @@ namespace execution
             stdinRead,
             stdoutWrite,
             environmentManager,
-            const_cast<std::string &>(binaryPath),
-            args
-        ); //TODO see if const cast is clean
+            std::move(binaryPath),
+            std::move(args)
+        );
         _childStdin = stdinWrite;
         _childStdout = stdoutRead;
         _childStdinClientDescriptor = stdinRead;
@@ -101,7 +102,7 @@ namespace execution
             environmentManager,
             const_cast<std::string &>(binaryPath),
             args
-        ); //TODO see if const cast is clean
+        );
         _childStdin = stdinWrite;
         _childStdout = stdoutRead;
         _childStdinClientDescriptor = stdinRead;
@@ -131,8 +132,8 @@ namespace execution
         Executor::pipeDescriptor stdinDescriptor,
         Executor::pipeDescriptor stdoutDescriptor,
         const env::Manager &env,
-        std::string &commandLine,
-        std::vector<std::string> const &args)
+        std::string commandLine,
+        std::vector<std::string> args)
     {
 #if _WIN32
         std::string convertedArgs {commandLine + " "};
@@ -162,8 +163,23 @@ namespace execution
         );
         if (res == 0)
             _throwWindowsError();
-#endif
+#else
+        if (access(commandLine.c_str(), X_OK) != 0)
+            throw std::runtime_error{"Cannot access binary: " + commandLine};
+        pid_t pid = fork();
+        std::vector<char *> convertedArgs;
 
+        convertedArgs.emplace_back(commandLine.data());
+        for (auto &e : args)
+            convertedArgs.emplace_back(e.data());
+        convertedArgs.emplace_back(nullptr);
+        if (pid == 0) {
+            dup2(stdinDescriptor, STDIN_FILENO);
+            dup2(stdoutDescriptor, STDOUT_FILENO);
+            execve(commandLine.c_str(), convertedArgs.data(), env);
+        } else
+            _processPid = pid;
+#endif
     }
 
     std::pair<Executor::pipeDescriptor, Executor::pipeDescriptor> Executor::_createPipe()
@@ -180,8 +196,8 @@ namespace execution
         if (CreatePipe(&(handles[0]), &(handles[1]), &securityAttributes, 0) == 0)
             _throwWindowsError();
 #else
-        if (pipe(handles) == 0)
-            throw std::runtime_error({strerror(errno)});
+        if (pipe(handles) == -1)
+            throw std::runtime_error(strerror(errno));
 #endif
         return {handles[0], handles[1]};
     }
@@ -195,16 +211,25 @@ namespace execution
         CloseHandle(_childStdinClientDescriptor);
         CloseHandle(_processInfo.hProcess);
         CloseHandle(_processInfo.hThread);
+#else
+        pid_t res = waitpid(_processPid, nullptr, {});
+
+        close(_childStdin);
+        close(_childStdout);
+        close(_childStdinClientDescriptor);
+        close(_childStdoutClientDescriptor);
 #endif
     }
 
     void Executor::wait() const
     {
-#if _WIN32
         if (!this->isRunning())
-            throw std::runtime_error("Error, process is not running");
+            throw std::runtime_error{"Error, process is not running"};
+#if _WIN32
         if (WaitForSingleObject(_processInfo.hProcess, INFINITE) == WAIT_FAILED)
             _throwWindowsError();
+#else
+        waitpid(_processPid, nullptr, {});
 #endif
     }
 
@@ -215,15 +240,21 @@ namespace execution
             throw std::runtime_error("Error, process is not running");
         if (TerminateProcess(_processInfo.hProcess, exitCode) == 0)
             _throwWindowsError();
+#else
+        ::kill(_processPid, SIGKILL);
 #endif
     }
 
     Executor::pid Executor::getPid() const
     {
+#if _WIN32
         return (_processInfo.hProcess);
+#else
+        return _processPid;
+#endif
     }
 
-    std::uint32_t Executor::operator<<(const std::string &str)
+    std::uint32_t Executor::operator<<(const std::string &str) const
     {
 #if _WIN32
         DWORD numBytesWritten;
@@ -237,19 +268,29 @@ namespace execution
         ) == 0)
             _throwWindowsError();
         return numBytesWritten;
-#endif
+#else
+        std::int64_t res = write(
+            _childStdin,
+            str.c_str(),
+            str.size()
+        );
 
+        if (res == -1)
+            throw std::runtime_error{strerror(errno)};
+        return res;
+#endif
     }
 
-    void Executor::operator>>(std::string &str)
+    void Executor::operator>>(std::string &str) const
     {
         static constexpr std::uint32_t numBytes = 1024;
-#if _WIN32
-        DWORD numBytesRead;
         std::string buff;
 
-        buff.resize(numBytes);
-        do {
+        buff.resize(numBytes + 1);
+#if _WIN32
+        DWORD numBytesRead;
+
+        while (true) {
             if (ReadFile(
                 _childStdout,
                 buff.data(),
@@ -260,20 +301,42 @@ namespace execution
                 _throwWindowsError();
             if (numBytes != numBytesRead) {
                 buff.resize(numBytesRead);
-                str += buff + '\0';
+                str += buff;
                 return;
             } else
                 str += buff;
-        } while (true);
+        }
+#else
+        std::int64_t numBytesRead;
+
+        while (true) {
+            numBytesRead = read(_childStdout, buff.data(), numBytes);
+            if (numBytesRead == -1)
+                throw std::runtime_error{strerror(errno)};
+            if (numBytes != numBytesRead) {
+                buff.resize(numBytesRead);
+                str += buff;
+                return;
+            } else
+                str += buff;
+        }
 #endif
     }
 
     bool Executor::isRunning() const
     {
+#if _WIN32
         DWORD exitCode;
 
         if (GetExitCodeProcess(_processInfo.hProcess, &exitCode) == 0)
             _throwWindowsError();
         return exitCode == STILL_ACTIVE;
+#else
+        pid_t res = waitpid(_processPid, nullptr, WNOHANG);
+
+        if (res == -1)
+            throw std::runtime_error{strerror(errno)};
+        return (res == 0);
+#endif
     }
 }

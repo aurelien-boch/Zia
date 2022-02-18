@@ -1,4 +1,5 @@
 #include <stdexcept>
+#include <cstring>
 
 #include "EnvManager.hpp"
 
@@ -110,10 +111,13 @@ namespace env
                 throw std::runtime_error{"An error occurred while setting environment"};
 #else
         {
-                    std::string res{key + "=" + val};
-                    if (putenv(res) == 0)
-                        throw std::runtime_error{strerror(errno)};
-                }
+            std::string res{key};
+
+            res += '=';
+            res += val;
+            if (putenv(res.data()) == 0)
+                throw std::runtime_error{strerror(errno)};
+        }
 #endif
     }
 
