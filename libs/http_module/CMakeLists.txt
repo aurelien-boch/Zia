@@ -18,14 +18,11 @@ target_include_directories(
             include/
 )
 
-if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-    set(COMPILE_FLAGS  "/W3")
-elseif (
-(CMAKE_CXX_COMPILER_ID MATCHES "GNU") OR
-(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-)
-    set(COMPILE_FLAGS -Wall -Wextra -Weffc++)
-endif()
+if (UNIX)
+    add_compile_options(-Wall -Wextra -Weffc++)
+else ()
+    add_compile_options(/W4)
+endif ()
 
 target_compile_options(
         ${NAME}
