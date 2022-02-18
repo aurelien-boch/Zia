@@ -18,7 +18,7 @@ namespace network::http
     void AsioHttpListener::run(
             std::function<void (error::ErrorSocket const &, std::shared_ptr<IClient>)> &&callback) noexcept
     {
-        this->_acceptor.async_accept(
+        _acceptor.async_accept(
             this->_io_context,
             [this, callback = std::forward<std::function<void (error::ErrorSocket const &, std::shared_ptr<IClient>)>>(callback)]
                     (asio::error_code const &error, asio::ip::tcp::socket peer) mutable {
@@ -34,7 +34,7 @@ namespace network::http
 
                     callback(error::SOCKET_NO_ERROR, std::move(res));
                 }
-                this->run(std::forward<std::function<void(error::ErrorSocket const &,
+                run(std::forward<std::function<void(error::ErrorSocket const &,
                     std::shared_ptr<IClient>)>>(callback));
             }
         );

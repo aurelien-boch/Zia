@@ -58,7 +58,7 @@ namespace modules
                     std::this_thread::yield();
                 } while (!responses.Size());
                 _sendResponses(responses);
-            } catch(const std::runtime_error &e) {
+            } catch (const std::runtime_error &e) {
                 std::cerr << "ERROR(modules/http): " << e.what() << std::endl;
             }
         }

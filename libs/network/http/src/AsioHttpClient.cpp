@@ -5,37 +5,37 @@
 namespace network::http
 {
     AsioHttpClient::AsioHttpClient(asio::io_context &io_context) :
-        ITCPClient(),
-        _socket(asio::ip::tcp::socket(io_context)),
-        _packet(),
+        ITCPClient{},
+        _socket{asio::ip::tcp::socket{io_context}},
+        _packet{},
         _buffer{}
     {}
 
     AsioHttpClient::AsioHttpClient(asio::ip::tcp::socket &socket) :
-        _socket(std::move(socket)),
-        _packet(),
+        _socket{std::move(socket)},
+        _packet{},
         _buffer{}
     {}
 
     AsioHttpClient::~AsioHttpClient()
     {
-        this->_socket.close();
+        _socket.close();
     }
 
     void AsioHttpClient::connect(Address const &peer) noexcept
     {
-        asio::ip::tcp::endpoint endpoint(asio::ip::address_v4(peer.ipAddress), peer.port);
+        asio::ip::tcp::endpoint endpoint{asio::ip::address_v4{peer.ipAddress}, peer.port};
 
-        this->_socket.connect(endpoint);
+        _socket.connect(endpoint);
     }
 
     std::size_t AsioHttpClient::send(std::string const &data) noexcept
     {
         try {
-            return this->_socket.send(asio::buffer(data.c_str(), sizeof(char) * data.size()));
+            return _socket.send(asio::buffer(data.c_str(), sizeof(char) * data.size()));
         } catch (std::system_error &err) {
             std::cerr << "ERROR(network/AsioHttpClient): " << err.what() << std::endl;
-            return (-1);
+            return (0);
         }
     }
 
@@ -46,7 +46,7 @@ namespace network::http
         while(request.find("\r\n\r\n") == std::string::npos) {
             char buff[257]{};
 
-            this->_socket.receive(asio::buffer(&buff, sizeof(char) * 256));
+            _socket.receive(asio::buffer(&buff, sizeof(char) * 256));
             request += std::string(buff);
         }
         return request;
@@ -56,7 +56,7 @@ namespace network::http
         std::string const &packet,
         std::function<void(error::ErrorSocket const &)> &&cb) noexcept
     {
-        this->_socket.async_send(asio::buffer(packet.data(), sizeof(char) * packet.size()),
+        _socket.async_send(asio::buffer(packet.data(), sizeof(char) * packet.size()),
             [cb = std::forward<std::function<void (error::ErrorSocket const &)>>(cb)] (asio::error_code const &ec, std::size_t) {
             if (ec) {
                 const auto it = error::AsioErrorTranslator.find(ec);
@@ -74,10 +74,10 @@ namespace network::http
         std::function<void(error::ErrorSocket const &, std::string &)> &&cb
     ) noexcept
     {
-        this->_socket.async_receive(
+        _socket.async_receive(
             asio::buffer(&_buffer, sizeof(char) * 256),
             [cb = std::forward<std::function<void (error::ErrorSocket const &, std::string &)>>(cb), this] (asio::error_code ec, std::size_t) mutable {
-                _packet += std::string(_buffer);
+                _packet += _buffer;
                 if (ec) {
                     const auto it = error::AsioErrorTranslator.find(ec);
 
