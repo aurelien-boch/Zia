@@ -2,6 +2,7 @@
 #define CONFIG_PARSER_HPP
 
 #include <iostream>
+#include <fstream>
 
 #include <yaml-cpp/yaml.h>
 
@@ -46,6 +47,28 @@ namespace parser
              * @return A shared pointer to the parameter
              */
             [[nodiscard]] std::shared_ptr<ziapi::config::Node> getValue(const std::string &root, const std::string &module, const std::string &param);
+
+            /*
+             * @brief Return a vector to the path for every config file
+             * @param[in] Path to the file containing every paths
+             * @throw std::runtime_error if the config file is not found
+             * @return A vector of string
+             */
+            static const std::vector<std::string> getConfigsPaths(std::string const &filename)
+            {
+                std::vector<std::string> configPaths;
+                std::ifstream file(filename);
+                std::string line;
+
+                if (!file.is_open())
+                    throw std::runtime_error("[ConfigParser] Root to config file not found");
+                
+                while (std::getline(file, line)) {
+                    configPaths.push_back(line);
+                }
+                file.close();
+                return (configPaths);
+            }
 
         private:
             inline void _checkConfig();
