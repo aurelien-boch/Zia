@@ -2,7 +2,7 @@
 
 #include "HttpFormatter.hpp"
 
-std::string_view Http::Formatter::HttpFormatter::format(const ziapi::http::Response &response)
+std::string Http::Formatter::HttpFormatter::format(const ziapi::http::Response &response)
 {
     std::ostringstream responseStream{};
 
@@ -13,5 +13,5 @@ std::string_view Http::Formatter::HttpFormatter::format(const ziapi::http::Respo
         responseStream << header.first << ": " << header.second << "\r\n";
     responseStream << "\r\n" << response.body;
 
-    return responseStream.view();
+    return responseStream.str();
 }

@@ -7,8 +7,8 @@
 TEST_CASE("Valid Http Response", "[HttpFormatter]")
 {
     static constexpr std::string_view responseString = "HTTP/1.1 200 OK\r\n"
-                           "Content-Type: text/html\r\n"
                            "Content-Length: 12\r\n"
+                           "Content-Type: text/html\r\n"
                            "\r\n"
                            "<html>\n"
                            "<body>\n"
@@ -20,8 +20,8 @@ TEST_CASE("Valid Http Response", "[HttpFormatter]")
         .status_code{ziapi::http::Code::kOK},
         .reason{ziapi::http::reason::kOK},
         .fields{
-            {"Content-Type", "text/html"},
             {"Content-Length", "12"},
+            {"Content-Type", "text/html"},
         },
         .body{"<html>\n"
               "<body>\n"
