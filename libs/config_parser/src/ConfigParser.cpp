@@ -2,7 +2,7 @@
 
 namespace parser
 {
-    ConfigParser::ConfigParser(std::string const &path) // doc missing
+    ConfigParser::ConfigParser(std::string const &path)
     {
         parse(path);
     }

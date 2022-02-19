@@ -4,6 +4,11 @@ add_library(
         src/ConfigParser.cpp
 )
 
+if (DEFINED ENABLE_TESTING AND "${ENABLE_TESTING}" STREQUAL "yes")
+    message(STATUS "ENABLE_TESTING=yes detected, enabling testing")
+    add_subdirectory(tests)
+endif()
+
 target_include_directories(
     config_parser PUBLIC
         include/
