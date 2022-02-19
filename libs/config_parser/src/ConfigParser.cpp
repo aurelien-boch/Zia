@@ -59,7 +59,6 @@ namespace parser
                     } catch(const YAML::BadConversion &e) {
                         tmp[parameters.first.as<std::string>()] = std::make_shared<ziapi::config::Node>(parameters.second.as<std::string>());
                     }
-                    // TODO Add a case for sequences
                 }
                 modules[moduleName.first.as<std::string>()] = std::make_shared<ziapi::config::Node>(tmp);
             }

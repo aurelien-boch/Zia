@@ -49,7 +49,7 @@ namespace parser
             [[nodiscard]] std::shared_ptr<ziapi::config::Node> getValue(std::string const &root, std::string const &module, std::string const &param);
 
             /*
-             * @brief Return a vector to the path for every config file
+             * @brief Retrieves a vector to the path for every config file
              * @param[in] Path to the file containing every paths
              * @throw std::runtime_error if the config file is not found
              * @return A vector of string
@@ -63,7 +63,7 @@ namespace parser
                 if (!file.is_open())
                     throw std::runtime_error("[ConfigParser] Root to config file not found");
                 while (std::getline(file, line))
-                    configPaths.push_back(line);
+                    configPaths.emplace_back(line);
                 return (configPaths);
             }
 
