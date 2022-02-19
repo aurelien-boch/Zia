@@ -1,2 +1,3 @@
 add_subdirectory(loader)
+add_subdirectory(HttpFormatter)
 add_subdirectory(config_parser)
