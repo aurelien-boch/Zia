@@ -7,6 +7,9 @@
 
 namespace Http::Formatter {
 
+/**
+ * @brief Formats Http responses into a string
+ */
 class HttpFormatter {
 
 public:
@@ -14,10 +17,21 @@ public:
     HttpFormatter() = default;
     ~HttpFormatter() = default;
 
+    HttpFormatter(const HttpFormatter &other) = delete;
+    HttpFormatter(const HttpFormatter &&other) = delete;
+    HttpFormatter &operator=(const HttpFormatter &other) = delete;
+
+    /**
+     * @brief Formats an Http response into a string to send back to a client
+     *
+     * @param response The response to format
+     * @return the formatted response
+     */
     std::string_view format(const ziapi::http::Response &response);
 
 private:
 
+    /// Version associated between the string in the response and the enum
     const std::unordered_map<ziapi::http::Version, std::string_view> s_versions{
         {ziapi::http::Version::kV1, "HTTP/1.0"},
         {ziapi::http::Version::kV1_1, "HTTP/1.1"},
