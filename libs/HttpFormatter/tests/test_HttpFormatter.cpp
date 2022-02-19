@@ -36,3 +36,30 @@ TEST_CASE("Valid Http Response", "[HttpFormatter]")
 
     REQUIRE(responseString == response);
 }
+
+TEST_CASE("Null Initialized Version", "[HttpFormatter]")
+{
+    static const ziapi::http::Response responseStruct{
+        .version{},
+        .status_code{ziapi::http::Code::kOK},
+        .reason{ziapi::http::reason::kOK},
+        .fields{
+            {"Content-Length", "12"},
+            {"Content-Type", "text/html"},
+        },
+        .body{"<html>\n"
+              "<body>\n"
+              "Hello World!\n"
+              "</body>\n"
+              "</html>"
+        },
+    };
+    Http::Formatter::HttpFormatter formatter;
+
+    try {
+        auto response = formatter.format(responseStruct);
+        FAIL();
+    } catch (const std::out_of_range &e) {
+        SUCCEED();
+    }
+}
