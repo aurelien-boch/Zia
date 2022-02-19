@@ -18,28 +18,28 @@ namespace parser
             ~ConfigParser() = default;
 
             /*
-             * @brief Parse the config file
-             * In cas of error it prints the error
+             * @brief Parses the config file
+             * In case of error it prints the error
              * @param[in] newPath The path to the config file
              * @throw std::runtime_error if there is an error while parsing the config file
              */
             void parse(std::string const &newPath);
             
             /*
-             * @brief Return the config map
+             * @brief Returns the config map
              * @return The config map
              */
             [[nodiscard]] inline ziapi::config::Dict const &getConfigMap() const { return (_configMap); }
 
             /*
-             * @brief Overload the [] operator to access the unordered_map of the module
-             * It works if the root contains a modules element otherwise it throws
+             * @brief Overloads the [] operator to access the unordered_map of the module
+             * @throw std::range_error if the module is not in the config
              * @return std::unordered_map<std::string, std::shared_ptr<ziapi::config::Node>> of the module
              */
             [[nodiscard]] ziapi::config::Dict operator[](std::string const &moduleName);
 
             /*
-             * @brief Return the value of a parameter in the module
+             * @brief Returns the value of a parameter in the module
              * Use As[String, Int, Double, Bool, Dict, Array] to access the right value
              * @param[in] root Root of the config
              * @param[in] module Module name in the root element of the config
@@ -54,7 +54,7 @@ namespace parser
              * @throw std::runtime_error if the config file is not found
              * @return A vector of string
              */
-            static const std::vector<std::string> getConfigsPaths(std::string const &filename)
+            [[nodiscard]] static const std::vector<std::string> getConfigsPaths(std::string const &filename)
             {
                 std::vector<std::string> configPaths;
                 std::ifstream file(filename);
@@ -62,11 +62,8 @@ namespace parser
 
                 if (!file.is_open())
                     throw std::runtime_error("[ConfigParser] Root to config file not found");
-                
-                while (std::getline(file, line)) {
+                while (std::getline(file, line))
                     configPaths.push_back(line);
-                }
-                file.close();
                 return (configPaths);
             }
 

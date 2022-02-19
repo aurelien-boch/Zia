@@ -12,7 +12,6 @@ namespace parser
         try {
             _config = YAML::LoadFile(newPath);
         } catch(YAML::BadFile const &e) {
-            std::cerr << "[ConfigParser] " << e.what() << std::endl;
             throw std::runtime_error("[ConfigParser] Error while parsing the config file");
         }
         _checkConfig();
@@ -40,13 +39,14 @@ namespace parser
     inline void ConfigParser::_checkConfig()
     {
         if (_config.IsNull())
-            throw std::runtime_error("[ConfigParser] Config file not found");
+            throw std::runtime_error("[ConfigParser] Config is null");
     }
 
     void ConfigParser::_putConfigInMap()
     {
         for (auto const &section : _config) {
             ziapi::config::Dict modules;
+
             for (auto const &moduleName : section.second) {
                 ziapi::config::Dict tmp;
 
@@ -57,9 +57,9 @@ namespace parser
                         tmp[parameters.first.as<std::string>()] = std::make_shared<ziapi::config::Node>(parameters.second.as<int>());
                         continue;
                     } catch(const YAML::BadConversion &e) {
+                        tmp[parameters.first.as<std::string>()] = std::make_shared<ziapi::config::Node>(parameters.second.as<std::string>());
                     }
                     // TODO Add a case for sequences
-                    tmp[parameters.first.as<std::string>()] = std::make_shared<ziapi::config::Node>(parameters.second.as<std::string>());
                 }
                 modules[moduleName.first.as<std::string>()] = std::make_shared<ziapi::config::Node>(tmp);
             }
