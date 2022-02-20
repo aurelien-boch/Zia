@@ -6,13 +6,18 @@
 ziapi::http::Request parser::HttpParser::parse(const std::string &requestString)
 {
     std::size_t pos{};
+    auto method{parseRequestMethod(pos, requestString)};
+    auto target{parseRequestTarget(pos, requestString)};
+    auto version{parseRequestVersion(pos, requestString)};
+    auto fields(parseRequestHeaders(pos, requestString));
+    auto body{parseRequestBody(pos, requestString)};
 
     return {
-        .method{parseRequestMethod(pos, requestString)},
-        .target{parseRequestTarget(pos, requestString)},
-        .version{parseRequestVersion(pos, requestString)},
-        .fields{parseRequestHeaders(pos, requestString)},
-        .body{parseRequestBody(pos, requestString)},
+        .version{version},
+        .method{method},
+        .target{target},
+        .fields{fields},
+        .body{body},
     };
 }
 
