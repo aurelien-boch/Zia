@@ -35,6 +35,7 @@ inline std::string HttpParser::HttpParser::parseRequestMethod(std::size_t &pos, 
 inline std::string HttpParser::HttpParser::parseRequestTarget(std::size_t &pos, const std::string &requestString)
 {
     std::string target{};
+
     requestString.copy(target.data(), requestString.find_first_of(' '), pos);
 
     if (target[0] != '/') {
@@ -49,6 +50,7 @@ inline ziapi::http::Version HttpParser::HttpParser::parseRequestVersion(std::siz
                                                                  const std::string &requestString) const
 {
     std::string version{};
+
     requestString.copy(version.data(), requestString.find_first_of('\r'), pos);
 
     if (s_versions.contains(version)) {
@@ -93,6 +95,7 @@ inline std::map<std::string, std::string> HttpParser::HttpParser::parseRequestHe
 inline std::string HttpParser::HttpParser::parseRequestBody(size_t &pos, const std::string &requestString)
 {
     std::string body{};
+
     requestString.copy(body.data(), requestString.size() - pos, pos);
 
     return body;
