@@ -5,10 +5,12 @@
 #include <ostream>
 #include <string_view>
 
-namespace HttpParser {
+namespace parser {
 
 /**
- * Base Exception for the HttpParser module
+ * @Class Exception
+ * @brief Base Exception for the HttpParser module
+ *
  * It is intended that exceptions used for this module are derived from this class
  */
 class Exception : public std::exception {
@@ -19,7 +21,7 @@ public:
      * Constructor
      * @param message The message to display
      */
-     Exception(const std::string_view &error, const std::string_view &logsPrefix = "[Exception] ") noexcept :
+     explicit Exception(const std::string_view &error, const std::string_view &logsPrefix = "[Exception] ") noexcept :
         s_logsPrefix{logsPrefix},
         s_error{error}
         {}
