@@ -8,7 +8,7 @@
 
 #include "ziapi/Http.hpp"
 
-namespace HttpParser {
+namespace parser {
 
 /**
  * @brief Parses HTTP requests on each `parse` call

@@ -3,7 +3,7 @@
 #include "HttpParser.hpp"
 #include "Exception.hpp"
 
-ziapi::http::Request HttpParser::HttpParser::parse(const std::string &requestString)
+ziapi::http::Request parser::HttpParser::parse(const std::string &requestString)
 {
     std::size_t pos{};
 
@@ -16,7 +16,7 @@ ziapi::http::Request HttpParser::HttpParser::parse(const std::string &requestStr
     };
 }
 
-inline std::string HttpParser::HttpParser::parseRequestMethod(std::size_t &pos, const std::string &requestString) const
+inline std::string parser::HttpParser::parseRequestMethod(std::size_t &pos, const std::string &requestString) const
 {
     auto result{std::find_if(s_methods.begin() + pos, s_methods.end(),
                  [&](const std::string_view &method)
@@ -32,7 +32,7 @@ inline std::string HttpParser::HttpParser::parseRequestMethod(std::size_t &pos, 
     return std::string{*result};
 }
 
-inline std::string HttpParser::HttpParser::parseRequestTarget(std::size_t &pos, const std::string &requestString)
+inline std::string parser::HttpParser::parseRequestTarget(std::size_t &pos, const std::string &requestString)
 {
     std::string target{};
 
@@ -46,8 +46,8 @@ inline std::string HttpParser::HttpParser::parseRequestTarget(std::size_t &pos, 
     return target;
 }
 
-inline ziapi::http::Version HttpParser::HttpParser::parseRequestVersion(std::size_t &pos,
-                                                                 const std::string &requestString) const
+inline ziapi::http::Version parser::HttpParser::parseRequestVersion(std::size_t &pos,
+                                                                    const std::string &requestString) const
 {
     std::string version{};
 
@@ -61,8 +61,8 @@ inline ziapi::http::Version HttpParser::HttpParser::parseRequestVersion(std::siz
     throw InvalidVersionException{"Version is not supported or not valid"};
 }
 
-inline std::map<std::string, std::string> HttpParser::HttpParser::parseRequestHeaders(std::size_t &pos,
-                                                                               const std::string &requestString) const
+inline std::map<std::string, std::string> parser::HttpParser::parseRequestHeaders(std::size_t &pos,
+                                                                                  const std::string &requestString) const
 {
     std::map<std::string, std::string> headers{};
     std::string headerName{};
@@ -92,7 +92,7 @@ inline std::map<std::string, std::string> HttpParser::HttpParser::parseRequestHe
     return headers;
 }
 
-inline std::string HttpParser::HttpParser::parseRequestBody(size_t &pos, const std::string &requestString)
+inline std::string parser::HttpParser::parseRequestBody(size_t &pos, const std::string &requestString)
 {
     std::string body{};
 
