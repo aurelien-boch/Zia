@@ -27,7 +27,7 @@ public:
      * @param response The response to format
      * @return the formatted response
      */
-    std::string format(const ziapi::http::Response &response);
+    [[nodiscard]] std::string format(const ziapi::http::Response &response);
 
 private:
 
