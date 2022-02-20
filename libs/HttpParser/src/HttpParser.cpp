@@ -28,7 +28,6 @@ inline std::string parser::HttpParser::parseRequestMethod(std::size_t &pos, cons
         throw InvalidMethodException{wrongMethod + " is not a valid HTTP method"};
     }
     pos += (*result).size() + 1;
-
     return std::string{*result};
 }
 
@@ -37,12 +36,9 @@ inline std::string parser::HttpParser::parseRequestTarget(std::size_t &pos, cons
     std::string target{};
 
     requestString.copy(target.data(), requestString.find_first_of(' '), pos);
-
-    if (target[0] != '/') {
+    if (target[0] != '/')
         throw InvalidTargetException{"Target must start with a '/'"};
-    }
     pos += target.size() + 1;
-
     return target;
 }
 
@@ -52,13 +48,10 @@ inline ziapi::http::Version parser::HttpParser::parseRequestVersion(std::size_t 
     std::string version{};
 
     requestString.copy(version.data(), requestString.find_first_of('\r'), pos);
-
-    if (s_versions.contains(version)) {
-        pos += version.size() + 2;
-        return s_versions.at(version);
-    }
-
-    throw InvalidVersionException{"Version is not supported or not valid"};
+    if (!s_versions.contains(version))
+        throw InvalidVersionException{"Version is not supported or not valid"};
+    pos += version.size() + 2;
+    return s_versions.at(version);
 }
 
 inline std::map<std::string, std::string> parser::HttpParser::parseRequestHeaders(std::size_t &pos,
@@ -81,14 +74,12 @@ inline std::map<std::string, std::string> parser::HttpParser::parseRequestHeader
             value.clear();
         }
 
-        if (!headers.contains(headerName)) {
+        if (!headers.contains(headerName))
             throw InvalidHeaderException{"Header `" + std::string(headerName) + "` is not supported or not valid"};
-        }
         value.clear();
         headerName.clear();
     }
     pos += 4;
-
     return headers;
 }
 
@@ -97,6 +88,5 @@ inline std::string parser::HttpParser::parseRequestBody(size_t &pos, const std::
     std::string body{};
 
     requestString.copy(body.data(), requestString.size() - pos, pos);
-
     return body;
 }
