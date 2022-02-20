@@ -13,7 +13,7 @@ namespace execution
 #ifdef _WIN32
         _processInfo {}
 #else
-    _processPid {}
+        _processPid {}
 #endif
     {
         auto[stdinRead, stdinWrite] = _createPipe();
@@ -38,7 +38,7 @@ namespace execution
 #ifdef _WIN32
         _processInfo {}
 #else
-    _processPid {}
+        _processPid {}
 #endif
     {
         auto[stdinRead, stdinWrite] = _createPipe();
@@ -64,7 +64,7 @@ namespace execution
 #ifdef _WIN32
         _processInfo {}
 #else
-    _processPid {}
+        _processPid {}
 #endif
     {
         auto[stdinRead, stdinWrite] = _createPipe();
@@ -88,6 +88,7 @@ namespace execution
 #ifdef _WIN32
     _processInfo {}
 #else
+    _processPid {}
     _processPid {}
 #endif
     {
