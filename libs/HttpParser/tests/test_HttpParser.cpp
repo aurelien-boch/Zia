@@ -2,6 +2,7 @@
 #include <string_view>
 
 #include "HttpParser.hpp"
+#include "Exception.hpp"
 #include "ziapi/Http.hpp"
 
 TEST_CASE("Valid HTTP request", "[HttpParser]")
@@ -42,4 +43,27 @@ TEST_CASE("Valid HTTP request", "[HttpParser]")
     REQUIRE(request.version == requestStruct.version);
     REQUIRE(request.fields == requestStruct.fields);
     REQUIRE(request.body == requestStruct.body);
+}
+
+TEST_CASE("Invalid Method", "[HttpParser]")
+{
+    const std::string requestString{"TOTO / HTTP/1.1\r\n"
+                                    "User-Agent: PostmanRuntime/7.29.0\r\n"
+                                    "Accept: */*\r\n"
+                                    "Cache-Control: no-cache\r\n"
+                                    "Postman-Token: ffa0b8c8-2d43-4805-9af2-7cfac22dc7f3\r\n"
+                                    "Host: localhost:8080\r\n"
+                                    "Accept-Encoding: gzip, deflate, br\r\n"
+                                    "Connection: keep-alive\r\n"
+                                    "Cookie: token=github|36404435\r\n\r\n"
+                                    "Hello World!"
+    };
+
+    parser::HttpParser parser{};
+    try {
+        auto request{parser.parse(requestString)};
+        FAIL();
+    } catch (const parser::InvalidMethodException& _) {
+        SUCCEED();
+    }
 }
