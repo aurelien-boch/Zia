@@ -7,6 +7,7 @@
 #include <unordered_map>
 
 #include "ziapi/Http.hpp"
+#include "ziapi/HttpConstants.hpp"
 
 namespace parser {
 

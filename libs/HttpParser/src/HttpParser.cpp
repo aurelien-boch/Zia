@@ -29,7 +29,7 @@ inline std::string parser::HttpParser::parseRequestMethod(std::size_t &pos, cons
 
     if (result == s_methods.end()) {
         std::string wrongMethod{};
-        requestString.copy(wrongMethod.data(), requestString.find_first_of(' '));
+        requestString.copy(wrongMethod.data(), requestString.find_first_of(' ', pos), pos);
         throw InvalidMethodException{wrongMethod + " is not a valid HTTP method"};
     }
     pos += (*result).size() + 1;
@@ -38,9 +38,8 @@ inline std::string parser::HttpParser::parseRequestMethod(std::size_t &pos, cons
 
 inline std::string parser::HttpParser::parseRequestTarget(std::size_t &pos, const std::string &requestString)
 {
-    std::string target{};
+    std::string target{requestString.substr(pos, requestString.find_first_of(' ', pos) - pos)};
 
-    requestString.copy(target.data(), requestString.find_first_of(' '), pos);
     if (target[0] != '/')
         throw InvalidTargetException{"Target must start with a '/'"};
     pos += target.size() + 1;
@@ -50,9 +49,8 @@ inline std::string parser::HttpParser::parseRequestTarget(std::size_t &pos, cons
 inline ziapi::http::Version parser::HttpParser::parseRequestVersion(std::size_t &pos,
                                                                     const std::string &requestString) const
 {
-    std::string version{};
+    std::string version{requestString.substr(pos, requestString.find_first_of('\r', pos) - pos)};
 
-    requestString.copy(version.data(), requestString.find_first_of('\r'), pos);
     if (!s_versions.contains(version))
         throw InvalidVersionException{"Version is not supported or not valid"};
     pos += version.size() + 2;
@@ -66,32 +64,25 @@ inline std::map<std::string, std::string> parser::HttpParser::parseRequestHeader
     std::string headerName{};
     std::string value{};
 
-    while (requestString.find_first_of("\r\n\r\n", pos) != pos) {
-        requestString.copy(headerName.data(), requestString.find_first_of(':', pos), pos);
+    while (requestString.find_first_of("\r\n", pos) != pos) {
+        headerName = requestString.substr(pos, requestString.find_first_of(':', pos) - pos);
         pos += headerName.size() + 2;
-
-        for (auto &headersName: s_headersNames) {
-            if (headersName == headerName) {
-                requestString.copy(value.data(), requestString.find_first_of('\r', pos), pos);
-                pos += value.size() + 2;
-                break;
-            }
-            value.clear();
-        }
+        value = requestString.substr(pos, requestString.find_first_of('\r', pos) - pos);
+        pos += value.size() + 2;
+        headers.emplace(headerName, value);
 
         if (!headers.contains(headerName))
             throw InvalidHeaderException{"Header `" + std::string(headerName) + "` is not supported or not valid"};
         value.clear();
         headerName.clear();
     }
-    pos += 4;
+    pos += 2;
     return headers;
 }
 
 inline std::string parser::HttpParser::parseRequestBody(size_t &pos, const std::string &requestString)
 {
-    std::string body{};
+    std::string body{requestString.substr(pos, requestString.size() - pos)};
 
-    requestString.copy(body.data(), requestString.size() - pos, pos);
     return body;
 }
