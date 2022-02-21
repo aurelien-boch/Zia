@@ -25,8 +25,6 @@ if (DEFINED ENABLE_TESTING AND "${ENABLE_TESTING}" STREQUAL "yes")
     add_subdirectory(tests)
 endif()
 
-
-
 add_executable(
     ${NAME}
         ${INCLUDES}
@@ -45,5 +43,4 @@ target_link_libraries(
         ziapi
         loader
         config_parser
-        http
 )
