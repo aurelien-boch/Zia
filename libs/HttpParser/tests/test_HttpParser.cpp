@@ -67,3 +67,26 @@ TEST_CASE("Invalid Method", "[HttpParser]")
         SUCCEED();
     }
 }
+
+TEST_CASE("Invalid Target", "[HttpParser]")
+{
+    const std::string requestString{"GET toto HTTP/1.1\r\n"
+                                    "User-Agent: PostmanRuntime/7.29.0\r\n"
+                                    "Accept: */*\r\n"
+                                    "Cache-Control: no-cache\r\n"
+                                    "Postman-Token: ffa0b8c8-2d43-4805-9af2-7cfac22dc7f3\r\n"
+                                    "Host: localhost:8080\r\n"
+                                    "Accept-Encoding: gzip, deflate, br\r\n"
+                                    "Connection: keep-alive\r\n"
+                                    "Cookie: token=github|36404435\r\n\r\n"
+                                    "Hello World!"
+    };
+
+    parser::HttpParser parser{};
+    try {
+        auto request{parser.parse(requestString)};
+        FAIL();
+    } catch (const parser::InvalidTargetException& _) {
+        SUCCEED();
+    }
+}
