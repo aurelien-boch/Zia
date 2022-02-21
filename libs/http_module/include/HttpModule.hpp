@@ -17,7 +17,7 @@ namespace modules
     {
         public:
 
-            explicit HttpModule(std::uint16_t port);
+            explicit HttpModule();
 
             ~HttpModule() = default;
 

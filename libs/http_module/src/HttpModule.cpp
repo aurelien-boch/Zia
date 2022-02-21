@@ -11,17 +11,24 @@
 
 namespace modules
 {
-    HttpModule::HttpModule(std::uint16_t port) :
+    HttpModule::HttpModule() :
         ziapi::INetworkModule(),
         _run(true),
-        _port(port),
+        //_port(port),
         _service{},
-        _listener(std::make_unique<network::http::AsioHttpListener>(_service, port)),
+        _listener{nullptr},
         _clients{}
     {}
 
-    void HttpModule::Init([[maybe_unused]] const ziapi::config::Node &cfg)
-    {}
+    void HttpModule::Init(const ziapi::config::Node &cfg) // TODO: Check if it works
+    {
+        auto &httpConfig = cfg["http"];
+        int port = httpConfig["port"].AsInt();
+
+        if (port < 0)
+            throw std::runtime_error("ERROR(modules/Http): Invalid port in configuration file");
+        _listener = std::make_unique<network::http::AsioHttpListener>(_service, port);
+    }
 
     ziapi::Version HttpModule::GetVersion() const noexcept
     {
@@ -40,11 +47,13 @@ namespace modules
 
     const char *HttpModule::GetDescription() const noexcept
     {
-        return "A http module that implements HTTP1.1 protocol.";
+        return "A http module that implements HTTP/1.1 protocol.";
     }
 
     void HttpModule::Run([[maybe_unused]] ziapi::http::IRequestOutputQueue &requests, ziapi::http::IResponseInputQueue &responses)
     {
+        if (!_listener)
+            throw std::runtime_error("ERROR(modules/Http): Module not configured");
         _listener->run(
             [this](const error::ErrorSocket &err, std::shared_ptr<IClient> client)
             {
