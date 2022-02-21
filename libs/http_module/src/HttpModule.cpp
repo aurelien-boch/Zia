@@ -65,6 +65,8 @@ namespace modules
             try {
                 do {
                     std::this_thread::yield();
+                    if (!_run)
+                        break;
                 } while (!responses.Size());
                 _sendResponses(responses);
             } catch (const std::runtime_error &e) {

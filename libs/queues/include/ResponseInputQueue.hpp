@@ -25,6 +25,8 @@ namespace modules
 
             void Push(ResponsePair &&response) noexcept;
 
+            void Wait() noexcept; // TODO: override
+
         private:
             std::queue<ResponsePair> _responses;
     };

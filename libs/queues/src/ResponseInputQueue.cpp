@@ -1,3 +1,5 @@
+#include <thread>
+
 #include "ResponseInputQueue.hpp"
 
 namespace modules
@@ -31,5 +33,11 @@ namespace modules
         _responses.push(std::forward<ResponsePair>(response));
     }
 
+    void ResponseInputQueue::Wait() noexcept
+    {
+        do {
+            std::this_thread::yield();
+        } while (Empty());
+    }
 }
 
