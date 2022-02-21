@@ -11,10 +11,13 @@
 
 namespace modules
 {
+    const ziapi::Version HttpModule::_version = {1, 0, 0};
+    const ziapi::Version HttpModule::_compatibleApiVersion = {3, 0, 0};
+
     HttpModule::HttpModule() :
         ziapi::INetworkModule(),
         _run(true),
-        //_port(port),
+        _port(0),
         _service{},
         _listener{nullptr},
         _clients{}
@@ -27,17 +30,18 @@ namespace modules
 
         if (port < 0)
             throw std::runtime_error("ERROR(modules/Http): Invalid port in configuration file");
+        _port = port;
         _listener = std::make_unique<network::http::AsioHttpListener>(_service, port);
     }
 
     ziapi::Version HttpModule::GetVersion() const noexcept
     {
-        return {1, 0, 0};
+        return _version;
     }
 
     ziapi::Version HttpModule::GetCompatibleApiVersion() const noexcept
     {
-        return {3, 0, 0};
+        return _compatibleApiVersion;
     }
 
     const char *HttpModule::GetName() const noexcept

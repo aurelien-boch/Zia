@@ -45,6 +45,9 @@ namespace modules
             std::unique_ptr<network::ITCPListener<std::string, std::string>> _listener;
             std::vector<std::shared_ptr<IClient>> _clients;
 
+            static const ziapi::Version _version;
+            static const ziapi::Version _compatibleApiVersion;
+
             void _onConnect(
                     error::ErrorSocket const &err,
                     std::shared_ptr<IClient> client);
