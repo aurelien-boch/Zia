@@ -53,7 +53,7 @@ namespace error {
         SOCKET_UNKNOWN_ERROR,
     };
 
-    static const std::unordered_map<ErrorSocket, std::string_view> errorMessage = {
+    static const std::unordered_map<ErrorSocket, std::string_view> errorMessage{
         {SOCKET_NO_ERROR    , "No error"},
         {SOCKET_ACCESS_DENIED, "Permission denied"},
         {SOCKET_ADDRESS_FAMILY_NOT_SUPPORTED, "Address family not supported by protocol"},
@@ -92,7 +92,7 @@ namespace error {
         {SOCKET_UNKNOWN_ERROR, "The socket encountered an unknown error"},
     };
 
-    static const std::unordered_map<asio::error_code, ErrorSocket> AsioErrorTranslator = {
+    static const std::unordered_map<asio::error_code, ErrorSocket> AsioErrorTranslator {
         {asio::error::access_denied, SOCKET_ACCESS_DENIED},
         {asio::error::address_family_not_supported, SOCKET_ADDRESS_FAMILY_NOT_SUPPORTED},
         {asio::error::address_in_use, SOCKET_ADDRESS_IN_USE},
