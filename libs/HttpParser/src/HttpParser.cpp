@@ -6,11 +6,11 @@
 ziapi::http::Request parser::HttpParser::parse(const std::string &requestString)
 {
     std::size_t pos{};
-    auto method{parseRequestMethod(pos, requestString)};
-    auto target{parseRequestTarget(pos, requestString)};
-    auto version{parseRequestVersion(pos, requestString)};
-    auto fields(parseRequestHeaders(pos, requestString));
-    auto body{parseRequestBody(pos, requestString)};
+    auto method{_parseRequestMethod(pos, requestString)};
+    auto target{_parseRequestTarget(pos, requestString)};
+    auto version{_parseRequestVersion(pos, requestString)};
+    auto fields(_parseRequestHeaders(pos, requestString));
+    auto body{_parseRequestBody(pos, requestString)};
 
     return {
         .version{version},
@@ -21,7 +21,7 @@ ziapi::http::Request parser::HttpParser::parse(const std::string &requestString)
     };
 }
 
-inline std::string parser::HttpParser::parseRequestMethod(std::size_t &pos, const std::string &requestString) const
+inline std::string parser::HttpParser::_parseRequestMethod(std::size_t &pos, const std::string &requestString) const
 {
     auto result{std::find_if(s_methods.begin() + pos, s_methods.end(),
                  [&](const std::string_view &method)
@@ -36,7 +36,7 @@ inline std::string parser::HttpParser::parseRequestMethod(std::size_t &pos, cons
     return std::string{*result};
 }
 
-inline std::string parser::HttpParser::parseRequestTarget(std::size_t &pos, const std::string &requestString)
+inline std::string parser::HttpParser::_parseRequestTarget(std::size_t &pos, const std::string &requestString)
 {
     std::string target{requestString.substr(pos, requestString.find_first_of(' ', pos) - pos)};
 
@@ -46,8 +46,8 @@ inline std::string parser::HttpParser::parseRequestTarget(std::size_t &pos, cons
     return target;
 }
 
-inline ziapi::http::Version parser::HttpParser::parseRequestVersion(std::size_t &pos,
-                                                                    const std::string &requestString) const
+inline ziapi::http::Version parser::HttpParser::_parseRequestVersion(std::size_t &pos,
+                                                                     const std::string &requestString) const
 {
     std::string version{requestString.substr(pos, requestString.find_first_of('\r', pos) - pos)};
 
@@ -57,8 +57,8 @@ inline ziapi::http::Version parser::HttpParser::parseRequestVersion(std::size_t 
     return s_versions.at(version);
 }
 
-inline std::map<std::string, std::string> parser::HttpParser::parseRequestHeaders(std::size_t &pos,
-                                                                                  const std::string &requestString) const
+inline std::map<std::string, std::string> parser::HttpParser::_parseRequestHeaders(std::size_t &pos,
+                                                                                   const std::string &requestString) const
 {
     std::map<std::string, std::string> headers{};
     std::string headerName{};
@@ -80,7 +80,7 @@ inline std::map<std::string, std::string> parser::HttpParser::parseRequestHeader
     return headers;
 }
 
-inline std::string parser::HttpParser::parseRequestBody(size_t &pos, const std::string &requestString)
+inline std::string parser::HttpParser::_parseRequestBody(size_t &pos, const std::string &requestString)
 {
     std::string body{requestString.substr(pos, requestString.size() - pos)};
 

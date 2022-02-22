@@ -146,7 +146,7 @@ private:
      * @param[in] requestString the string containing the request
      * @return the parsed method
      */
-    [[nodiscard]] inline std::string parseRequestMethod(std::size_t &pos, const std::string &requestString) const;
+    [[nodiscard]] inline std::string _parseRequestMethod(std::size_t &pos, const std::string &requestString) const;
 
     /**
      * Parses the target of the HTTP request
@@ -154,7 +154,7 @@ private:
      * @param[in] requestString the string containing the request
      * @return the parsed target
      */
-    [[nodiscard]] static inline std::string parseRequestTarget(std::size_t &pos, const std::string &requestString);
+    [[nodiscard]] static inline std::string _parseRequestTarget(std::size_t &pos, const std::string &requestString);
 
     /**
      * Parses the version of the HTTP request
@@ -162,7 +162,7 @@ private:
      * @param[in] requestString the string containing the request
      * @return the parsed version
      */
-    [[nodiscard]] inline ziapi::http::Version parseRequestVersion(std::size_t &pos, const std::string &requestString)
+    [[nodiscard]] inline ziapi::http::Version _parseRequestVersion(std::size_t &pos, const std::string &requestString)
     const;
 
     /**
@@ -171,8 +171,8 @@ private:
      * @param[in] requestString the string containing the request
      * @return the parsed headers
      */
-    [[nodiscard]] inline std::map<std::string, std::string> parseRequestHeaders(std::size_t &pos,
-                                                                                const std::string &requestString) const;
+    [[nodiscard]] inline std::map<std::string, std::string> _parseRequestHeaders(std::size_t &pos,
+                                                                                 const std::string &requestString) const;
 
     /**
      * Parses the body of the HTTP request
@@ -180,7 +180,7 @@ private:
      * @param[in] requestString the string containing the request
      * @return the parsed body
      */
-    [[nodiscard]] static inline std::string parseRequestBody(std::size_t &pos, const std::string &requestString);
+    [[nodiscard]] static inline std::string _parseRequestBody(std::size_t &pos, const std::string &requestString);
 };
 
 }
