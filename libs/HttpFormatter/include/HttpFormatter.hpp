@@ -8,6 +8,8 @@
 namespace formatter {
 
 /**
+ * @Class HttpFormatter
+ *
  * @brief Formats Http responses into a string
  */
 class HttpFormatter {
@@ -24,7 +26,7 @@ public:
     /**
      * @brief Formats an Http response into a string to send back to a client
      *
-     * @param response The response to format
+     * @param response[in] The response to format
      * @return the formatted response
      */
     [[nodiscard]] std::string format(const ziapi::http::Response &response);

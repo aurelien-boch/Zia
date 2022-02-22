@@ -19,7 +19,7 @@ public:
 
     /**
      * Constructor
-     * @param message The message to display
+     * @param[in] message The message to display
      */
      explicit Exception(const std::string_view &error, const std::string_view &logsPrefix = "[Exception] ") noexcept :
         s_logsPrefix{logsPrefix},
@@ -37,7 +37,7 @@ public:
     /**
      * Sends the error string to the specified output stream
      *
-     * @param os the stream to send it to
+     * @param[in] os the stream to send it to
      * @return the stream taken as parameter
      */
     std::ostream &operator<<(std::ostream &os) const noexcept

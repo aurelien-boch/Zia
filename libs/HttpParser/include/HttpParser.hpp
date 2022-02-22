@@ -12,6 +12,8 @@
 namespace parser {
 
 /**
+ * @Class HttpParser
+ *
  * @brief Parses HTTP requests on each `parse` call
  */
 class HttpParser {
