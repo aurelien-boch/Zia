@@ -20,9 +20,9 @@ TEST_CASE("Valid HTTP request", "[HttpParser]")
     };
     ziapi::http::Request requestStruct{
         .version{ziapi::http::Version::kV1_1},
-        .method{ziapi::http::method::kGet},
         .target{"/"},
-        .fields{
+        .method{ziapi::http::method::kGet},
+        .headers{
             {"User-Agent", "PostmanRuntime/7.29.0"},
             {"Accept", "*/*"},
             {"Cache-Control", "no-cache"},
@@ -41,7 +41,7 @@ TEST_CASE("Valid HTTP request", "[HttpParser]")
     REQUIRE(request.method == requestStruct.method);
     REQUIRE(request.target == requestStruct.target);
     REQUIRE(request.version == requestStruct.version);
-    REQUIRE(request.fields == requestStruct.fields);
+    REQUIRE(request.headers == requestStruct.headers);
     REQUIRE(request.body == requestStruct.body);
 }
 

@@ -14,9 +14,9 @@ ziapi::http::Request parser::HttpParser::parse(const std::string &requestString)
 
     return {
         .version{version},
-        .method{method},
         .target{target},
-        .fields{fields},
+        .method{method},
+        .headers{fields},
         .body{body},
     };
 }

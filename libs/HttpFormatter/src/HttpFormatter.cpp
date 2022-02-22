@@ -9,7 +9,7 @@ std::string formatter::HttpFormatter::format(const ziapi::http::Response &respon
     responseStream << s_versions.at(response.version) << ' ' <<
                         static_cast<int>(response.status_code) << ' ' <<
                         response.reason << "\r\n";
-    for (const auto &header : response.fields)
+    for (const auto &header : response.headers)
         responseStream << header.first << ": " << header.second << "\r\n";
     responseStream << "\r\n" << response.body;
 

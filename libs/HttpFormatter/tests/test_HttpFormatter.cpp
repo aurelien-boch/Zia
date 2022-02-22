@@ -19,7 +19,7 @@ TEST_CASE("Valid Http Response", "[HttpFormatter]")
         .version{ziapi::http::Version::kV1_1},
         .status_code{ziapi::http::Code::kOK},
         .reason{ziapi::http::reason::kOK},
-        .fields{
+        .headers{
             {"Content-Length", "12"},
             {"Content-Type", "text/html"},
         },
@@ -43,7 +43,7 @@ TEST_CASE("Null Initialized Version", "[HttpFormatter]")
         .version{},
         .status_code{ziapi::http::Code::kOK},
         .reason{ziapi::http::reason::kOK},
-        .fields{
+        .headers{
             {"Content-Length", "12"},
             {"Content-Type", "text/html"},
         },
