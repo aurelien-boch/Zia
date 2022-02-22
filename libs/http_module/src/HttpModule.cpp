@@ -6,6 +6,8 @@
 #include <ResponseInputQueue.hpp>
 #include <RequestOutputQueue.hpp>
 
+#include <Loader.hpp>
+
 #include "HttpModule.hpp"
 
 
@@ -141,5 +143,12 @@ namespace modules
             }
              client->asyncSend(_formatter.format(res.first), [](error::ErrorSocket const &){});
         }
+    }
+}
+
+extern "C" {
+    DllExport ziapi::IModule *LoadZiaModule()
+    {
+        return new modules::HttpModule();
     }
 }
