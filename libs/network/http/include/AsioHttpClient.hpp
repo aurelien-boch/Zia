@@ -38,7 +38,8 @@ namespace network::http
 
         private:
             asio::ip::tcp::socket _socket;
-            std::string _packet;
+            std::string _header;
+            std::string _body;
             char _buffer[257];
     };
 }

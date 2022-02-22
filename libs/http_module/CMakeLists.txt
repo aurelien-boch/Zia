@@ -40,4 +40,6 @@ target_link_libraries(
         ziapi
         http_network
         queues
+        ziaHttpParser
+        HttpFormatter
 )

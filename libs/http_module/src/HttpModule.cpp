@@ -20,7 +20,9 @@ namespace modules
         _port(0),
         _service{},
         _listener{nullptr},
-        _clients{}
+        _clients{},
+        _formatter{},
+        _parser{}
     {}
 
     void HttpModule::Init(const ziapi::config::Node &cfg) // TODO: Check if it works
@@ -54,14 +56,14 @@ namespace modules
         return "A http module that implements HTTP/1.1 protocol.";
     }
 
-    void HttpModule::Run([[maybe_unused]] ziapi::http::IRequestOutputQueue &requests, ziapi::http::IResponseInputQueue &responses)
+    void HttpModule::Run(ziapi::http::IRequestOutputQueue &requests, ziapi::http::IResponseInputQueue &responses)
     {
         if (!_listener)
             throw std::runtime_error("ERROR(modules/Http): Module not configured");
         _listener->run(
-            [this](const error::ErrorSocket &err, std::shared_ptr<IClient> client)
+            [this, &requests] (const error::ErrorSocket &err, std::shared_ptr<IClient> client) mutable
             {
-                _onConnect(err, std::move(client));
+                _onConnect(requests, err, std::move(client));
             }
         );
         _service.run();
@@ -85,6 +87,7 @@ namespace modules
     }
 
     void HttpModule::_onConnect(
+        ziapi::http::IRequestOutputQueue &requests,
         error::ErrorSocket const &err,
         std::shared_ptr<IClient> client)
     {
@@ -97,14 +100,14 @@ namespace modules
                 std::cerr << "Error occurred" << err << std::endl;
         } else {
             std::shared_ptr<IClient> c = _clients.emplace_back(client);
-
-            c->asyncReceive([c, this] (error::ErrorSocket err, std::string &request) mutable {
-                _onPacket(err, request, c);
+            c->asyncReceive([c, this, &requests] (error::ErrorSocket err, std::string &request) mutable {
+                _onPacket(requests, err, request, c);
             });
         }
     }
     
     void HttpModule::_onPacket(
+        ziapi::http::IRequestOutputQueue &requests,
         const error::ErrorSocket &err,
         std::string &packet,
         std::shared_ptr<IClient> &client)
@@ -117,21 +120,26 @@ namespace modules
             else
                 std::cerr << "ERROR(modules/Http): " << err << std::endl;
         } else {
-            // TODO:
-            // Call parser
-            // Add Packet in queue with client as Context
+            requests.Push({_parser.parse(packet),
+                 {{"client", std::make_any<std::shared_ptr<IClient>>(client)}}});
         }
     }
 
     void HttpModule::_sendResponses(ziapi::http::IResponseInputQueue &responses)
     {
         while (responses.Size()) {
-            const auto res = responses.Pop().value();
-            auto client = res.second.find("client");
+            auto res = responses.Pop().value();
+            auto clientIt = res.second.find("client");
+            std::shared_ptr<IClient> client = nullptr;
 
-            if (client == res.second.end())
-                throw std::runtime_error("No client specified");
-            // TODO: send response to client using http formatter
+            if (clientIt == res.second.end())
+                throw std::runtime_error("ERROR(modules/Http): No client specified");
+            try {
+                client = std::any_cast<std::shared_ptr<IClient>>(clientIt);
+            } catch (std::bad_any_cast const &e) {
+                throw std::runtime_error("ERROR(modules/Http): Invalid client");
+            }
+             client->asyncSend(_formatter.format(res.first), [](error::ErrorSocket const &){});
         }
     }
 }

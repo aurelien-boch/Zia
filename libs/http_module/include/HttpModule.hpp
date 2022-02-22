@@ -11,6 +11,9 @@
 
 #include <ITCPListener.hpp>
 
+#include <HttpParser.hpp>
+#include <HttpFormatter.hpp>
+
 namespace modules
 {
     class HttpModule : public ziapi::INetworkModule
@@ -48,11 +51,16 @@ namespace modules
             static const ziapi::Version _version;
             static const ziapi::Version _compatibleApiVersion;
 
+            Http::Formatter::HttpFormatter _formatter;
+            parser::HttpParser _parser;
+
             void _onConnect(
+                    ziapi::http::IRequestOutputQueue &requests,
                     error::ErrorSocket const &err,
                     std::shared_ptr<IClient> client);
 
             void _onPacket(
+                    ziapi::http::IRequestOutputQueue &requests,
                     error::ErrorSocket const &err,
                     std::string &packet,
                     std::shared_ptr<IClient> &client);

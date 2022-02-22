@@ -7,13 +7,15 @@ namespace network::http
     AsioHttpClient::AsioHttpClient(asio::io_context &io_context) :
         ITCPClient{},
         _socket{asio::ip::tcp::socket{io_context}},
-        _packet{},
+        _header{},
+        _body{},
         _buffer{}
     {}
 
     AsioHttpClient::AsioHttpClient(asio::ip::tcp::socket &socket) :
         _socket{std::move(socket)},
-        _packet{},
+        _header{},
+        _body{},
         _buffer{}
     {}
 
@@ -77,18 +79,20 @@ namespace network::http
         _socket.async_receive(
             asio::buffer(&_buffer, sizeof(char) * 256),
             [cb = std::forward<std::function<void (error::ErrorSocket const &, std::string &)>>(cb), this] (asio::error_code ec, std::size_t) mutable {
-                _packet += _buffer;
+                _header += _buffer;
                 if (ec) {
                     const auto it = error::AsioErrorTranslator.find(ec);
 
                     if (it == error::AsioErrorTranslator.end())
                         std::cerr << "ERROR(network/AsioHttpClient): " << ec << std::endl;
-                    else
-                        cb(it->second, _packet);
-                } else if (_packet.find("\r\n") != std::string::npos) {
-                    cb(error::SOCKET_NO_ERROR, _packet);
-                    _packet = "";
+//                    else
+//                        cb(it->second, _header + _body);}
                 }
+//                else if (_header.find("\r\n") != std::string::npos) {
+//                    // Check content length header<
+////                    cb(error::SOCKET_NO_ERROR, _packet);
+////                    _packet = "";
+//                }
                 asyncReceive(std::move(cb));
             }
         );
