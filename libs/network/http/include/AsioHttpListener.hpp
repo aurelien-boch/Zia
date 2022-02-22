@@ -4,15 +4,14 @@
 #include <asio.hpp>
 #include <memory>
 
-#include "../../helper/include/ITCPListener.hpp" // TODO: Fix this
-//#include <ITCPListener.hpp>
+#include <ITCPListener.hpp>
 
 #include "AsioHttpClient.hpp"
 
 namespace network::http
 {
     /**
-     * An http listener using Asio library
+     * @class An http listener using Asio library
      * Enables to accept new clients connections on the server
      */
     class AsioHttpListener : public ITCPListener<std::string, std::string>

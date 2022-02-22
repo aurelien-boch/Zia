@@ -8,9 +8,9 @@
 namespace network
 {
     /**
-     * @brief Represents a TCP server listening for new connections
+     * @class Represents a TCP server listening for new connections
      */
-     template <typename Request, typename Response>
+    template <typename Request, typename Response>
     class ITCPListener
     {
         public:

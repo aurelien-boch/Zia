@@ -7,7 +7,7 @@
 namespace network
 {
     /**
-     * @brief Represents a TCP Client
+     * @class Represents a TCP Client
      */
     template <typename Request, typename Response>
     class ITCPClient
@@ -35,7 +35,7 @@ namespace network
             [[nodiscard]] virtual Request receive() noexcept = 0;
 
             /**
-             * @brie Sends data asynchronously
+             * @brief Sends data asynchronously
              * @param[in] packet Refers to the data to be sent.
              * @param[in|out] callback Refers to the function to be called when a packet is successfully sent
              */
