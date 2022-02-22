@@ -57,10 +57,6 @@ namespace network::http
             asyncSend("411 Length Required", [](error::ErrorSocket const &){});
             return {};
         }
-        if (bodyLength == 0) {
-            asyncSend("400 Bad Request", [](error::ErrorSocket const &){});
-            return {};
-        }
         while (body.size() < bodyLength)
             _rec(body);
         return (header + body);
@@ -97,14 +93,24 @@ namespace network::http
 
                     if (it == error::AsioErrorTranslator.end())
                         std::cerr << "ERROR(network/AsioHttpClient): " << ec << std::endl;
-//                    else
-//                        cb(it->second, _header + _body);}
+                    else {
+                        _header += _body;
+                        cb(it->second, _header);
+                    }
+                } else if (_header.find("\r\n") != std::string::npos) {
+                    try {
+                        _cleanHeader(_header, _body);
+                        if (_body.size() < _getContentLength(_header))
+                            asyncReceive(std::move(cb));
+                        _header += _body;
+                        cb(error::SOCKET_NO_ERROR, _header);
+                        _header = "";
+                        _body = "";
+                    } catch (std::runtime_error const &e) {
+                        std::cerr << e.what() << std::endl;
+                        asyncSend("411 Length Required", [](error::ErrorSocket const &){});
+                    }
                 }
-//                else if (_header.find("\r\n") != std::string::npos) {
-//                    // Check content length header<
-////                    cb(error::SOCKET_NO_ERROR, _packet);
-////                    _packet = "";
-//                }
                 asyncReceive(std::move(cb));
             }
         );
@@ -127,6 +133,9 @@ namespace network::http
             bodyLength = std::stol(header.substr(pos, pos2));
         } catch (std::exception const &) {
             throw std::runtime_error("ERROR(network/AsioHttpClient): Invalid Content-Length header");
+        }
+        if (bodyLength == 0) {
+            asyncSend("400 Bad Request", [](error::ErrorSocket const &){});
         }
         return bodyLength;
     }
