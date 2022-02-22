@@ -36,7 +36,7 @@ namespace parser
              * @throw std::range_error if the module is not in the config
              * @return std::unordered_map<std::string, std::shared_ptr<ziapi::config::Node>> of the module
              */
-            [[nodiscard]] ziapi::config::Dict operator[](std::string const &moduleName);
+            [[nodiscard]] ziapi::config::Dict operator[](std::string const &moduleName) const;
 
             /*
              * @brief Returns the value of a parameter in the module

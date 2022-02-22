@@ -18,22 +18,22 @@ namespace parser
         _putConfigInMap();
     }
 
-    ziapi::config::Dict ConfigParser::operator[](std::string const &moduleName)
+    ziapi::config::Dict ConfigParser::operator[](std::string const &moduleName) const
     {
-        if (_configMap["modules"]->AsDict().find(moduleName) == _configMap["modules"]->AsDict().end())
+        if (_configMap.at("modules")->AsDict().find(moduleName) == _configMap.at("modules")->AsDict().end())
             throw std::range_error("[ConfigParser] not in [modules]");
-        return (_configMap["modules"]->AsDict()[moduleName]->AsDict());
+        return (_configMap.at("modules")->AsDict().at(moduleName)->AsDict());
     }
 
-    std::shared_ptr<ziapi::config::Node> ConfigParser::getValue(std::string const &root, std::string const &module, std::string const &param) 
+    std::shared_ptr<ziapi::config::Node> ConfigParser::getValue(std::string const &root, std::string const &module, std::string const &param)
     {
         if (_configMap.find(root) == _configMap.end())
             throw std::range_error("[ConfigParser] not in config");
-        if (_configMap[root]->AsDict().find(module) == _configMap[root]->AsDict().end())
+        if (_configMap.at(root)->AsDict().find(module) == _configMap.at(root)->AsDict().end())
             throw std::range_error("[ConfigParser] not in [" + root + "]");
-        if (_configMap[root]->AsDict()[module]->AsDict().find(param) == _configMap[root]->AsDict()[module]->AsDict().end())
+        if (_configMap.at(root)->AsDict().at(module)->AsDict().find(param) == _configMap.at(root)->AsDict().at(module)->AsDict().end())
             throw std::range_error("[ConfigParser] not in [" + root + "][" + module + "]");
-        return (_configMap[root]->AsDict()[module]->AsDict()[param]);
+        return (_configMap.at(root)->AsDict().at(module)->AsDict().at(param));
     }
 
     inline void ConfigParser::_checkConfig()
