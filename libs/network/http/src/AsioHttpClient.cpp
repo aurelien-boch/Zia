@@ -43,15 +43,27 @@ namespace network::http
 
     std::string AsioHttpClient::receive() noexcept
     {
-        std::string request{};
+        std::string header;
+        std::string body;
+        std::size_t bodyLength = 0;
 
-        while(request.find("\r\n\r\n") == std::string::npos) {
-            char buff[257]{};
-
-            _socket.receive(asio::buffer(&buff, sizeof(char) * 256));
-            request += std::string(buff);
+        while(header.find("\r\n\r\n") == std::string::npos)
+            _rec(header);
+        _cleanHeader(header, body);
+        try {
+            bodyLength = _getContentLength(header);
+        } catch (std::runtime_error const &e) {
+            std::cerr << e.what() << std::endl;
+            asyncSend("411 Length Required", [](error::ErrorSocket const &){});
+            return {};
         }
-        return request;
+        if (bodyLength == 0) {
+            asyncSend("400 Bad Request", [](error::ErrorSocket const &){});
+            return {};
+        }
+        while (body.size() < bodyLength)
+            _rec(body);
+        return (header + body);
     }
 
     void AsioHttpClient::asyncSend(
@@ -97,4 +109,45 @@ namespace network::http
             }
         );
     }
+
+    std::size_t AsioHttpClient::_getContentLength(std::string const &header)
+    {
+        std::string toFind = "Content-Length:";
+        std::size_t pos = header.find(toFind);
+        std::size_t bodyLength = 0;
+
+        if (pos == std::string::npos)
+            throw std::runtime_error("ERROR(network/AsioHttpClient): No Content-Length header");
+        try {
+            pos += toFind.size() + 1;
+            std::size_t pos2 = header.substr(pos).find("\r\n");
+
+            if (pos2 == std::string::npos)
+                throw std::runtime_error("ERROR(network/AsioHttpClient): Invalid Content-Length header");
+            bodyLength = std::stol(header.substr(pos, pos2));
+        } catch (std::exception const &) {
+            throw std::runtime_error("ERROR(network/AsioHttpClient): Invalid Content-Length header");
+        }
+        return bodyLength;
+    }
+
+    void AsioHttpClient::_rec(std::string &str)
+    {
+        char buff[257]{};
+
+        _socket.receive(asio::buffer(&buff, sizeof(char) * 256));
+        str += buff;
+    }
+
+    void AsioHttpClient::_cleanHeader(std::string &header, std::string &body)
+    {
+        std::string toFind = "\r\n\r\n";
+        std::size_t pos = header.find(toFind);
+
+        if (pos == std::string::npos)
+            throw std::runtime_error("ERROR(network/AsioHttpClient): Invalid header");
+        body = header.substr(pos + toFind.size());
+        header = header.substr(0, pos + toFind.size());
+    }
+
 }

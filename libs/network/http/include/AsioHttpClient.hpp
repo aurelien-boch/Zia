@@ -41,6 +41,12 @@ namespace network::http
             std::string _header;
             std::string _body;
             char _buffer[257];
+
+            [[nodiscard]] std::size_t _getContentLength(std::string const &header);
+
+            void _rec(std::string &str);
+
+            void _cleanHeader(std::string &header, std::string &body);
     };
 }
 
