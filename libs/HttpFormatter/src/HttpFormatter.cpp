@@ -2,7 +2,7 @@
 
 #include "HttpFormatter.hpp"
 
-std::string Http::Formatter::HttpFormatter::format(const ziapi::http::Response &response)
+std::string formatter::HttpFormatter::format(const ziapi::http::Response &response)
 {
     std::ostringstream responseStream{};
 

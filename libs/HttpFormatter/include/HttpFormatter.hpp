@@ -5,7 +5,7 @@
 
 #include "ziapi/Http.hpp"
 
-namespace Http::Formatter {
+namespace formatter {
 
 /**
  * @brief Formats Http responses into a string

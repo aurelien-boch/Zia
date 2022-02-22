@@ -31,7 +31,7 @@ TEST_CASE("Valid Http Response", "[HttpFormatter]")
         },
     };
 
-    Http::Formatter::HttpFormatter formatter{};
+    formatter::HttpFormatter formatter{};
     auto response = formatter.format(responseStruct);
 
     REQUIRE(responseString == response);
@@ -54,7 +54,7 @@ TEST_CASE("Null Initialized Version", "[HttpFormatter]")
               "</html>"
         },
     };
-    Http::Formatter::HttpFormatter formatter{};
+    formatter::HttpFormatter formatter{};
 
     try {
         auto response = formatter.format(responseStruct);
@@ -67,7 +67,7 @@ TEST_CASE("Null Initialized Version", "[HttpFormatter]")
 TEST_CASE("Null Initialized Response", "[HttpFormatter]")
 {
     ziapi::http::Response responseStruct{};
-    Http::Formatter::HttpFormatter formatter{};
+    formatter::HttpFormatter formatter{};
 
     try {
         auto response = formatter.format(responseStruct);
