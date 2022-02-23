@@ -2,7 +2,6 @@
 
 #include <RequestOutputQueue.hpp>
 
-// TODO: change when API version is 3.1.1
 TEST_CASE("Push and Pop", "[RequestOutputQueue]")
 {
     modules::RequestOutputQueue queue{};
@@ -20,9 +19,8 @@ TEST_CASE("Push and Pop", "[RequestOutputQueue]")
 
     auto r = queue.Pop().value().first;
     REQUIRE(r.version == ziapi::http::Version::kV1);
-//     REQUIRE(r.target == "target"); // TODO: v3.1.1 required
-//     REQUIRE(r.method == "method"); // TODO: v3.1.1 required
-//    REQUIRE(r.headers.size() == 2 && r.headers["header1"] == "h1" && r.headers["header2"] == "h2"); // TODO: v3.1.1 required
+    REQUIRE(r.target == "target");
+    REQUIRE(r.method == "method");
     REQUIRE(r.body == "body");
 }
 
