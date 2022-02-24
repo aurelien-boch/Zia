@@ -2,6 +2,7 @@
 #include <thread>
 
 #include <AsioHttpListener.hpp>
+#include <AsioHttpClient.hpp>
 
 #include <ResponseInputQueue.hpp>
 #include <RequestOutputQueue.hpp>
@@ -34,7 +35,7 @@ namespace modules
         if (port < 0)
             throw std::runtime_error("ERROR(modules/Http): Invalid port in configuration file");
         _port = port;
-        _listener = std::make_unique<network::http::AsioHttpListener>(_service, port);
+        _listener = std::make_unique<network::http::AsioHttpListener<network::http::AsioHttpClient>>(_service, port);
     }
 
     ziapi::Version HttpModule::GetVersion() const noexcept
