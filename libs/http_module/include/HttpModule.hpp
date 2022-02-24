@@ -51,7 +51,7 @@ namespace modules
             static const ziapi::Version _version;
             static const ziapi::Version _compatibleApiVersion;
 
-            Http::Formatter::HttpFormatter _formatter;
+            formatter::HttpFormatter _formatter;
             parser::HttpParser _parser;
 
             void _onConnect(
