@@ -15,7 +15,7 @@ else ()
 endif ()
 
 add_library(
-    ziaHttpParser SHARED
+    ziaHttpParser 
         include/HttpParser.hpp
         src/HttpParser.cpp
         include/Exception.hpp)

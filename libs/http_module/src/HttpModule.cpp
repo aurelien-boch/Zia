@@ -10,16 +10,15 @@
 
 #include "HttpModule.hpp"
 
-
 namespace modules
 {
     const ziapi::Version HttpModule::_version = {1, 0, 0};
-    const ziapi::Version HttpModule::_compatibleApiVersion = {3, 0, 0};
+    const ziapi::Version HttpModule::_compatibleApiVersion = {3, 1, 1};
 
     HttpModule::HttpModule() :
         ziapi::INetworkModule(),
-        _run(true),
-        _port(0),
+        _run{true},
+        _port{0},
         _service{},
         _listener{nullptr},
         _clients{},
@@ -27,9 +26,9 @@ namespace modules
         _parser{}
     {}
 
-    void HttpModule::Init(const ziapi::config::Node &cfg) // TODO: Check if it works
+    void HttpModule::Init(const ziapi::config::Node &cfg)
     {
-        auto &httpConfig = cfg["http"];
+        auto &httpConfig = cfg["modules"]["http"];
         int port = httpConfig["port"].AsInt();
 
         if (port < 0)

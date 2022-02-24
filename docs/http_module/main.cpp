@@ -1,19 +1,26 @@
+#include <thread>
+
 #include <HttpModule.hpp>
 #include <RequestOutputQueue.hpp>
 #include <ResponseInputQueue.hpp>
 
-/**
- * Please note that this example will not be the same when the config parser will be
- * available
- */
+#include <ConfigParser.hpp>
 
 int main()
 {
-    modules::HttpModule http(3000);
-    modules::ResponseInputQueue responses;
-    modules::RequestOutputQueue requests;
+    parser::ConfigParser parser("path/to/config/file.yml");
+    modules::HttpModule http;
+    modules::ResponseInputQueue responses{};
+    modules::RequestOutputQueue requests{};
+    std::thread httpThread;
 
-    std::cout << "Hello, World!" << std::endl;
-    http.Run(requests, responses);
+    http.Init(http.Init(parser.getConfigMap()));
+    httpThread = std::thread{http.Run(requests, responses)};
+    while (/* condition */) {
+        /* ... */
+    }
+    http.Terminate();
+    if (httpThread.joinable())
+        httpThread.join();
     return 0;
 }

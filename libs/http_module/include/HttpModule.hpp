@@ -26,13 +26,13 @@ namespace modules
 
             void Init(const ziapi::config::Node &cfg);
 
-            [[nodiscard]] ziapi::Version GetVersion() const noexcept override;
+            [[nodiscard]] inline ziapi::Version GetVersion() const noexcept override;
 
-            [[nodiscard]] ziapi::Version GetCompatibleApiVersion() const noexcept override;
+            [[nodiscard]] inline ziapi::Version GetCompatibleApiVersion() const noexcept override;
 
-            [[nodiscard]] const char *GetName() const noexcept override;
+            [[nodiscard]] inline const char *GetName() const noexcept override;
 
-            [[nodiscard]] const char *GetDescription() const noexcept override;
+            [[nodiscard]] inline const char *GetDescription() const noexcept override;
 
             void Run(ziapi::http::IRequestOutputQueue &requests, ziapi::http::IResponseInputQueue &responses) override;
 

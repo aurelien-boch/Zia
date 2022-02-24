@@ -1,16 +1,18 @@
-set(NAME asioHttpClient_tests)
+set(NAME httpModule_tests)
 
 find_package(catch2)
 
 add_executable(
         ${NAME}
-        ${CMAKE_CURRENT_LIST_DIR}/AsioHttpClientTests.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/HttpModuleTests.cpp
 )
 
 target_link_libraries(
         ${NAME}
         Catch2::Catch2WithMain
         http_network
+        http_module
+        config_parser
 )
 
 set_target_properties(

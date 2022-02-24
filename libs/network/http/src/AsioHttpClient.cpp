@@ -71,9 +71,9 @@ namespace network::http
             if (ec) {
                 const auto it = error::AsioErrorTranslator.find(ec);
 
-                if (it == error::AsioErrorTranslator.end()) {
+                if (it == error::AsioErrorTranslator.end())
                     std::cerr << "ERROR(network/AsioHttpClient): " << ec << std::endl;
-                } else
+                else
                     cb(it->second);
             } else
                  cb(error::SOCKET_NO_ERROR);

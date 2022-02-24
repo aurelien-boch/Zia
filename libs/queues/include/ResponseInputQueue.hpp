@@ -7,6 +7,9 @@
 
 namespace modules
 {
+    /**
+     * @class Implements Response queue
+     */
     class ResponseInputQueue : public ziapi::http::IResponseInputQueue
     {
         public:

@@ -1,0 +1,3 @@
+modules:
+  http:
+    port: 3000
