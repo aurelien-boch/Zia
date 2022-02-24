@@ -9,14 +9,16 @@ namespace network::http
         _socket{asio::ip::tcp::socket{io_context}},
         _header{},
         _body{},
-        _buffer{}
+        _buffer{},
+        _address{static_cast<std::uint32_t>(std::stoul(_socket.remote_endpoint().address().to_string())), static_cast<std::uint8_t>(_socket.remote_endpoint().port())}
     {}
 
     AsioHttpClient::AsioHttpClient(asio::ip::tcp::socket &socket) :
         _socket{std::move(socket)},
         _header{},
         _body{},
-        _buffer{}
+        _buffer{},
+        _address{static_cast<std::uint32_t>(std::stoul(_socket.remote_endpoint().address().to_string())), static_cast<std::uint8_t>(_socket.remote_endpoint().port())}
     {}
 
     AsioHttpClient::~AsioHttpClient()
@@ -157,6 +159,11 @@ namespace network::http
             throw std::runtime_error("ERROR(network/AsioHttpClient): Invalid header");
         body = header.substr(pos + toFind.size());
         header = header.substr(0, pos + toFind.size());
+    }
+
+    Address const &AsioHttpClient::getAddress() const noexcept
+    {
+        return _address;
     }
 
 }

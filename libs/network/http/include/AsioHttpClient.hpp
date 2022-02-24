@@ -36,8 +36,12 @@ namespace network::http
                 std::function<void(error::ErrorSocket const &, std::string &)> &&callback
             ) noexcept override;
 
+            [[nodiscard]] inline Address const &getAddress() const noexcept override;
+
+
         private:
             asio::ip::tcp::socket _socket;
+            Address _address;
             std::string _header;
             std::string _body;
             char _buffer[257];

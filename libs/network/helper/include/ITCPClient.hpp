@@ -49,6 +49,12 @@ namespace network
              */
             virtual void asyncReceive(
                 std::function<void(error::ErrorSocket const &, Request &)> &&callback) noexcept = 0;
+
+            /**
+             * @brief Retrieves the Client's address
+             * @return a const reference to the Client's address
+             */
+            [[nodiscard]] inline virtual Address const &getAddress() const noexcept = 0;
     };
 }
 
