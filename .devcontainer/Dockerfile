@@ -11,7 +11,8 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     build-essential                                         \
     wget                                                    \
     cmake                                                   \
-    gcovr
+    gcovr                                                   \
+    clang-format
 
 # Install conan
 RUN pip3 install conan
