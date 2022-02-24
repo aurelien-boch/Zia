@@ -30,7 +30,7 @@ namespace network::http
 
             void connect(Address const &peer) noexcept override;
 
-            std::size_t send(std::string const &data) noexcept override;
+            [[nodiscard]]  std::size_t send(std::string const &data) noexcept override;
 
             [[nodiscard]] std::string receive() noexcept override;
 
