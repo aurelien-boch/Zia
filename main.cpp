@@ -2,6 +2,7 @@
 #include "ConfigParser.hpp"
 #include "Core.hpp"
 
+
 int main()
 {
     std::vector<parser::LibInfo> pipelines = parser::ConfigParser::getConfigsPaths("../../pipelines.txt");

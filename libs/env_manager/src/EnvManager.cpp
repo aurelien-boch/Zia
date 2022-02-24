@@ -141,7 +141,7 @@ namespace env
         env.erase(env.begin(), env.begin() + 1);
 #else
         for (std::size_t i = 0; environ[i] != nullptr; ++i)
-                    env.emplace_back(environ[i]);
+                    _env.emplace_back(environ[i]);
 #endif
         for (auto const &e : env) {
             auto delimiter = static_cast<std::int64_t>(e.find('='));

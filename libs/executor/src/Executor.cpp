@@ -177,7 +177,7 @@ namespace execution
         if (pid == 0) {
             dup2(stdinDescriptor, STDIN_FILENO);
             dup2(stdoutDescriptor, STDOUT_FILENO);
-            execve(commandLine.c_str(), convertedArgs.data(), env);
+            execve(commandLine.c_str(), convertedArgs.data(), _env);
         } else
             _processPid = pid;
 #endif
