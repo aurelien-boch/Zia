@@ -17,8 +17,8 @@ namespace core
     {
         if (!_configLoaded)
             throw std::runtime_error{"Error, the config isn't loaded"};
-        std::unique_ptr<modules::RequestOutputQueue> requests{std::make_unique<modules::RequestOutputQueue>()};
-        std::unique_ptr<modules::ResponseInputQueue> responses{std::make_unique<modules::ResponseInputQueue>()};
+        std::unique_ptr<modules::RequestOutputQueue> requests = std::make_unique<modules::RequestOutputQueue>();
+        std::unique_ptr<modules::ResponseInputQueue> responses = std::make_unique<modules::ResponseInputQueue>();
         std::jthread _networkRunThread{[this, &requests, &responses]() -> void {
             _networkModule->Run(*requests, *responses);
         }};
@@ -39,18 +39,18 @@ namespace core
         std::unique_ptr<modules::ResponseInputQueue> &responses)
     {
         ziapi::http::Response response{};
-        std::optional<std::pair<ziapi::http::Request, ziapi::http::Context>> req{requests->Pop()};
+//        std::optional<std::pair<ziapi::http::Request, ziapi::http::Context>> req{requests->Pop()};
 
-        if (!req)
-            return;
-        auto &[request, ctx] = *req;
-        for (auto const &e : _preProcessors)
-            e->PreProcess(ctx, request);
-        for (auto const &e : _handlers)
-            e->Handle(ctx, request, response);
-        for (auto const &e : _postProcessors)
-            e->PostProcess(ctx, response);
-        responses->Push({response, ctx});
+//        if (!req)
+//            return;
+//        auto &[request, ctx] = *req;
+//        for (auto const &e : _preProcessors)
+//            e->PreProcess(ctx, request);
+//        for (auto const &e : _handlers)
+//            e->Handle(ctx, request, response);
+//        for (auto const &e : _postProcessors)
+//            e->PostProcess(ctx, response);
+//        responses->Push({response, ctx});
     }
 
     void Core::stop()
@@ -64,15 +64,16 @@ namespace core
         _configLoaded = false;
         _purgeData();
         _parser.parse(_filepath);
-//        ziapi::config::Dict config = _parser.getConfigMap();
-//        parser::ConfigParser::getConfigsPaths();
+        ziapi::config::Dict config = _parser.getConfigMap();
+        ziapi::config::Dict modules = config["modules"]->AsDict();
 
-        //TODO: learn how to iterate on modules
-//        for (auto const &e : modules) {
-            //todo get module path
-//            std::string path{"/"};
-//            _loadModule(cfg, path);
-//        }
+        for (auto const &[_, e] : modules) {
+            try {
+                auto path = e->AsDict().at("path")->AsString();
+
+                _loadModule(config, path);
+            } catch (std::out_of_range const &_) {};
+        }
         _configLoaded = true;
     }
 

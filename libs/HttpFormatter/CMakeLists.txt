@@ -9,7 +9,7 @@ endif()
 if (UNIX)
     add_compile_options(-Wall -Wextra -Weffc++)
 else ()
-    add_compile_options(/W4)
+    add_compile_options(/W3)
 endif ()
 
 add_library(
