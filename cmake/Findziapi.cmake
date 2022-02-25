@@ -3,7 +3,7 @@ if (NOT ziapi_found)
     FetchContent_Declare(
             ziapi_git
             GIT_REPOSITORY  https://github.com/martin-olivier/ZiAPI.git
-            GIT_TAG         v3.1.1
+            GIT_TAG         v4.0.0
             INSTALL_COMMAND ""
             TEST_COMMAND    ""
     )
