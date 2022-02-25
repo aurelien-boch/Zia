@@ -10,10 +10,6 @@
 #include <Loader.hpp>
 #include <ConfigParser.hpp>
 
-#include <ziapi/Config.hpp>
-#include <ziapi/Module.hpp>
-#include <string>
-
 namespace core
 {
     class Core
@@ -28,7 +24,7 @@ namespace core
             /**
              * todo
              */
-            [[noreturn]] void run();
+            void run();
 
             /**
              * todo
