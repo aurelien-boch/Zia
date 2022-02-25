@@ -17,9 +17,9 @@ namespace core
     {
         if (!_configLoaded)
             throw std::runtime_error{"Error, the config isn't loaded"};
-
         std::unique_ptr<modules::RequestOutputQueue> requests{std::make_unique<modules::RequestOutputQueue>()};
         std::unique_ptr<modules::ResponseInputQueue> responses{std::make_unique<modules::ResponseInputQueue>()};
+
         std::jthread _networkRunThread{[this, &requests, &responses]() -> void {
             _networkModule->Run(*requests, *responses);
         }};
@@ -40,18 +40,18 @@ namespace core
         std::unique_ptr<modules::ResponseInputQueue> &responses)
     {
         ziapi::http::Response response{};
-        std::optional<std::pair<ziapi::http::Request, ziapi::http::Context>> req{requests->Pop()};
+//        std::optional<std::pair<ziapi::http::Request, ziapi::http::Context>> req{requests->Pop()};
 
-        if (!req)
-            return;
-        auto &[request, ctx] = *req;
-        for (auto const &e : _preProcessors)
-            e->PreProcess(ctx, request);
-        for (auto const &e : _handlers)
-            e->Handle(ctx, request, response);
-        for (auto const &e : _postProcessors)
-            e->PostProcess(ctx, response);
-        responses->Push({response, ctx});
+//        if (!req)
+//            return;
+//        auto &[request, ctx] = *req;
+//        for (auto const &e : _preProcessors)
+//            e->PreProcess(ctx, request);
+//        for (auto const &e : _handlers)
+//            e->Handle(ctx, request, response);
+//        for (auto const &e : _postProcessors)
+//            e->PostProcess(ctx, response);
+//        responses->Push({response, ctx});
     }
 
     void Core::stop()
