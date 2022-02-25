@@ -1,4 +1,3 @@
-# DEFINES LIBS HERE USING add_subdirectory
 add_subdirectory(HttpParser)
 add_subdirectory(loader)
 add_subdirectory(HttpFormatter)

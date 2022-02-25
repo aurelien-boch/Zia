@@ -4,17 +4,18 @@
 #include <queue>
 
 #include <ziapi/Http.hpp>
+#include <Loader.hpp>
 
 namespace modules
 {
-    class RequestOutputQueue : public ziapi::http::IRequestOutputQueue
+    class DllExport RequestOutputQueue : public ziapi::http::IRequestOutputQueue
     {
         public:
             using RequestPair = std::pair<ziapi::http::Request, ziapi::http::Context>;
 
             RequestOutputQueue();
 
-            ~RequestOutputQueue() = default;
+            ~RequestOutputQueue() override = default;
 
             [[nodiscard]] std::optional<RequestPair> Pop();
 

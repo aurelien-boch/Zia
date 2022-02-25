@@ -2,9 +2,13 @@
 #define CORE_HPP
 
 #include <memory>
+#include <string>
+
 #include <ziapi/Config.hpp>
 #include <ziapi/Module.hpp>
-#include <string>
+
+#include <Loader.hpp>
+#include <ConfigParser.hpp>
 
 namespace core
 {
@@ -15,29 +19,42 @@ namespace core
              * todo
              * @param filepath
              */
-            explicit Core(std::string &&filepath) noexcept;
+            explicit Core(std::string &filepath) noexcept;
 
             /**
              * todo
              */
-            [[noreturn]] void run();
+            void run();
 
             /**
              * todo
              */
             void stop();
 
+            /**
+             * todo
+             * @param cfg
+             */
+            void config() noexcept;
+
         private:
-
-            void _config() noexcept;
-
             bool _running;
             bool _configLoaded;
+            std::string _filepath;
 
+            parser::ConfigParser _parser;
             std::shared_ptr<ziapi::INetworkModule> _networkModule;
-            std::vector<std::shared_ptr<ziapi::IHandlerModule>> _modules;
             std::vector<std::shared_ptr<ziapi::IPreProcessorModule>> _preProcessors;
+            std::vector<std::shared_ptr<ziapi::IHandlerModule>> _handlers;
             std::vector<std::shared_ptr<ziapi::IPostProcessorModule>> _postProcessors;
+            std::vector<loader::Loader> _libs;
+
+            void _serveRequest(std::unique_ptr<modules::RequestOutputQueue> &requests,
+                               std::unique_ptr<modules::ResponseInputQueue> &responses);
+
+            void _purgeData();
+
+            void _loadModule(const ziapi::config::Node &cfg, std::string &path);
     };
 }
 

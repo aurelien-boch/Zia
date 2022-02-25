@@ -14,16 +14,22 @@ target_include_directories(
         include/
 )
 
-set_target_properties(
+if (UNIX)
+    add_compile_options(-Wall -Wextra -Weffc++)
+else ()
+    add_compile_options(/W4)
+endif ()
+
+target_compile_options(
     config_parser
-        PROPERTIES
-        CXX_STANDARD 20
-        LINKER_LANGUAGE CXX
+        PRIVATE
+        ${COMPILE_FLAGS}
 )
 
 target_link_libraries(
     config_parser
         ziapi
+        loader
 )
 
 conan_target_link_libraries(

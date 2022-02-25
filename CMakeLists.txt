@@ -43,4 +43,5 @@ target_link_libraries(
         ziapi
         loader
         config_parser
+        queues
 )

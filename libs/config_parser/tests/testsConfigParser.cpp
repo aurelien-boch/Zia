@@ -22,7 +22,7 @@ TEST_CASE("creation of a config parser and check of a valid value in the config"
 {
     parser::ConfigParser parser("../libs/config_parser/tests/config.yml");
 
-    REQUIRE(parser.getValue("modules", "phpCGI", "foo")->AsString() == "bar");
+    REQUIRE(parser.getValue("modules", "phpCGI", "_loadModule")->AsString() == "bar");
 }
 
 TEST_CASE("creation of a config parser and check of an invalid value in the config", "[config_parser]")
@@ -37,7 +37,7 @@ TEST_CASE("creation of a config parser and check of a valid value in the config 
 {
     parser::ConfigParser parser("../libs/config_parser/tests/config.yml");
 
-    REQUIRE_THROWS_AS(parser.getValue("module", "phpCGI", "foo")->AsString(), std::range_error);
+    REQUIRE_THROWS_AS(parser.getValue("module", "phpCGI", "_loadModule")->AsString(), std::range_error);
 }
 
 TEST_CASE("creation of a config parser and check of a valid value in the config with an invalid module",
@@ -45,7 +45,7 @@ TEST_CASE("creation of a config parser and check of a valid value in the config 
 {
     parser::ConfigParser parser("../libs/config_parser/tests/config.yml");
 
-    REQUIRE_THROWS_AS(parser.getValue("modules", "phpCGI_", "foo")->AsString(), std::range_error);
+    REQUIRE_THROWS_AS(parser.getValue("modules", "phpCGI_", "_loadModule")->AsString(), std::range_error);
 }
 
 TEST_CASE("creation of a config parser with an empty config file", "[config_parser]")
@@ -62,12 +62,12 @@ TEST_CASE("creation of a config parser and access via the operator", "[config_pa
 {
     parser::ConfigParser parser("../libs/config_parser/tests/config.yml");
 
-    REQUIRE(parser["phpCGI"]["foo"]->AsString() == "bar");
+    REQUIRE(parser["phpCGI"]["_loadModule"]->AsString() == "bar");
 }
 
 TEST_CASE("creation of a config parser and access via the operator with an invalid module", "[config_parser]")
 {
     parser::ConfigParser parser("../libs/config_parser/tests/config.yml");
 
-    REQUIRE_THROWS_AS(parser["phpCGI_"]["foo"], std::range_error);
+    REQUIRE_THROWS_AS(parser["phpCGI_"]["_loadModule"], std::range_error);
 }

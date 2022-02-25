@@ -1,38 +1,56 @@
+#include <RequestOutputQueue.hpp>
+#include <ResponseInputQueue.hpp>
+#include <thread>
+
 #include "Core.hpp"
-
-class A : public ziapi::http::IResponseInputQueue {
-    public:
-        std::pair<ziapi::http::Request, ziapi::http::Context> Pop() override
-        {
-            return {};
-        }
-
-        [[nodiscard]] std::size_t Size() const noexcept
-        {
-            return 0;
-        }
-};
-class B : public ziapi::http::IRequestOutputQueue {};
 
 namespace core
 {
-    Core::Core(std::string &&filepath) noexcept :
-        _running(false),
-        _configLoaded(false)
-    {
+    Core::Core(std::string &filepath) noexcept :
+        _running{false},
+        _configLoaded{false},
+        _filepath{filepath},
+        _parser{_filepath}
+    {}
 
+    void Core::run()
+    {
+        if (!_configLoaded)
+            throw std::runtime_error{"Error, the config isn't loaded"};
+        std::unique_ptr<modules::RequestOutputQueue> requests{std::make_unique<modules::RequestOutputQueue>()};
+        std::unique_ptr<modules::ResponseInputQueue> responses{std::make_unique<modules::ResponseInputQueue>()};
+        std::jthread _networkRunThread{[this, &requests, &responses]() -> void {
+            _networkModule->Run(*requests, *responses);
+        }};
+
+        _running = true;
+        while (true)
+        {
+            while (requests->Size() == 0 && _running)
+                std::this_thread::yield();
+            if (!_running)
+                return;
+            _serveRequest(requests, responses);
+        }
     }
 
-    [[noreturn]] void Core::run()
+    void Core::_serveRequest(
+        std::unique_ptr<modules::RequestOutputQueue> &requests,
+        std::unique_ptr<modules::ResponseInputQueue> &responses)
     {
-        std::unique_ptr<ziapi::http::IRequestOutputQueue> requests = std::make_unique<A>();
-        std::unique_ptr<ziapi::http::IResponseInputQueue> responses;
+        ziapi::http::Response response{};
+        std::optional<std::pair<ziapi::http::Request, ziapi::http::Context>> req{requests->Pop()};
 
-//        _networkModule->Run(*requests, *responses); -> error => blocking
-        _running = true;
-        while (_running)
-        {
-        }
+        if (!req)
+            return;
+        auto &[request, ctx] = *req;
+        for (auto const &e : _preProcessors)
+            e->PreProcess(ctx, request);
+        for (auto const &e : _handlers)
+            e->Handle(ctx, request, response);
+        for (auto const &e : _postProcessors)
+            e->PostProcess(ctx, response);
+        responses->Push({response, ctx});
     }
 
     void Core::stop()
@@ -41,10 +59,51 @@ namespace core
         _running = false;
     }
 
-    void Core::_config() noexcept
+    void Core::config() noexcept
     {
         _configLoaded = false;
-        //todo load config
+        _purgeData();
+        _parser.parse(_filepath);
+//        ziapi::config::Dict config = _parser.getConfigMap();
+//        parser::ConfigParser::getConfigsPaths();
+
+        //TODO: learn how to iterate on modules
+//        for (auto const &e : modules) {
+            //todo get module path
+//            std::string path{"/"};
+//            _loadModule(cfg, path);
+//        }
         _configLoaded = true;
+    }
+
+    void Core::_loadModule(const ziapi::config::Node &cfg, std::string &path)
+    {
+        loader::Loader &loader = _libs.emplace_back(path);
+        std::function<ziapi::IModule *()> symbol;
+
+        try {
+            symbol = loader.getSymbol<ziapi::IModule *()>("LoadZiaModule");
+        } catch (std::runtime_error &e) {
+            std::cerr << "Error, cannot find LoadZiaModule method on " << path << " library. " << std::endl;
+        }
+        std::shared_ptr<ziapi::IModule> instance{symbol()};
+
+        instance->Init(cfg);
+        if (dynamic_cast<ziapi::IPreProcessorModule *>(instance.get()))
+            _preProcessors.emplace_back(std::dynamic_pointer_cast<ziapi::IPreProcessorModule>(instance));
+        if (dynamic_cast<ziapi::IHandlerModule *>(instance.get()))
+            _handlers.emplace_back(std::dynamic_pointer_cast<ziapi::IHandlerModule>(instance));
+        if (dynamic_cast<ziapi::IPostProcessorModule *>(instance.get()))
+            _postProcessors.emplace_back(std::dynamic_pointer_cast<ziapi::IPostProcessorModule>(instance));
+    }
+
+    void Core::_purgeData()
+    {
+        if (_configLoaded)
+            throw std::runtime_error{"Error config is in loaded state, cannot perform destruction"};
+        _preProcessors.clear();
+        _handlers.clear();
+        _postProcessors.clear();
+        _libs.clear();
     }
 }

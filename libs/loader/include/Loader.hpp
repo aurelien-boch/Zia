@@ -8,7 +8,7 @@
 
 #ifdef _WIN32
     #include "Windows.h"
-    #define DllExport __declspec(dllexport)
+    #define DllExport   __declspec( dllexport )
 #else
     #include <dlfcn.h>
     #define DllExport

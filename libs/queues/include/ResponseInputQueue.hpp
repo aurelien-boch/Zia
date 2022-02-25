@@ -4,13 +4,14 @@
 #include <queue>
 
 #include <ziapi/Http.hpp>
+#include <Loader.hpp>
 
 namespace modules
 {
     /**
      * @class Implements Response queue
      */
-    class ResponseInputQueue : public ziapi::http::IResponseInputQueue
+    class DllExport ResponseInputQueue : public ziapi::http::IResponseInputQueue
     {
         public:
 
@@ -18,7 +19,7 @@ namespace modules
 
             ResponseInputQueue();
 
-            ~ResponseInputQueue() = default;
+            ~ResponseInputQueue() override = default;
 
             [[nodiscard]] std::optional<ResponsePair> Pop() override;
 

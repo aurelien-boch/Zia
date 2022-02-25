@@ -5,6 +5,7 @@
 #include <iostream>
 #include <yaml-cpp/yaml.h>
 #include <ziapi/Config.hpp>
+#include <Loader.hpp>
 
 #ifdef _WIN32
     #define DllExport __declspec(dllexport)

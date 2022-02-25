@@ -31,12 +31,13 @@ else ()
 endif ()
 
 target_compile_options(
-        ${NAME}
+    ${NAME}
         PRIVATE
         ${COMPILE_FLAGS}
 )
 
 target_link_libraries(
-        ${NAME}
+    ${NAME}
         ziapi
+        loader
 )
