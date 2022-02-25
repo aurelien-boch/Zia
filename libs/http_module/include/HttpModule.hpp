@@ -38,18 +38,24 @@ namespace modules
 
             void Terminate() override;
 
-        private:
+        protected:
 
             using IClient = network::ITCPClient<std::string, std::string>;
 
             bool _run;
             std::uint16_t _port;
-            asio::io_service _service;
             std::unique_ptr<network::ITCPListener<std::string, std::string>> _listener;
-            std::vector<std::shared_ptr<IClient>> _clients;
 
             static const ziapi::Version _version;
             static const ziapi::Version _compatibleApiVersion;
+
+
+        private:
+
+            asio::io_service _service;
+            std::vector<std::shared_ptr<IClient>> _clients;
+
+
 
             formatter::HttpFormatter _formatter;
             parser::HttpParser _parser;

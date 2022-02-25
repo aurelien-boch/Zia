@@ -3,9 +3,11 @@
 
 #include <ziapi/Module.hpp>
 
+#include <HttpModule.hpp>
+
 namespace modules
 {
-    class HttpsModule : ziapi::INetworkModule
+    class HttpsModule : public HttpModule
     {
         public:
 
@@ -25,11 +27,7 @@ namespace modules
 
             void Run(ziapi::http::IRequestOutputQueue &requests, ziapi::http::IResponseInputQueue &responses) override;
 
-            void Terminate() override;
-
         private:
-
-            bool _run;
 
             static const ziapi::Version _version;
             static const ziapi::Version _compatibleApiVersion;

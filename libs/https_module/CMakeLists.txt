@@ -49,4 +49,5 @@ target_link_libraries(
         ziaHttpParser
         HttpFormatter
         loader
+        http_module
 )

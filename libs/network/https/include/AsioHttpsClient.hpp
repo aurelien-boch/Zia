@@ -3,14 +3,21 @@
 
 #include <string>
 
+#include <asio/ssl.hpp>
+
 #include <ITCPClient.hpp>
 
 namespace network::https
 {
+    /**
+     * @class Implements an Http client with SSL using Asio library
+     */
     class AsioHttpsClient : ITCPClient<std::string, std::string>
     {
         public:
-            AsioHttpsClient();
+            explicit AsioHttpsClient(asio::ssl::context &ctx, std::string const &certificatePath = "");
+
+            explicit AsioHttpsClient(asio::ip::tcp::socket &socket);
 
             ~AsioHttpsClient() = default;
 
@@ -29,6 +36,8 @@ namespace network::https
             ) noexcept override;
 
         private:
+            asio::ssl::context &_context;
+            Address _address;
     };
 }
 

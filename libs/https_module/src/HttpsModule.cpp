@@ -1,11 +1,13 @@
 #include "HttpsModule.hpp"
 
+#include <Loader.hpp>
+
 namespace modules
 {
     const ziapi::Version HttpsModule::_version = {1, 1, 1};
     const ziapi::Version HttpsModule::_compatibleApiVersion = {3, 1, 1};
 
-    HttpsModule::HttpsModule()
+    HttpsModule::HttpsModule() : HttpModule()
     {}
 
     void HttpsModule::Init(const ziapi::config::Node &cfg)
@@ -34,6 +36,11 @@ namespace modules
     void HttpsModule::Run(ziapi::http::IRequestOutputQueue &requests, ziapi::http::IResponseInputQueue &responses)
     {}
 
-    void HttpsModule::Terminate()
-    {}
+}
+
+extern "C" {
+    DllExport ziapi::IModule * LoadZiaModule()
+    {
+        return new modules::HttpsModule();
+    }
 }
