@@ -1,1 +1,1 @@
-../config.yml
+basic::../config.yml::./lib/libmock_lib.so
