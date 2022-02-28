@@ -48,21 +48,21 @@ namespace network::http
         protected:
             asio::ip::tcp::socket _socket;
             Address _address;
-<<<<<<< HEAD
+
             std::string _requestBuffer;
             std::size_t _bodyLength;
             std::size_t _totalBytesRead;
-=======
-        private:
 
             std::string _header;
             std::string _body;
->>>>>>> 2a5503a (feat(network/https): Add connect method implementation in AsioHttpsClient)
+
+            virtual void _rec(std::string &str);
+
+        private:
+
             char _buffer[257];
 
             [[nodiscard]] std::size_t _getContentLength(std::string const &header);
-
-            void _rec(std::string &str);
 
             void _cleanHeader(std::string &header, std::string &body);
     };

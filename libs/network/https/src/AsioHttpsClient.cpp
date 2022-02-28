@@ -37,24 +37,35 @@ namespace network::https
         }
     }
 
-    std::string receive() noexcept
-{
-    try {
-        std::string data;
-        
-    } catch (std::system_error const &err) {
-        std::cerr << "ERROR(network/AsioHttpsClient): " << err.what() << std::endl;
-        return {};
-    }
-}
+//    std::string AsioHttpsClient::receive() noexcept
+//    {
+//        try {
+//            std::string header;
+//            std::string body;
+//
+//            return (header + body);
+//
+//        } catch (std::system_error const &err) {
+//            std::cerr << "ERROR(network/AsioHttpsClient): " << err.what() << std::endl;
+//            return {};
+//        }
+//    }
 
-    void asyncSend(
+    void AsioHttpsClient::asyncSend(
         std::string const &packet,
         std::function<void(error::ErrorSocket const &)> &&callback) noexcept
     {}
 
-    void asyncReceive(
-            std::function<void(error::ErrorSocket const &, std::string &)> &&callback
-    ) noexcept
+    void AsioHttpsClient::asyncReceive(
+        std::function<void(error::ErrorSocket const &, std::string &)> &&callback) noexcept
     {}
+
+    void AsioHttpsClient::_rec(std::string &str)
+    {
+        char buff[257]{};
+
+        asio::read(_sslSocket, asio::buffer(buff, sizeof(char) * 256));
+        str += buff;
+    }
+
 }

@@ -25,7 +25,7 @@ namespace network::https
 
             [[nodiscard]] std::size_t send(std::string const &data) noexcept override;
 
-            [[nodiscard]] std::string receive() noexcept override;
+            // [[nodiscard]] std::string receive() noexcept override;
 
             void asyncSend(
                 std::string const &packet,
@@ -40,6 +40,9 @@ namespace network::https
             asio::ssl::stream<asio::ip::tcp::socket> _sslSocket;
             asio::ip::tcp::socket::lowest_layer_type& _connectionSocket;
             // asio::ip::tcp::resolver _resolver;
+
+            void _rec(std::string &str) override;
+
 
     };
 }
