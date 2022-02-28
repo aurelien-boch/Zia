@@ -6,6 +6,12 @@
 #include <yaml-cpp/yaml.h>
 #include <ziapi/Config.hpp>
 
+#ifdef _WIN32
+    #define DllExport __declspec(dllexport)
+#else
+    #define DllExport
+#endif
+
 namespace parser
 {
     struct LibInfo {
@@ -14,7 +20,7 @@ namespace parser
         std::string modulePath;
     };
 
-    class ConfigParser
+    class DllExport ConfigParser
     {
       public:
         ConfigParser(std::string const &path);
