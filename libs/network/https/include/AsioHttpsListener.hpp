@@ -22,7 +22,6 @@ namespace network::https
 
         private:
             std::string _certificatePath;
-
     };
 }
 

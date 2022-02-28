@@ -5,17 +5,17 @@
 
 #include <asio/ssl.hpp>
 
-#include <ITCPClient.hpp>
+#include <AsioHttpClient.hpp>
 
 namespace network::https
 {
     /**
      * @class Implements an Http client with SSL using Asio library
      */
-    class AsioHttpsClient : ITCPClient<std::string, std::string>
+    class AsioHttpsClient : http::AsioHttpClient
     {
         public:
-            explicit AsioHttpsClient(asio::ssl::context &ctx, std::string const &certificatePath = "");
+            explicit AsioHttpsClient(asio::io_context &ctx, std::string const &certificatePath = "");
 
             explicit AsioHttpsClient(asio::ip::tcp::socket &socket);
 
@@ -23,7 +23,7 @@ namespace network::https
 
             void connect(Address const &peer) noexcept override;
 
-            std::size_t send(std::string const &data) noexcept override;
+            [[nodiscard]] std::size_t send(std::string const &data) noexcept override;
 
             [[nodiscard]] std::string receive() noexcept override;
 
@@ -36,8 +36,10 @@ namespace network::https
             ) noexcept override;
 
         private:
-            asio::ssl::context &_context;
-            Address _address;
+            asio::ssl::context _sslContext;
+            asio::ssl::stream<asio::ip::tcp::socket> _sslSocket;
+            asio::ip::tcp::socket::lowest_layer_type& _connectionSocket;
+
     };
 }
 

@@ -1,8 +1,9 @@
 #ifndef ASIOHTTPLISTENER_HPP_
 #define ASIOHTTPLISTENER_HPP_
 
-#include <asio.hpp>
 #include <memory>
+
+#include <asio/ip/tcp.hpp>
 
 #include <ITCPListener.hpp>
 

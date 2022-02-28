@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include <asio.hpp>
+#include <asio/ip/tcp.hpp>
 
 #include <Utility.hpp>
 #include <ITCPClient.hpp>
@@ -28,7 +28,7 @@ namespace network::http
 
             ~AsioHttpClient() override;
 
-            void connect(Address const &peer) noexcept override;
+            void connect(Address const &peer) noexcept;
 
             [[nodiscard]]  std::size_t send(std::string const &data) noexcept override;
 
@@ -45,12 +45,19 @@ namespace network::http
             [[nodiscard]] inline Address const &getAddress() const noexcept override;
 
 
-        private:
+        protected:
             asio::ip::tcp::socket _socket;
             Address _address;
+<<<<<<< HEAD
             std::string _requestBuffer;
             std::size_t _bodyLength;
             std::size_t _totalBytesRead;
+=======
+        private:
+
+            std::string _header;
+            std::string _body;
+>>>>>>> 2a5503a (feat(network/https): Add connect method implementation in AsioHttpsClient)
             char _buffer[257];
 
             [[nodiscard]] std::size_t _getContentLength(std::string const &header);
