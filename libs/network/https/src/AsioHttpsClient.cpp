@@ -1,3 +1,6 @@
+#include <asio/write.hpp>
+#include <asio/read.hpp>
+
 #include "AsioHttpsClient.hpp"
 
 namespace network::https
@@ -6,31 +9,44 @@ namespace network::https
         AsioHttpClient(ctx),
         _sslContext{asio::ssl::context::sslv23},
         _sslSocket{ctx, _sslContext},
-         _connectionSocket{_sslSocket.lowest_layer()}
+        _connectionSocket{_sslSocket.lowest_layer()} // ,
+        // _resolver{ctx}
     {
-        _sslContext.set_verify_mode(asio::ssl::verify_peer);
-        if (certificatePath.empty()) {
-            // TODO
-        }
+        if (certificatePath.empty())
+            _sslContext.set_default_verify_paths();
         else
             _sslContext.load_verify_file(certificatePath);
+        _sslSocket.set_verify_mode(asio::ssl::verify_peer);
+        _sslSocket.handshake(asio::ssl::stream<asio::ip::tcp::socket>::client);
     }
 
     void AsioHttpsClient::connect(Address const &peer) noexcept
     {
         asio::ip::tcp::endpoint endpoint{asio::ip::address_v4{peer.ipAddress}, peer.port};
+        // asio::ip::tcp::resolver::query query("host.name", "https");
 
         _connectionSocket.connect(endpoint);
     }
     std::size_t AsioHttpsClient::send(std::string const &data) noexcept
     {
-        return 0;
+        try {
+            return asio::write(_sslSocket, asio::buffer(data.c_str(), sizeof(char) * data.size()));
+        } catch (std::system_error const &err) {
+            std::cerr << "ERROR(network/AsioHttpsClient): " << err.what() << std::endl;
+            return 0;
+        }
     }
 
     std::string receive() noexcept
-    {
+{
+    try {
+        std::string data;
+        
+    } catch (std::system_error const &err) {
+        std::cerr << "ERROR(network/AsioHttpsClient): " << err.what() << std::endl;
         return {};
     }
+}
 
     void asyncSend(
         std::string const &packet,

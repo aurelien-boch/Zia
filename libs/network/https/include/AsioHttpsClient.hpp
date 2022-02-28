@@ -39,6 +39,7 @@ namespace network::https
             asio::ssl::context _sslContext;
             asio::ssl::stream<asio::ip::tcp::socket> _sslSocket;
             asio::ip::tcp::socket::lowest_layer_type& _connectionSocket;
+            // asio::ip::tcp::resolver _resolver;
 
     };
 }
