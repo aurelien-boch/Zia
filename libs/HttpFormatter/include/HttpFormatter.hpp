@@ -5,6 +5,12 @@
 
 #include "ziapi/Http.hpp"
 
+#ifdef _WIN32
+    #define DllExport __declspec(dllexport)
+#else
+    #define DllExport
+#endif
+
 namespace formatter {
 
 /**
@@ -12,7 +18,7 @@ namespace formatter {
  *
  * @brief Formats Http responses into a string
  */
-class HttpFormatter {
+class DllExport HttpFormatter {
 
 public:
 
