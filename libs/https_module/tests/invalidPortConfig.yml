@@ -1,4 +1,6 @@
 modules:
+  https:
+    port: abc
   networksTLS:
     ip: plouf
     location: /etc/nginx/certs

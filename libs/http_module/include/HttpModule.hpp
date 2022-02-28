@@ -45,20 +45,16 @@ namespace modules
             bool _run;
             std::uint16_t _port;
             std::unique_ptr<network::ITCPListener<std::string, std::string>> _listener;
+            asio::io_service _service;
+            std::vector<std::shared_ptr<IClient>> _clients;
+            formatter::HttpFormatter _formatter;
+            parser::HttpParser _parser;
 
             static const ziapi::Version _version;
             static const ziapi::Version _compatibleApiVersion;
 
 
         private:
-
-            asio::io_service _service;
-            std::vector<std::shared_ptr<IClient>> _clients;
-
-
-
-            formatter::HttpFormatter _formatter;
-            parser::HttpParser _parser;
 
             void _onConnect(
                     ziapi::http::IRequestOutputQueue &requests,

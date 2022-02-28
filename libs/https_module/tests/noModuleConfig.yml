@@ -1,5 +1,5 @@
 modules:
-  networksTLS:
+  otherModule:
     ip: plouf
     location: /etc/nginx/certs
     id: 1234

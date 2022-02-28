@@ -5,10 +5,10 @@ set(NAME https_module)
 add_subdirectory(src/)
 add_subdirectory(include/)
 
-#if (DEFINED ENABLE_TESTING AND "${ENABLE_TESTING}" STREQUAL "yes")
-#    message(STATUS "ENABLE_TESTING=yes detected, enabling testing")
-#    add_subdirectory(tests)
-#endif()
+if (DEFINED ENABLE_TESTING AND "${ENABLE_TESTING}" STREQUAL "yes")
+    message(STATUS "ENABLE_TESTING=yes detected, enabling testing")
+    add_subdirectory(tests)
+endif()
 
 add_library(
         ${NAME}
@@ -38,6 +38,7 @@ target_compile_options(
 conan_target_link_libraries(
         ${NAME}
         CONAN_PKG::asio
+        CONAN_PKG::openssl
 )
 
 target_link_libraries(
@@ -50,4 +51,5 @@ target_link_libraries(
         HttpFormatter
         loader
         http_module
+#        https_module
 )

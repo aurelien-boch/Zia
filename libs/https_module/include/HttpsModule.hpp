@@ -31,6 +31,8 @@ namespace modules
 
             static const ziapi::Version _version;
             static const ziapi::Version _compatibleApiVersion;
+
+            std::string _certificatePath;
     };
 }
 
