@@ -9,6 +9,12 @@
 #include "ziapi/Http.hpp"
 #include "ziapi/HttpConstants.hpp"
 
+#ifdef _WIN32
+    #define DllExport __declspec(dllexport)
+#else
+    #define DllExport
+#endif
+
 namespace parser {
 
 /**
@@ -16,7 +22,7 @@ namespace parser {
  *
  * @brief Parses HTTP requests on each `parse` call
  */
-class HttpParser {
+class DllExport HttpParser {
 
 public:
 

@@ -5,6 +5,12 @@
 #include <ostream>
 #include <string_view>
 
+#ifdef _WIN32
+    #define DllExport __declspec(dllexport)
+#else
+    #define DllExport
+#endif
+
 namespace parser {
 
 /**
@@ -13,7 +19,7 @@ namespace parser {
  *
  * It is intended that exceptions used for this module are derived from this class
  */
-class Exception : public std::exception {
+class DllExport Exception : public std::exception {
 
 public:
 
@@ -58,7 +64,7 @@ protected:
 /**
  * To be thrown on invalid method name
  */
-class InvalidMethodException : public Exception {
+class DllExport InvalidMethodException : public Exception {
 
 public:
 
@@ -70,7 +76,7 @@ public:
 /**
  * To be thrown on invalid target name
  */
-class InvalidTargetException : public Exception {
+class DllExport InvalidTargetException : public Exception {
 
 public:
 
@@ -82,7 +88,7 @@ public:
 /**
  * To be thrown on invalid version name
  */
-class InvalidVersionException : public Exception {
+class DllExport InvalidVersionException : public Exception {
 
 public:
 
@@ -94,7 +100,7 @@ public:
 /**
  * To be thrown on invalid header name
  */
-class InvalidHeaderException : public Exception {
+class DllExport InvalidHeaderException : public Exception {
 
 public:
 
