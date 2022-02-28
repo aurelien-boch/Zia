@@ -30,7 +30,7 @@ namespace network::https
     std::size_t AsioHttpsClient::send(std::string const &data) noexcept
     {
         try {
-            return asio::write(_sslSocket, asio::buffer(data.c_str(), sizeof(char) * data.size()));
+            return asio::write(_sslSocket, asio::buffer(data.data(), sizeof(char) * data.size()));
         } catch (std::system_error const &err) {
             std::cerr << "ERROR(network/AsioHttpsClient): " << err.what() << std::endl;
             return 0;
@@ -53,8 +53,21 @@ namespace network::https
 
     void AsioHttpsClient::asyncSend(
         std::string const &packet,
-        std::function<void(error::ErrorSocket const &)> &&callback) noexcept
-    {}
+        std::function<void(error::ErrorSocket const &)> &&cb) noexcept
+    {
+        asio::async_write(_sslSocket, asio::buffer(packet.data(), sizeof(char) * packet.size()),
+            [cb = std::forward<std::function<void (error::ErrorSocket const &)>>(cb)] (asio::error_code const &ec, std::size_t) {
+                if (ec) {
+                    const auto it = error::AsioErrorTranslator.find(ec);
+
+                    if (it == error::AsioErrorTranslator.end())
+                        std::cerr << "ERROR(network/AsioHttpClient): " << ec << std::endl;
+                    else
+                        cb(it->second);
+                } else
+                    cb(error::SOCKET_NO_ERROR);
+        });
+    }
 
     void AsioHttpsClient::asyncReceive(
         std::function<void(error::ErrorSocket const &, std::string &)> &&callback) noexcept
@@ -67,5 +80,4 @@ namespace network::https
         asio::read(_sslSocket, asio::buffer(buff, sizeof(char) * 256));
         str += buff;
     }
-
 }
