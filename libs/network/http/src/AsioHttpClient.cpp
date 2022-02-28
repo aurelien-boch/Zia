@@ -90,6 +90,7 @@ namespace network::http
     {
         _socket.async_receive(
             asio::buffer(&_buffer, sizeof(char) * 256),
+<<<<<<< HEAD
             [cb = std::forward<std::function<void (error::ErrorSocket const &, std::string &)>>(cb), this] (asio::error_code ec, std::size_t bytesRead) mutable {
                 _requestBuffer += std::string{_buffer, _buffer + bytesRead};
 
@@ -119,6 +120,10 @@ namespace network::http
                         } else
                             asyncReceive(std::forward<std::function<void (error::ErrorSocket const &, std::string &)>>(cb));
                 }
+=======
+            [cb = std::forward<std::function<void (error::ErrorSocket const &, std::string &)>>(cb), this] (asio::error_code ec, std::size_t) mutable {
+                _asyncRec(ec, std::forward<std::function<void (error::ErrorSocket const &, std::string &)>>(cb));
+>>>>>>> e330099 (feat(network/https): Add asyncReceive method implementation in AsioHttpsClient)
             }
         );
     }
@@ -165,4 +170,37 @@ namespace network::http
         return _address;
     }
 
+<<<<<<< HEAD
 }
+=======
+    void AsioHttpClient::_asyncRec(asio::error_code ec, std::function<void(error::ErrorSocket const &, std::string &)> &&cb)
+    {
+        _header += _buffer;
+        if (ec) {
+            const auto it = error::AsioErrorTranslator.find(ec);
+
+            if (it == error::AsioErrorTranslator.end())
+                std::cerr << "ERROR(network/AsioHttpClient): " << ec << std::endl;
+            else {
+                _header += _body;
+                cb(it->second, _header);
+            }
+        } else if (_header.find("\r\n\r\n") != std::string::npos) {
+            try {
+                _cleanHeader(_header, _body);
+                if (_body.size() < _getContentLength(_header))
+                    asyncReceive(std::move(cb));
+                _header += _body;
+                cb(error::SOCKET_NO_ERROR, _header);
+                _header = "";
+                _body = "";
+            } catch (std::runtime_error const &e) {
+                std::cerr << e.what() << std::endl;
+                asyncSend("411 Length Required", [](error::ErrorSocket const &){});
+            }
+        }
+        asyncReceive(std::move(cb));
+    }
+
+}
+>>>>>>> e330099 (feat(network/https): Add asyncReceive method implementation in AsioHttpsClient)

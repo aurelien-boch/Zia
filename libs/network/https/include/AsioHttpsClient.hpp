@@ -25,8 +25,6 @@ namespace network::https
 
             [[nodiscard]] std::size_t send(std::string const &data) noexcept override;
 
-            // [[nodiscard]] std::string receive() noexcept override;
-
             void asyncSend(
                 std::string const &packet,
                 std::function<void(error::ErrorSocket const &)> &&callback) noexcept override;

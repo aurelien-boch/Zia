@@ -61,7 +61,7 @@ namespace network::https
                     const auto it = error::AsioErrorTranslator.find(ec);
 
                     if (it == error::AsioErrorTranslator.end())
-                        std::cerr << "ERROR(network/AsioHttpClient): " << ec << std::endl;
+                        std::cerr << "ERROR(network/AsioHttpsClient): " << ec << std::endl;
                     else
                         cb(it->second);
                 } else
@@ -70,8 +70,13 @@ namespace network::https
     }
 
     void AsioHttpsClient::asyncReceive(
-        std::function<void(error::ErrorSocket const &, std::string &)> &&callback) noexcept
-    {}
+        std::function<void(error::ErrorSocket const &, std::string &)> &&cb) noexcept
+    {
+        asio::async_read(_sslSocket, asio::buffer(_buffer, sizeof(char) * 256),
+            [cb = std::forward<std::function<void (error::ErrorSocket const &, std::string &)>>(cb), this] (asio::error_code ec, std::size_t) mutable {
+                _asyncRec(ec, std::forward<std::function<void (error::ErrorSocket const &, std::string &)>>(cb));
+        });
+    }
 
     void AsioHttpsClient::_rec(std::string &str)
     {
