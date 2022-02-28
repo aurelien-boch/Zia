@@ -90,40 +90,9 @@ namespace network::http
     {
         _socket.async_receive(
             asio::buffer(&_buffer, sizeof(char) * 256),
-<<<<<<< HEAD
             [cb = std::forward<std::function<void (error::ErrorSocket const &, std::string &)>>(cb), this] (asio::error_code ec, std::size_t bytesRead) mutable {
-                _requestBuffer += std::string{_buffer, _buffer + bytesRead};
-
-                if (ec) {
-                    try {
-                        cb(error::AsioErrorTranslator.at(ec), _requestBuffer);
-                    } catch (std::out_of_range const &) {
-                        std::cerr << "ERROR(network/AsioHttpClient): " << ec << std::endl;
-                    }
-                } else {
-                    if (_requestBuffer.find("\r\n\r\n") != std::string::npos && _bodyLength == 0) {
-                        try {
-                            _bodyLength = _getContentLength(_requestBuffer); // body length is now known
-                        } catch (std::runtime_error &) { // DISCARDS BODY
-                            cb(error::SOCKET_NO_ERROR, _requestBuffer);
-                        } catch (std::invalid_argument &) { // invalid header
-                            send("HTTP/1.1 400 Bad request\r\nContent-Length: 0\r\n\r\n");
-                        }
-                    } else
-                        if (_bodyLength != 0) {
-                            _totalBytesRead = bytesRead;
-                            _requestBuffer += _buffer;
-                            if (_totalBytesRead != _bodyLength)
-                                asyncReceive(std::forward<std::function<void (error::ErrorSocket const &, std::string &)>>(cb));
-                            else
-                                cb(error::SOCKET_NO_ERROR, _requestBuffer);
-                        } else
-                            asyncReceive(std::forward<std::function<void (error::ErrorSocket const &, std::string &)>>(cb));
-                }
-=======
             [cb = std::forward<std::function<void (error::ErrorSocket const &, std::string &)>>(cb), this] (asio::error_code ec, std::size_t) mutable {
                 _asyncRec(ec, std::forward<std::function<void (error::ErrorSocket const &, std::string &)>>(cb));
->>>>>>> e330099 (feat(network/https): Add asyncReceive method implementation in AsioHttpsClient)
             }
         );
     }
@@ -170,37 +139,36 @@ namespace network::http
         return _address;
     }
 
-<<<<<<< HEAD
-}
-=======
-    void AsioHttpClient::_asyncRec(asio::error_code ec, std::function<void(error::ErrorSocket const &, std::string &)> &&cb)
+    void AsioHttpClient::_asyncRec(asio::error_code ec, std::function<void(error::ErrorSocket const &, std::string &)> &&cb, std::size_t bytesRead)
     {
-        _header += _buffer;
-        if (ec) {
-            const auto it = error::AsioErrorTranslator.find(ec);
+        _requestBuffer += std::string{_buffer, _buffer + bytesRead};
 
-            if (it == error::AsioErrorTranslator.end())
-                std::cerr << "ERROR(network/AsioHttpClient): " << ec << std::endl;
-            else {
-                _header += _body;
-                cb(it->second, _header);
-            }
-        } else if (_header.find("\r\n\r\n") != std::string::npos) {
+        if (ec) {
             try {
-                _cleanHeader(_header, _body);
-                if (_body.size() < _getContentLength(_header))
-                    asyncReceive(std::move(cb));
-                _header += _body;
-                cb(error::SOCKET_NO_ERROR, _header);
-                _header = "";
-                _body = "";
-            } catch (std::runtime_error const &e) {
-                std::cerr << e.what() << std::endl;
-                asyncSend("411 Length Required", [](error::ErrorSocket const &){});
+                cb(error::AsioErrorTranslator.at(ec), _requestBuffer);
+            } catch (std::out_of_range const &) {
+                std::cerr << "ERROR(network/AsioHttpClient): " << ec << std::endl;
             }
+        } else {
+            if (_requestBuffer.find("\r\n\r\n") != std::string::npos && _bodyLength == 0) {
+                try {
+                    _bodyLength = _getContentLength(_requestBuffer); // body length is now known
+            } catch (std::runtime_error &) { // DISCARDS BODY
+                cb(error::SOCKET_NO_ERROR, _requestBuffer);
+            } catch (std::invalid_argument &) { // invalid header
+                send("HTTP1/1.1 400 Bad request\r\nContent-Length: 0\r\n\r\n");
+            }
+        } else
+            if (_bodyLength != 0) {
+                _totalBytesRead = bytesRead;
+                _requestBuffer += _buffer;
+                if (_totalBytesRead != _bodyLength)
+                    asyncReceive(std::forward<std::function<void (error::ErrorSocket const &, std::string &)>>(cb));
+                else
+                cb(error::SOCKET_NO_ERROR, _requestBuffer);
+            } else
+                asyncReceive(std::forward<std::function<void (error::ErrorSocket const &, std::string &)>>(cb));
         }
         asyncReceive(std::move(cb));
     }
-
 }
->>>>>>> e330099 (feat(network/https): Add asyncReceive method implementation in AsioHttpsClient)

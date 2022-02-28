@@ -56,11 +56,15 @@ namespace network::http
             std::string _header;
             std::string _body;
 
+            char _buffer[257];
+
             virtual void _rec(std::string &str);
+
+            void _asyncRec(asio::error_code ec, std::function<void(error::ErrorSocket const &, std::string &)> &&cb, std::size_t bytesRead);
+
 
         private:
 
-            char _buffer[257];
 
             [[nodiscard]] std::size_t _getContentLength(std::string const &header);
 

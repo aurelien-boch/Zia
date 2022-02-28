@@ -73,8 +73,8 @@ namespace network::https
         std::function<void(error::ErrorSocket const &, std::string &)> &&cb) noexcept
     {
         asio::async_read(_sslSocket, asio::buffer(_buffer, sizeof(char) * 256),
-            [cb = std::forward<std::function<void (error::ErrorSocket const &, std::string &)>>(cb), this] (asio::error_code ec, std::size_t) mutable {
-                _asyncRec(ec, std::forward<std::function<void (error::ErrorSocket const &, std::string &)>>(cb));
+            [cb = std::forward<std::function<void (error::ErrorSocket const &, std::string &)>>(cb), this] (asio::error_code ec, std::size_t bytesRead) mutable {
+                _asyncRec(ec, std::forward<std::function<void (error::ErrorSocket const &, std::string &)>>(cb), bytesRead);
         });
     }
 

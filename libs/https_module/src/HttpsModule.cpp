@@ -16,14 +16,14 @@ namespace modules
 
     void HttpsModule::Init(const ziapi::config::Node &cfg)
     {
-        auto &httpsConfig = cfg["modules"]; // ["https"];
+        auto &httpsConfig = cfg["modules"]["https"];
         int port = httpsConfig["port"].AsInt();
 
         if (port < 0)
             throw std::runtime_error("ERROR(modules/Https): Invalid port in configuration file");
         try {
             _certificatePath = httpsConfig["certificatePath"];
-        } catch (std::range_error const &) {}
+        } catch (std::exception const &) {}
         _port = port;
         _listener = std::make_unique<network::https::AsioHttpsListener>(_service, _port, _certificatePath);
     }

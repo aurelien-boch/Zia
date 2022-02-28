@@ -1,0 +1,7 @@
+modules:
+  https:
+    port: 3000
+  otherModule:
+    ip: plouf
+    location: /etc/nginx/certs
+    id: 1234
