@@ -33,12 +33,12 @@ namespace modules
 
     ziapi::Version Cgi::GetVersion() const noexcept
     {
-        return {1, 0};
+        return {1, 0, 0};
     }
 
     ziapi::Version Cgi::GetCompatibleApiVersion() const noexcept
     {
-        return {3, 1};
+        return {4, 0, 0};
     }
 
     const char *Cgi::GetName() const noexcept
