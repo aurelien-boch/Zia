@@ -9,5 +9,13 @@ if (NOT yaml-cpp_found)
     message(STATUS "Pardon Paul")
     message(STATUS "Cloning yaml-cpp")
     FetchContent_MakeAvailable(yaml-cpp)
+
+    if (UNIX)
+        target_compile_options(
+            yaml-cpp PRIVATE
+                "-fpic"
+        )
+    endif()
+
     set(yaml-cpp_found)
 endif()
