@@ -1,7 +1,5 @@
 set(NAME httpModule_tests)
 
-find_package(catch2)
-
 add_executable(
         ${NAME}
         ${CMAKE_CURRENT_LIST_DIR}/HttpModuleTests.cpp

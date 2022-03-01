@@ -1,5 +1,3 @@
-find_package(catch2)
-
 add_library(
     mock_lib SHARED
         ${CMAKE_CURRENT_LIST_DIR}/mockLib/code.cpp

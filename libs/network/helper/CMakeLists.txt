@@ -4,28 +4,14 @@ set(NAME network_helper)
 
 add_subdirectory(include/)
 
-add_library(
-    ${NAME}
-        SHARED
+add_library(${NAME} INTERFACE)
+
+target_sources(
+    ${NAME} INTERFACE
         ${INCLUDES}
 )
 
-set_target_properties(${NAME} PROPERTIES LINKER_LANGUAGE CXX)
-
 target_include_directories(
-        ${NAME}
-        PUBLIC
+    ${NAME} INTERFACE
         include/
-)
-
-if (UNIX)
-    add_compile_options(-Wall -Wextra -Weffc++)
-else ()
-    add_compile_options(/W3)
-endif ()
-
-target_compile_options(
-        ${NAME}
-        PRIVATE
-        ${COMPILE_FLAGS}
 )

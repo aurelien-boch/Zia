@@ -1,5 +1,3 @@
-find_package(catch2)
-
 add_executable(
     zia_tests
         ${CMAKE_CURRENT_LIST_DIR}/placeholder.cpp

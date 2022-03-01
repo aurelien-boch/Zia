@@ -1,8 +1,4 @@
 modules:
   http:
     port: 8080
-    path: ../lib/libhttp_module.so
-  networksTLS:
-    ip: plouf
-    location: /etc/nginx/certs
-    id: 1234
+    path: http_module.dll

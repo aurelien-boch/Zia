@@ -122,12 +122,16 @@ namespace modules
             else
                 std::cerr << "ERROR(modules/Http): " << err << std::endl;
         } else {
-            const network::Address &clientAddress{client->getAddress()};
+            const network::Address clientAddress{client->getAddress()};
 
-            requests.Push({_parser.parse(packet),
-                 {{"_client", std::make_any<std::shared_ptr<IClient>>(client)},
-                  {"REMOTE_ADDR", std::make_any<std::uint32_t>(clientAddress.ipAddress)},
-                  {"PORT", std::make_any<std::uint16_t>(reinterpret_cast<std::uint16_t>(clientAddress.port))}}});
+            requests.Push({
+                _parser.parse(packet),
+                {
+                    {"_client", std::make_any<std::shared_ptr<IClient>>(client)},
+                    {"REMOTE_ADDR", std::make_any<std::uint32_t>(clientAddress.ipAddress)},
+                    {"PORT", std::make_any<const std::uint16_t>(clientAddress.port)}
+                }
+            });
         }
     }
 

@@ -11,7 +11,7 @@ if (DEFINED ENABLE_TESTING AND "${ENABLE_TESTING}" STREQUAL "yes")
 endif()
 
 add_library(
-        ${NAME}
+    ${NAME}
         SHARED
         ${SRCS}
         ${INCLUDES}

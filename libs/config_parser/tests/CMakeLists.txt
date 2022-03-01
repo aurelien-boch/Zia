@@ -1,5 +1,3 @@
-find_package(catch2)
-
 set(LINKS_LIBS Catch2::Catch2WithMain config_parser)
 set(COMPILE_OPTIONS)
 

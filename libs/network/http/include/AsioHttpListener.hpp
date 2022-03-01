@@ -8,13 +8,19 @@
 
 #include "AsioHttpClient.hpp"
 
+#ifdef _WIN32
+    #define DllExport   __declspec( dllexport )
+#else
+    #define DllExport
+#endif
+
 namespace network::http
 {
     /**
      * @class An http listener using Asio library
      * Enables to accept new clients connections on the server
      */
-    class AsioHttpListener : public ITCPListener<std::string, std::string>
+    class DllExport AsioHttpListener : public ITCPListener<std::string, std::string>
     {
         public:
 

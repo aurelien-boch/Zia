@@ -59,7 +59,7 @@ namespace core
                 e->Handle(ctx, request, response);
         for (auto const &e : _postProcessors)
             if (e->ShouldPostProcess(ctx, request, response))
-                e->PostProcess(ctx, response);
+                e->PostProcess(ctx, request, response);
         response.version = ziapi::http::Version::kV1;
         response.status_code = ziapi::http::Code::kOK;
         responses.Push({std::move(response), std::move(ctx)});

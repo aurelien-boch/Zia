@@ -8,12 +8,18 @@
 #include <Utility.hpp>
 #include <ITCPClient.hpp>
 
+#ifdef _WIN32
+    #define DllExport   __declspec( dllexport )
+#else
+    #define DllExport
+#endif
+
 namespace network::http
 {
     /**
      * Implements an Http client using the Asio library
      */
-    class AsioHttpClient : public ITCPClient<std::string, std::string>
+    class DllExport AsioHttpClient : public ITCPClient<std::string, std::string>
     {
         public:
             explicit AsioHttpClient(asio::io_context &io_context);

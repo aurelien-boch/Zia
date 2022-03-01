@@ -3,11 +3,12 @@ if (NOT ziapi_found)
     FetchContent_Declare(
             ziapi_git
             GIT_REPOSITORY  https://github.com/martin-olivier/ZiAPI.git
-            GIT_TAG         v4.0.0
+            GIT_TAG         v5.0.0
             INSTALL_COMMAND ""
             TEST_COMMAND    ""
     )
 
+    message(STATUS "Cloning ziapi")
     FetchContent_MakeAvailable(ziapi_git)
     add_library(ziapi INTERFACE)
     add_dependencies(ziapi PUBLIC ziapi_git)

@@ -14,6 +14,7 @@ else()
     message(FATAL_ERROR "conanbuildinfo.cmake not found. Run conan install")
 endif()
 
+find_package(catch2)
 find_package(ziapi)
 
 add_subdirectory(include/)

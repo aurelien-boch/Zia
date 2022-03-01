@@ -1,6 +1,5 @@
 [requires]
 asio/1.21.0
-yaml-cpp/0.7.0
 
 [options]
 *:shared=True

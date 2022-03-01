@@ -1,3 +1,5 @@
+find_package(yaml-cpp)
+
 add_library(
     config_parser SHARED
         include/ConfigParser.hpp
@@ -30,9 +32,5 @@ target_link_libraries(
     config_parser
         ziapi
         loader
-)
-
-conan_target_link_libraries(
-    config_parser
-        CONAN_PKG::yaml-cpp
+        yaml-cpp
 )
