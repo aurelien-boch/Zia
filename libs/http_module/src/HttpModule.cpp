@@ -67,7 +67,7 @@ namespace modules
                 _onConnect(requests, err, std::move(client));
             }
         );
-        _service.run();
+        std::jthread serviceRunner{[this]() -> void { _service.run(); }};
         while (_run) {
             try {
                 do {
@@ -84,6 +84,7 @@ namespace modules
 
     void HttpModule::Terminate()
     {
+        _service.stop();
         _run = false;
     }
 
@@ -106,7 +107,7 @@ namespace modules
             });
         }
     }
-    
+
     void HttpModule::_onPacket(
         ziapi::http::IRequestOutputQueue &requests,
         const error::ErrorSocket &err,
@@ -140,11 +141,20 @@ namespace modules
             if (clientIt == res.second.end())
                 throw std::runtime_error("ERROR(modules/Http): No client specified");
             try {
-                client = std::any_cast<std::shared_ptr<IClient>>(clientIt);
+                client = std::any_cast<std::shared_ptr<IClient>>(clientIt->second);
             } catch (std::bad_any_cast const &e) {
                 throw std::runtime_error("ERROR(modules/Http): Invalid client");
             }
-             client->asyncSend(_formatter.format(res.first), [](error::ErrorSocket const &){});
+             client->asyncSend(_formatter.format(res.first), [this, client](error::ErrorSocket const &err) mutable {
+                 if (err != error::SOCKET_NO_ERROR) {
+                     try {
+                         std::cerr << "ERROR(modules/Http): " << error::errorMessage.at(err) << std::endl;
+                     } catch (std::out_of_range const &) {
+                         std::cerr << "ERROR(modules/Http): " << err << std::endl;
+                     }
+                 }
+                 _clients.erase(std::remove(_clients.begin(), _clients.end(), client), _clients.end());
+             });
         }
     }
 }

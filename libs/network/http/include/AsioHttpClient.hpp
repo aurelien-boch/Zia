@@ -42,8 +42,9 @@ namespace network::http
         private:
             asio::ip::tcp::socket _socket;
             Address _address;
-            std::string _header;
-            std::string _body;
+            std::string _requestBuffer;
+            std::size_t _bodyLength;
+            std::size_t _totalBytesRead;
             char _buffer[257];
 
             [[nodiscard]] std::size_t _getContentLength(std::string const &header);

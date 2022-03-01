@@ -22,7 +22,7 @@ TEST_CASE("creation of a config parser and check of a valid value in the config"
 {
     parser::ConfigParser parser("../libs/config_parser/tests/config.yml");
 
-    REQUIRE(parser.getValue("modules", "phpCGI", "_loadModule")->AsString() == "bar");
+    REQUIRE(parser.getValue("modules", "phpCGI", "foo")->AsString() == "bar");
 }
 
 TEST_CASE("creation of a config parser and check of an invalid value in the config", "[config_parser]")

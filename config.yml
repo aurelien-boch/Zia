@@ -1,10 +1,7 @@
 modules:
-  phpCGI:
-    foo: bar
-    bar: baz
-    baz: qux
-    qux: quux
-    quux: quuz
+  http:
+    port: 8080
+    path: ../lib/libhttp_module.so
   networksTLS:
     ip: plouf
     location: /etc/nginx/certs

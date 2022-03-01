@@ -17,17 +17,23 @@ namespace core
     {
         if (!_configLoaded)
             throw std::runtime_error{"Error, the config isn't loaded"};
-        std::unique_ptr<modules::RequestOutputQueue> requests{std::make_unique<modules::RequestOutputQueue>()};
-        std::unique_ptr<modules::ResponseInputQueue> responses{std::make_unique<modules::ResponseInputQueue>()};
-
+        _running = true;
+        modules::RequestOutputQueue requests{};
+        modules::ResponseInputQueue responses{};
         std::jthread _networkRunThread{[this, &requests, &responses]() -> void {
-            _networkModule->Run(*requests, *responses);
+            try {
+                _networkModule->Run(requests, responses);
+            } catch (std::exception &err) {
+                std::cerr
+                << "Error: the network module thrown an exception while running.\n" + std::string{err.what()}
+                << std::endl;
+            }
+            _running = false;
         }};
 
-        _running = true;
-        while (true)
+        while (_running)
         {
-            while (requests->Size() == 0 && _running)
+            while (requests.Size() == 0 && _running)
                 std::this_thread::yield();
             if (!_running)
                 return;
@@ -36,22 +42,27 @@ namespace core
     }
 
     void Core::_serveRequest(
-        std::unique_ptr<modules::RequestOutputQueue> &requests,
-        std::unique_ptr<modules::ResponseInputQueue> &responses)
+        modules::RequestOutputQueue &requests,
+        modules::ResponseInputQueue &responses)
     {
         ziapi::http::Response response{};
-//        std::optional<std::pair<ziapi::http::Request, ziapi::http::Context>> req{requests->Pop()};
+        std::optional<std::pair<ziapi::http::Request, ziapi::http::Context>> req{requests.Pop()};
 
-//        if (!req)
-//            return;
-//        auto &[request, ctx] = *req;
-//        for (auto const &e : _preProcessors)
-//            e->PreProcess(ctx, request);
-//        for (auto const &e : _handlers)
-//            e->Handle(ctx, request, response);
-//        for (auto const &e : _postProcessors)
-//            e->PostProcess(ctx, response);
-//        responses->Push({response, ctx});
+        if (!req)
+            return;
+        auto &[request, ctx] = *req;
+        for (auto const &e : _preProcessors)
+            if (e->ShouldPreProcess(ctx, request))
+                e->PreProcess(ctx, request);
+        for (auto const &e : _handlers)
+            if (e->ShouldHandle(ctx, request))
+                e->Handle(ctx, request, response);
+        for (auto const &e : _postProcessors)
+            if (e->ShouldPostProcess(ctx, request, response))
+                e->PostProcess(ctx, response);
+        response.version = ziapi::http::Version::kV1;
+        response.status_code = ziapi::http::Code::kOK;
+        responses.Push({std::move(response), std::move(ctx)});
     }
 
     void Core::stop()
@@ -68,17 +79,22 @@ namespace core
         ziapi::config::Dict config = _parser.getConfigMap();
         ziapi::config::Dict modules = config["modules"]->AsDict();
 
-        for (auto const &[_, e] : modules) {
+        for (auto const &[moduleName, e] : modules) {
             try {
                 auto path = e->AsDict().at("path")->AsString();
 
-                _loadModule(config, path);
-            } catch (std::out_of_range const &_) {};
+                _loadModule(config, path, moduleName);
+            } catch (std::out_of_range const &err) {
+                std::cerr
+                    << "Error, module " + moduleName + " doesn't have a path attribute. The module won't be loaded.\n"
+                    << "Error: " + std::string{err.what()}
+                    << std::endl;
+            }
         }
         _configLoaded = true;
     }
 
-    void Core::_loadModule(const ziapi::config::Node &cfg, std::string &path)
+    void Core::_loadModule(const ziapi::config::Node &cfg, const std::string &path, std::string const &name)
     {
         loader::Loader &loader = _libs.emplace_back(path);
         std::function<ziapi::IModule *()> symbol;
@@ -90,13 +106,22 @@ namespace core
         }
         std::shared_ptr<ziapi::IModule> instance{symbol()};
 
-        instance->Init(cfg);
+        try {
+            instance->Init(cfg);
+        } catch (std::exception const &err) {
+            std::cerr
+                << "Error: " + name + " module thrown during initialization. The module will be skipped.\n" +
+                std::string{err.what()}
+                << std::endl;
+        }
         if (dynamic_cast<ziapi::IPreProcessorModule *>(instance.get()))
             _preProcessors.emplace_back(std::dynamic_pointer_cast<ziapi::IPreProcessorModule>(instance));
         if (dynamic_cast<ziapi::IHandlerModule *>(instance.get()))
             _handlers.emplace_back(std::dynamic_pointer_cast<ziapi::IHandlerModule>(instance));
         if (dynamic_cast<ziapi::IPostProcessorModule *>(instance.get()))
             _postProcessors.emplace_back(std::dynamic_pointer_cast<ziapi::IPostProcessorModule>(instance));
+        if (dynamic_cast<ziapi::INetworkModule *>(instance.get()))
+            _networkModule = std::dynamic_pointer_cast<ziapi::INetworkModule>(instance);
     }
 
     void Core::_purgeData()

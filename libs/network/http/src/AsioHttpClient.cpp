@@ -7,17 +7,19 @@ namespace network::http
     AsioHttpClient::AsioHttpClient(asio::io_context &io_context) :
         ITCPClient{},
         _socket{asio::ip::tcp::socket{io_context}},
-        _header{},
-        _body{},
         _buffer{},
+        _requestBuffer{},
+        _bodyLength{},
+        _totalBytesRead{},
         _address{static_cast<std::uint32_t>(std::stoul(_socket.remote_endpoint().address().to_string())), static_cast<std::uint8_t>(_socket.remote_endpoint().port())}
     {}
 
     AsioHttpClient::AsioHttpClient(asio::ip::tcp::socket &socket) :
         _socket{std::move(socket)},
-        _header{},
-        _body{},
         _buffer{},
+        _requestBuffer{},
+        _bodyLength{},
+        _totalBytesRead{},
         _address{static_cast<std::uint32_t>(std::stoul(_socket.remote_endpoint().address().to_string())), static_cast<std::uint8_t>(_socket.remote_endpoint().port())}
     {}
 
@@ -88,58 +90,55 @@ namespace network::http
     {
         _socket.async_receive(
             asio::buffer(&_buffer, sizeof(char) * 256),
-            [cb = std::forward<std::function<void (error::ErrorSocket const &, std::string &)>>(cb), this] (asio::error_code ec, std::size_t) mutable {
-                _header += _buffer;
-                if (ec) {
-                    const auto it = error::AsioErrorTranslator.find(ec);
+            [cb = std::forward<std::function<void (error::ErrorSocket const &, std::string &)>>(cb), this] (asio::error_code ec, std::size_t bytesRead) mutable {
+                _requestBuffer += std::string{_buffer, _buffer + bytesRead};
 
-                    if (it == error::AsioErrorTranslator.end())
-                        std::cerr << "ERROR(network/AsioHttpClient): " << ec << std::endl;
-                    else {
-                        _header += _body;
-                        cb(it->second, _header);
-                    }
-                } else if (_header.find("\r\n") != std::string::npos) {
+                if (ec) {
                     try {
-                        _cleanHeader(_header, _body);
-                        if (_body.size() < _getContentLength(_header))
-                            asyncReceive(std::move(cb));
-                        _header += _body;
-                        cb(error::SOCKET_NO_ERROR, _header);
-                        _header = "";
-                        _body = "";
-                    } catch (std::runtime_error const &e) {
-                        std::cerr << e.what() << std::endl;
-                        asyncSend("411 Length Required", [](error::ErrorSocket const &){});
+                        cb(error::AsioErrorTranslator.at(ec), _requestBuffer);
+                    } catch (std::out_of_range const &) {
+                        std::cerr << "ERROR(network/AsioHttpClient): " << ec << std::endl;
                     }
+                } else {
+                    if (_requestBuffer.find("\r\n\r\n") != std::string::npos && _bodyLength == 0) {
+                        try {
+                            _bodyLength = _getContentLength(_requestBuffer); // body length is now known
+                        } catch (std::runtime_error &) { // DISCARDS BODY
+                            cb(error::SOCKET_NO_ERROR, _requestBuffer);
+                        } catch (std::invalid_argument &) { // invalid header
+                            send("HTTP1/1.1 400 Bad request\r\nContent-Length: 0\r\n\r\n");
+                        }
+                    } else
+                        if (_bodyLength != 0) {
+                            _totalBytesRead = bytesRead;
+                            _requestBuffer += _buffer;
+                            if (_totalBytesRead != _bodyLength)
+                                asyncReceive(std::forward<std::function<void (error::ErrorSocket const &, std::string &)>>(cb));
+                            else
+                                cb(error::SOCKET_NO_ERROR, _requestBuffer);
+                        } else
+                            asyncReceive(std::forward<std::function<void (error::ErrorSocket const &, std::string &)>>(cb));
                 }
-                asyncReceive(std::move(cb));
             }
         );
     }
 
     std::size_t AsioHttpClient::_getContentLength(std::string const &header)
     {
-        std::string toFind = "Content-Length:";
-        std::size_t pos = header.find(toFind);
-        std::size_t bodyLength = 0;
+        std::size_t pos = header.find("Content-Length:");
+        std::size_t bodyLength;
 
         if (pos == std::string::npos)
-            throw std::runtime_error("ERROR(network/AsioHttpClient): No Content-Length header");
-        try {
-            pos += toFind.size() + 1;
-            std::size_t pos2 = header.substr(pos).find("\r\n");
+            throw std::runtime_error{"No Content-Length header"};
+        std::size_t pos2 = header.substr(pos + 16).find("\r\n");
 
-            if (pos2 == std::string::npos)
-                throw std::runtime_error("ERROR(network/AsioHttpClient): Invalid Content-Length header");
-            bodyLength = std::stol(header.substr(pos, pos2));
-        } catch (std::exception const &) {
-            throw std::runtime_error("ERROR(network/AsioHttpClient): Invalid Content-Length header");
+        if (pos2 == std::string::npos)
+            throw std::invalid_argument("Invalid Content-Length header");
+        try {
+            return std::stol(header.substr(pos, pos2));
+        } catch (std::invalid_argument const &) {
+            throw std::invalid_argument("Invalid Content-Length header");
         }
-        if (bodyLength == 0) {
-            asyncSend("400 Bad Request", [](error::ErrorSocket const &){});
-        }
-        return bodyLength;
     }
 
     void AsioHttpClient::_rec(std::string &str)
@@ -156,7 +155,7 @@ namespace network::http
         std::size_t pos = header.find(toFind);
 
         if (pos == std::string::npos)
-            throw std::runtime_error("ERROR(network/AsioHttpClient): Invalid header");
+            throw std::runtime_error("ERROR(network/    AsioHttpClient): Invalid header");
         body = header.substr(pos + toFind.size());
         header = header.substr(0, pos + toFind.size());
     }

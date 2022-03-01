@@ -9,6 +9,8 @@
 
 #include <Loader.hpp>
 #include <ConfigParser.hpp>
+#include <RequestOutputQueue.hpp>
+#include <ResponseInputQueue.hpp>
 
 namespace core
 {
@@ -49,12 +51,12 @@ namespace core
             std::vector<std::shared_ptr<ziapi::IPostProcessorModule>> _postProcessors;
             std::vector<loader::Loader> _libs;
 
-            void _serveRequest(std::unique_ptr<modules::RequestOutputQueue> &requests,
-                               std::unique_ptr<modules::ResponseInputQueue> &responses);
+            void _serveRequest(modules::RequestOutputQueue &requests,
+                               modules::ResponseInputQueue &responses);
 
             void _purgeData();
 
-            void _loadModule(const ziapi::config::Node &cfg, std::string &path);
+            void _loadModule(const ziapi::config::Node &cfg, const std::string &path, std::string const &name);
     };
 }
 
