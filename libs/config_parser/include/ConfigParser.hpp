@@ -21,7 +21,7 @@ namespace parser
         std::string modulePath;
     };
 
-    class ConfigParser
+    class DllExport ConfigParser
     {
         public:
             explicit ConfigParser(std::string const &path);
