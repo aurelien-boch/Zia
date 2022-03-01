@@ -25,19 +25,31 @@ int main(int ac, char **av)
     };
     std::string ip(av[1]);
     std::size_t port = std::stol(av[2]);
-    asio::io_context ctx{};
-    network::https::AsioHttpsClient client(ctx);
+    asio::io_context ctx;
+//    try {
+        std::cout << "Creating client..." << std::endl;
+        network::https::AsioHttpsClient client(ctx);
+        std::cout << "Client created" << std::endl;
 
-    client.connect(network::Address{static_cast<std::uint32_t>(std::stoul(ip)), static_cast<std::uint16_t>(port)});
-    std::cout << "Connecting to " << ip << ":" << port << std::endl;
-    client.asyncReceive([](error::ErrorSocket const &, std::string &str) {
-        std::cout << "Receiving: " << str << std::endl;
-    });
-    while (1) {
-        client.asyncSend(requestString, [](error::ErrorSocket const &){
-            std::cout << "Client sent message." << std::endl;
+//        try {
+            client.connect(
+                    network::Address{static_cast<std::uint32_t>(std::stoul(ip)), static_cast<std::uint16_t>(port)});
+//        } catch (...) {
+//            std::cerr << "Unable to connect to " << ip << ":" << port << std::endl;
+//            return 84;
+//        }
+        std::cout << "Connecting to " << ip << ":" << port << std::endl;
+        client.asyncReceive([](error::ErrorSocket const &, std::string &str) {
+            std::cout << "Receiving: " << str << std::endl;
         });
-        sleep(3);
-    }
+        while (1) {
+            client.asyncSend(requestString, [](error::ErrorSocket const &) {
+                std::cout << "Client sent message." << std::endl;
+            });
+            sleep(3);
+        }
+//    } catch (...) {
+//        std::cerr << "An error occurred" << std::endl;
+//    }
     return 0;
 }

@@ -6,12 +6,13 @@ namespace network::http
 {
     AsioHttpClient::AsioHttpClient(asio::io_context &io_context) :
         ITCPClient{},
-        _socket{asio::ip::tcp::socket{io_context}},
+         _socket{io_context},
         _buffer{},
         _requestBuffer{},
         _bodyLength{},
         _totalBytesRead{},
-        _address{static_cast<std::uint32_t>(std::stoul(_socket.remote_endpoint().address().to_string())), static_cast<std::uint8_t>(_socket.remote_endpoint().port())}
+        _address{} // TODO: fix segfault here
+        // static_cast<std::uint32_t>(std::stoul(_socket.remote_endpoint().address().to_string())), static_cast<std::uint8_t>(_socket.remote_endpoint().port())}
     {}
 
     AsioHttpClient::AsioHttpClient(asio::ip::tcp::socket &socket) :

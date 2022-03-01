@@ -2,6 +2,8 @@ set(NAME httpsModule_tests)
 
 find_package(catch2)
 
+add_subdirectory(client_for_testing)
+
 add_executable(
         ${NAME}
         ${CMAKE_CURRENT_LIST_DIR}/HttpsModuleTests.cpp

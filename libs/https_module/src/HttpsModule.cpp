@@ -47,12 +47,6 @@ namespace modules
     {
         return "A https module that implements Http/1.1 protocol with SSL.";
     }
-
-    void HttpsModule::Run(ziapi::http::IRequestOutputQueue &requests, ziapi::http::IResponseInputQueue &responses)
-    {
-
-    }
-
 }
 
 extern "C" {

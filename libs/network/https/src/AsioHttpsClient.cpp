@@ -16,8 +16,14 @@ namespace network::https
             _sslContext.set_default_verify_paths();
         else
             _sslContext.load_verify_file(certificatePath);
+        std::cout << "SSL certificate done" << std::endl; // TODO: remove
+
         _sslSocket.set_verify_mode(asio::ssl::verify_peer);
+        std::cout << "Verify mode done " << std::endl; // TODO: remove
+
         _sslSocket.handshake(asio::ssl::stream<asio::ip::tcp::socket>::client);
+        std::cout << "Handshake done " << std::endl; // TODO: remove
+
     }
 
     void AsioHttpsClient::connect(Address const &peer) noexcept
@@ -36,20 +42,6 @@ namespace network::https
             return 0;
         }
     }
-
-//    std::string AsioHttpsClient::receive() noexcept
-//    {
-//        try {
-//            std::string header;
-//            std::string body;
-//
-//            return (header + body);
-//
-//        } catch (std::system_error const &err) {
-//            std::cerr << "ERROR(network/AsioHttpsClient): " << err.what() << std::endl;
-//            return {};
-//        }
-//    }
 
     void AsioHttpsClient::asyncSend(
         std::string const &packet,

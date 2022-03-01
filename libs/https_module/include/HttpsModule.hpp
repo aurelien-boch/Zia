@@ -25,7 +25,7 @@ namespace modules
 
             [[nodiscard]] inline const char *GetDescription() const noexcept override;
 
-            void Run(ziapi::http::IRequestOutputQueue &requests, ziapi::http::IResponseInputQueue &responses) override;
+//            void Run(ziapi::http::IRequestOutputQueue &requests, ziapi::http::IResponseInputQueue &responses) override;
 
         private:
 
