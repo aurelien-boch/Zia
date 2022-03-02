@@ -6,10 +6,10 @@
 
 namespace core
 {
-    Core::Core(std::string &filepath) noexcept :
+    Core::Core(std::string &&filepath) noexcept :
         _running{false},
         _configLoaded{false},
-        _filepath{filepath},
+        _filepath{std::forward<std::string>(filepath)},
         _parser{_filepath}
     {}
 
@@ -46,7 +46,7 @@ namespace core
         modules::ResponseInputQueue &responses)
     {
         ziapi::http::Response response{};
-        std::optional<std::pair<ziapi::http::Request, ziapi::http::Context>> req{requests.Pop()};
+        auto req{requests.Pop()};
 
         if (!req)
             return;
@@ -94,7 +94,7 @@ namespace core
         _configLoaded = true;
     }
 
-    void Core::_loadModule(const ziapi::config::Node &cfg, const std::string &path, std::string const &name)
+    void Core::_loadModule(ziapi::config::Node const &cfg, std::string const &path, std::string const &name)
     {
         loader::Loader &loader = _libs.emplace_back(path);
         std::function<ziapi::IModule *()> symbol;

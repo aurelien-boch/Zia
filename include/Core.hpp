@@ -14,28 +14,29 @@
 
 namespace core
 {
+    /**
+     * @brief This class manages a pipeline
+     */
     class Core
     {
         public:
             /**
-             * todo
-             * @param filepath
+             * @param [in]filepath this parameter refers to the config of the pipeline
              */
-            explicit Core(std::string &filepath) noexcept;
+            explicit Core(std::string &&filepath) noexcept;
 
             /**
-             * todo
+             * @brief Starts the pipeline
              */
             void run();
 
             /**
-             * todo
+             * @brief Stops the pipeline
              */
             void stop();
 
             /**
-             * todo
-             * @param cfg
+             * @brief Reload the pipeline
              */
             void config() noexcept;
 
@@ -56,7 +57,7 @@ namespace core
 
             void _purgeData();
 
-            void _loadModule(const ziapi::config::Node &cfg, const std::string &path, std::string const &name);
+            void _loadModule(ziapi::config::Node const &cfg, std::string const &path, std::string const &name);
     };
 }
 

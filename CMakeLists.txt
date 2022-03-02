@@ -14,17 +14,17 @@ else()
     message(FATAL_ERROR "conanbuildinfo.cmake not found. Run conan install")
 endif()
 
-find_package(catch2)
 find_package(ziapi)
+
+if (DEFINED ENABLE_TESTING AND "${ENABLE_TESTING}" STREQUAL "yes")
+    find_package(catch2)
+    message(STATUS "ENABLE_TESTING=yes detected, enabling testing")
+    add_subdirectory(tests)
+endif()
 
 add_subdirectory(include/)
 add_subdirectory(libs/)
 add_subdirectory(src/)
-
-if (DEFINED ENABLE_TESTING AND "${ENABLE_TESTING}" STREQUAL "yes")
-    message(STATUS "ENABLE_TESTING=yes detected, enabling testing")
-    add_subdirectory(tests)
-endif()
 
 add_executable(
     ${NAME}

@@ -13,8 +13,6 @@ namespace parser
             _config = YAML::LoadFile(newPath);
         } catch(YAML::BadFile const &e) {
             throw std::runtime_error("[ConfigParser] Error while parsing the config file");
-        } catch (std::exception const &e) {
-            std::cerr << "QUEUE: " << e.what() << std::endl;
         }
         _checkConfig();
         _putConfigInMap();

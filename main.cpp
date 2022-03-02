@@ -1,14 +1,10 @@
-#include <iostream>
-#include "ConfigParser.hpp"
-
 #include "Core.hpp"
 
 int main()
 {
-    std::string zizi{"../../config.yml"};
-    core::Core zazou{zizi};
+    core::Core pipeline{"../../config.yml"};
 
-    zazou.config();
-    zazou.run();
+    pipeline.config();
+    pipeline.run();
     return 0;
 }
