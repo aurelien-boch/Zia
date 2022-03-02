@@ -36,7 +36,7 @@ namespace core
             void stop();
 
             /**
-             * @brief Reload the pipeline
+             * @brief Reloads the pipeline
              */
             void config() noexcept;
 
