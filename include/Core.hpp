@@ -15,7 +15,8 @@
 namespace core
 {
     /**
-     * @class This class manages a pipeline
+     * @class Core
+     * @brief This class manages a pipeline
      */
     class Core
     {
