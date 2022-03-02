@@ -88,7 +88,7 @@ namespace core
             } catch (std::out_of_range const &err) {
                 std::cerr
                     << "Error, module " + moduleName + " doesn't have a path attribute. The module won't be loaded.\n"
-                    << "Error: " + std::string{err.what()}
+                    << "Error: " << err.what()
                     << std::endl;
             }
         }
