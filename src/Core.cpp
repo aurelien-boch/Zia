@@ -111,8 +111,8 @@ namespace core
             instance->Init(cfg);
         } catch (std::exception const &err) {
             std::cerr
-                << "Error: " + name + " module thrown during initialization. The module will be skipped.\n" +
-                std::string{err.what()}
+                << "Error: " + name + " module thrown during initialization. The module will be skipped.\n"
+                << err.what()
                 << std::endl;
         }
         if (dynamic_cast<ziapi::IPreProcessorModule *>(instance.get()))
