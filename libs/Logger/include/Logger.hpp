@@ -12,6 +12,10 @@
 
 namespace post_process_modules {
 
+/**
+ * @Class Logger
+ * @brief Logs the requests received by the server.
+ */
 class DllExport Logger : public ziapi::IPostProcessorModule {
 
 public:
@@ -39,17 +43,39 @@ public:
 
 private:
 
+    /**
+     * @brief Returns the color of the background of the status for the logger
+     * @param status The status of the response
+     * @return The color of the background of the status
+     */
     [[nodiscard]] inline const std::string_view _getStatusColor(const ziapi::http::Code &status) const noexcept;
 
+    /**
+     * @brief Returns the color of the background of the method for the logger
+     * @param method The method of the request
+     * @return The color of the background of the method for the logger
+     */
     [[nodiscard]] inline const std::string_view _getMethodColor(const std::string_view &method) const noexcept;
 
+    /**
+     * @brief Returns the time the request took with its unit
+     * @param path The duration of the request
+     * @return The time the request took with its unit
+     */
     [[nodiscard]] static inline const std::string _getDurationWithUnit(
             const std::chrono::system_clock::duration &duration) noexcept;
 
+    /**
+     * @brief Returns the IP of the client formatted as string
+     * @param numericIpAddress The IP of the client
+     * @return the IP of the client formatted as string
+     */
     [[nodiscard]] inline const std::string _getIpAddress(const std::uint32_t &numericIpAddress) const noexcept;
 
+    // The pipeline name that the logs are prefixed with
     std::string_view m_pipelineName{};
 
+    // The colors used by the logger
     static constexpr std::string_view s_white{"\033[90;47m"};
     static constexpr std::string_view s_green{"\033[97;42m"};
     static constexpr std::string_view s_yellow{"\033[90;43m"};
