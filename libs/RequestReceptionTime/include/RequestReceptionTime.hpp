@@ -3,13 +3,19 @@
 
 #include "ziapi/Module.hpp"
 
+#ifdef _WIN32
+#define DllExport __declspec(dllexport)
+#else
+#define DllExport
+#endif
+
 namespace pre_process_modules {
 
 /**
  * @Class RequestReceptionTime
  * @brief This module is used to store the time at which the request has been received
  */
-class RequestReceptionTime : public ziapi::IPreProcessorModule {
+class DllExport RequestReceptionTime : public ziapi::IPreProcessorModule {
 
 public:
 

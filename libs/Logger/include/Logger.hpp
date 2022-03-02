@@ -4,9 +4,15 @@
 #include "ziapi/Module.hpp"
 #include "ziapi/Http.hpp"
 
+#ifdef _WIN32
+    #define DllExport __declspec(dllexport)
+#else
+    #define DllExport
+#endif
+
 namespace post_process_modules {
 
-class Logger : public ziapi::IPostProcessorModule {
+class DllExport Logger : public ziapi::IPostProcessorModule {
 
 public:
 
