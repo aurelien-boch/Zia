@@ -97,8 +97,8 @@ namespace core
 
     void Core::_loadModule(ziapi::config::Node const &cfg, std::string const &path, std::string const &name)
     {
-        loader::Loader &loader = _libs.emplace_back(path);
-        std::function<ziapi::IModule *()> symbol;
+        loader::Loader &loader{_libs.emplace_back(path)};
+        std::function<ziapi::IModule *()> symbol{};
 
         try {
             symbol = loader.getSymbol<ziapi::IModule *()>("LoadZiaModule");
