@@ -25,7 +25,8 @@ namespace core
                 _networkModule->Run(requests, responses);
             } catch (std::exception &err) {
                 std::cerr
-                << "Error: the network module thrown an exception while running.\n" + std::string{err.what()}
+                << "Error: the network module thrown an exception while running.\n"
+                << err.what()
                 << std::endl;
             }
             _running = false;
