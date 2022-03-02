@@ -1,5 +1,5 @@
 add_library(
-    env_manager
+    env_manager SHARED
         include/EnvManager.hpp
         include/VariableNotFoundException.hpp
         include/VariableAlreadyDefinedException.hpp

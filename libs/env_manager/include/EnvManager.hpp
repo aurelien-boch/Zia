@@ -13,8 +13,7 @@
 #else
     #include <stdio.h>
     #include <stdlib.h>
-
-    extern char **environ;
+    #include <unistd.h>
 #endif
 
 namespace env

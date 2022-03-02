@@ -1,5 +1,5 @@
 add_library(
-    executor
+    executor SHARED
         include/Executor.hpp
         src/Executor.cpp
 )

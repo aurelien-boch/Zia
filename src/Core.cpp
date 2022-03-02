@@ -90,9 +90,14 @@ namespace core
                     << "Error, module " + moduleName + " doesn't have a path attribute. The module won't be loaded.\n"
                     << "Error: " << err.what()
                     << std::endl;
+            } catch (std::runtime_error const &err) {
+                std::cerr << err.what() << std::endl;
             }
         }
-        _configLoaded = true;
+        if (_networkModule == nullptr)
+            std::cerr << "Error, no network module loaded, config failed" << std::endl;
+        else
+            _configLoaded = true;
     }
 
     bool Core::hotReload() noexcept
@@ -115,6 +120,7 @@ namespace core
             symbol = loader.getSymbol<ziapi::IModule *()>("LoadZiaModule");
         } catch (std::runtime_error &e) {
             std::cerr << "Error, cannot find LoadZiaModule method on " << path << " library. " << std::endl;
+            return;
         }
         std::shared_ptr<ziapi::IModule> instance{symbol()};
 
@@ -125,6 +131,7 @@ namespace core
                 << "Error: " + name + " module thrown during initialization. The module will be skipped.\n"
                 << err.what()
                 << std::endl;
+            return;
         }
         if (dynamic_cast<ziapi::IPreProcessorModule *>(instance.get()))
             _preProcessors.emplace_back(std::dynamic_pointer_cast<ziapi::IPreProcessorModule>(instance));

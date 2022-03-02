@@ -2,6 +2,7 @@
 #define CGI_HPP
 
 #include <ziapi/Module.hpp>
+#include <EnvManager.hpp>
 
 namespace modules
 {
@@ -30,6 +31,7 @@ namespace modules
 
         private:
             std::string _cgiPath;
+            std::string _rootDirectory;
             env::Manager _env;
 
             struct Url
@@ -43,7 +45,7 @@ namespace modules
 
             static std::string _getHostName();
 
-            static void _populateEnv(env::Manager &env, ziapi::http::Context &ctx, const ziapi::http::Request &req);
+            void _populateEnv(env::Manager &env, ziapi::http::Context &ctx, const ziapi::http::Request &req);
     };
 }
 

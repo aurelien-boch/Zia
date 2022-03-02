@@ -89,7 +89,6 @@ namespace execution
     _processInfo {}
 #else
     _processPid {}
-    _processPid {}
 #endif
     {
         auto [stdinRead, stdinWrite] = _createPipe();
@@ -177,7 +176,7 @@ namespace execution
         if (pid == 0) {
             dup2(stdinDescriptor, STDIN_FILENO);
             dup2(stdoutDescriptor, STDOUT_FILENO);
-            execve(commandLine.c_str(), convertedArgs.data(), _env);
+            execve(commandLine.c_str(), convertedArgs.data(), env);
         } else
             _processPid = pid;
 #endif

@@ -22,13 +22,14 @@ namespace modules
             child.wait();
             child >> cgiResult;
         }
+        res.body = cgiResult;
         //TODO, need core
-
     }
 
     void Cgi::Init(const ziapi::config::Node &cfg)
     {
-        _cgiPath = cfg["modules"]["CGI"]["CgiPath"].AsString();
+        _cgiPath = cfg["modules"]["cgi"]["cgiPath"].AsString();
+        _rootDirectory = cfg["modules"]["cgi"]["rootDirectory"].AsString();
     }
 
     ziapi::Version Cgi::GetVersion() const noexcept
@@ -92,18 +93,18 @@ namespace modules
 
     void Cgi::_populateEnv(env::Manager &env, ziapi::http::Context &ctx, const ziapi::http::Request &req)
     {
-        Url url{_parseUrl(req.target)};
-        std::uint16_t port = std::any_cast<std::uint16_t>(ctx["PORT"]);
-        std::uint32_t addr = std::any_cast<std::uint32_t>(ctx["REMOTE_ADDR"]);
+        std::string filepath = _rootDirectory + req.target;
+        auto port{std::any_cast<std::uint16_t>(ctx["PORT"])};
+        auto addr{std::any_cast<std::uint32_t>(ctx["REMOTE_ADDR"])};
         auto *converted = reinterpret_cast<std::uint8_t *>(&addr);
 
         env.pushEnvVariable("AUTH_TYPE", "");
         env.pushEnvVariable("CONTENT_LENGTH", std::to_string(req.body.size()));
         env.pushEnvVariable("CONTENT_TYPE", "");
         env.pushEnvVariable("GATEWAY_INTERFACE", "CGI/1.1");
-        env.pushEnvVariable("PATH_INFO", url.route);
-        env.pushEnvVariable("PATH_TRANSLATED", std::filesystem::path(url.route).relative_path().string());
-        env.pushEnvVariable("QUERY_STRING", url.queryStr);
+        env.pushEnvVariable("PATH_INFO", filepath);
+        env.pushEnvVariable("PATH_TRANSLATED", std::filesystem::absolute(filepath).string());
+        env.pushEnvVariable("QUERY_STRING", req.target);
         env.pushEnvVariable("REMOTE_ADDR",
                                 std::to_string(converted[0]) + "." +
                                 std::to_string(converted[1]) + "." +
@@ -111,10 +112,11 @@ namespace modules
                                 std::to_string(converted[3]));
         env.pushEnvVariable("REMOTE_HOST", "");
         env.pushEnvVariable("REQUEST_METHOD", req.method);
-        env.pushEnvVariable("SCRIPT_NAME", url.route);
+        env.pushEnvVariable("SCRIPT_NAME", filepath);
         env.pushEnvVariable("SERVER_NAME", _getHostName());
         env.pushEnvVariable("SERVER_PORT", std::to_string(port));
         env.pushEnvVariable("SERVER_PROTOCOL", "HTTP/1.1");
         env.pushEnvVariable("SERVER_SOFTWARE", "Zia version (1)");
+        env.pushEnvVariable("REDIRECT_STATUS", "200");
     }
 }
