@@ -21,7 +21,7 @@ namespace core
     {
         public:
             /**
-             * @param [in]filepath this parameter refers to the config of the pipeline
+             * @param[in] filepath this parameter refers to the config of the pipeline
              */
             explicit Core(std::string &&filepath) noexcept;
 
