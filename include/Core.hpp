@@ -1,16 +1,14 @@
 #ifndef CORE_HPP
 #define CORE_HPP
 
-#include <memory>
-#include <string>
-
-#include <ziapi/Config.hpp>
-#include <ziapi/Module.hpp>
-
-#include <Loader.hpp>
 #include <ConfigParser.hpp>
+#include <Loader.hpp>
 #include <RequestOutputQueue.hpp>
 #include <ResponseInputQueue.hpp>
+#include <memory>
+#include <string>
+#include <ziapi/Config.hpp>
+#include <ziapi/Module.hpp>
 
 namespace core
 {
@@ -24,7 +22,7 @@ namespace core
             /**
              * @param[in] filepath this parameter refers to the config of the pipeline
              */
-            explicit Core(std::string &&filepath) noexcept;
+            Core(std::string &name, std::string &filepath) noexcept;
 
             /**
              * @brief Starts the pipeline
@@ -41,10 +39,21 @@ namespace core
              */
             void config() noexcept;
 
+            /**
+             * @brief Activates or deactivates the hot reloading
+             */
+            bool hotReload() noexcept;
+
+            /**
+             * @brief Get the state of the pipeline
+             */
+            bool isRunning() const noexcept;
+
         private:
             bool _running;
             bool _configLoaded;
             std::string _filepath;
+            bool _hotReload;
 
             parser::ConfigParser _parser;
             std::shared_ptr<ziapi::INetworkModule> _networkModule;
@@ -60,6 +69,6 @@ namespace core
 
             void _loadModule(ziapi::config::Node const &cfg, std::string const &path, std::string const &name);
     };
-}
+} // namespace core
 
-#endif //CORE_HPP
+#endif // CORE_HPP

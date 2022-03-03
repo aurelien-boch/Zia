@@ -6,7 +6,7 @@
 
 namespace core
 {
-    Core::Core(std::string &&filepath) noexcept :
+    Core::Core(std::string &name, std::string &filepath) noexcept :
         _running{false},
         _configLoaded{false},
         _filepath{std::forward<std::string>(filepath)},
@@ -93,6 +93,17 @@ namespace core
             }
         }
         _configLoaded = true;
+    }
+
+    bool Core::hotReload() noexcept
+    {
+        _hotReload = !_hotReload;
+        return _hotReload;
+    }
+
+    bool Core::isRunning() const noexcept
+    {
+        return _running;
     }
 
     void Core::_loadModule(ziapi::config::Node const &cfg, std::string const &path, std::string const &name)
