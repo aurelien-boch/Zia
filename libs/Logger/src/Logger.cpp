@@ -22,7 +22,7 @@ inline ziapi::Version post_process_modules::Logger::GetVersion() const noexcept
 
 inline ziapi::Version post_process_modules::Logger::GetCompatibleApiVersion() const noexcept
 {
-    return {4, 0, 0};
+    return {5, 0, 0};
 }
 
 inline const char *post_process_modules::Logger::GetName() const noexcept

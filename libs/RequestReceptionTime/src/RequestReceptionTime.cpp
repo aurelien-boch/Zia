@@ -12,7 +12,7 @@ inline ziapi::Version pre_process_modules::RequestReceptionTime::GetVersion() co
 
 inline ziapi::Version pre_process_modules::RequestReceptionTime::GetCompatibleApiVersion() const noexcept
 {
-    return {4, 0, 0};
+    return {5, 0, 0};
 }
 
 inline const char *pre_process_modules::RequestReceptionTime::GetName() const noexcept
