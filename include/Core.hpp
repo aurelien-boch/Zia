@@ -1,14 +1,17 @@
 #ifndef CORE_HPP
 #define CORE_HPP
 
-#include <ConfigParser.hpp>
-#include <Loader.hpp>
-#include <RequestOutputQueue.hpp>
-#include <ResponseInputQueue.hpp>
 #include <memory>
 #include <string>
+
 #include <ziapi/Config.hpp>
 #include <ziapi/Module.hpp>
+
+#include <Loader.hpp>
+#include <ConfigParser.hpp>
+#include <RequestOutputQueue.hpp>
+#include <ResponseInputQueue.hpp>
+#include <ThreadPool.hpp>
 
 namespace core
 {
@@ -61,8 +64,12 @@ namespace core
             std::vector<std::shared_ptr<ziapi::IHandlerModule>> _handlers;
             std::vector<std::shared_ptr<ziapi::IPostProcessorModule>> _postProcessors;
             std::vector<loader::Loader> _libs;
+            thread::ThreadPool _threadPool;
+            modules::RequestOutputQueue _requests;
+            modules::ResponseInputQueue _responses;
 
-            void _serveRequest(modules::RequestOutputQueue &requests, modules::ResponseInputQueue &responses);
+            void _serveRequest(modules::RequestOutputQueue &requests,
+                               modules::ResponseInputQueue &responses) const;
 
             void _purgeData();
 
@@ -70,6 +77,6 @@ namespace core
 
             void registerModule(const std::shared_ptr<ziapi::IModule> &instance);
     };
-} // namespace core
+}
 
-#endif // CORE_HPP
+#endif //CORE_HPP

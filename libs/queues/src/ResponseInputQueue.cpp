@@ -9,7 +9,8 @@ namespace modules
 
     std::optional<ResponseInputQueue::ResponsePair> ResponseInputQueue::Pop()
     {
-        ResponsePair response = {};
+        std::lock_guard<std::mutex> lock(_mutex);
+        ResponsePair response{};
 
         if (_responses.empty())
             return std::nullopt;
@@ -30,14 +31,23 @@ namespace modules
 
     void ResponseInputQueue::Push(ResponsePair &&response) noexcept
     {
+        std::lock_guard<std::mutex> lock{_mutex};
         _responses.push(std::forward<ResponsePair>(response));
+        _condvar.notify_one();
     }
 
     void ResponseInputQueue::Wait() noexcept
     {
-        do {
-            std::this_thread::yield();
-        } while (Empty());
+        std::unique_lock<std::mutex> lock{_mutex};
+
+        if (!_responses.empty())
+            return;
+        _condvar.wait(lock, [this] { return !_responses.empty(); });
+    }
+
+    void ResponseInputQueue::StopWait() noexcept
+    {
+        _condvar.notify_all();
     }
 }
 

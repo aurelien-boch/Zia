@@ -2,11 +2,14 @@
 
 namespace modules
 {
-    RequestOutputQueue::RequestOutputQueue() : _requests{}
+    RequestOutputQueue::RequestOutputQueue() :
+        _requests{},
+        _mutex{}
     {}
 
     std::optional<RequestOutputQueue::RequestPair> RequestOutputQueue::Pop()
     {
+        std::lock_guard<std::mutex> lock(_mutex);
         RequestPair request{};
 
         if (_requests.empty())
@@ -28,6 +31,22 @@ namespace modules
 
     void RequestOutputQueue::Push(RequestPair &&req)
     {
+        std::lock_guard<std::mutex> lock{_mutex};
         _requests.push(std::forward<RequestPair>(req));
+        _cond_var.notify_one();
+    }
+
+    void RequestOutputQueue::Wait() noexcept
+    {
+        std::unique_lock<std::mutex> lock{_mutex};
+
+        if (!_requests.empty())
+            return;
+        _cond_var.wait(lock, [this] { return !_requests.empty(); });
+    }
+
+    void RequestOutputQueue::StopWait() noexcept
+    {
+        _cond_var.notify_all();
     }
 }

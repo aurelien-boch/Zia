@@ -1,6 +1,8 @@
+#include <thread>
+#include <future>
+
 #include <RequestOutputQueue.hpp>
 #include <ResponseInputQueue.hpp>
-#include <thread>
 
 #include "Core.hpp"
 
@@ -18,11 +20,9 @@ namespace core
         if (!_configLoaded)
             throw std::runtime_error{"Error, the config isn't loaded"};
         _running = true;
-        modules::RequestOutputQueue requests{};
-        modules::ResponseInputQueue responses{};
-        std::jthread _networkRunThread{[this, &requests, &responses]() -> void {
+        std::jthread _networkRunThread{[this]() -> void {
             try {
-                _networkModule->Run(requests, responses);
+                _networkModule->Run(_requests, _responses);
             } catch (std::exception &err) {
                 std::cerr
                 << "Error: the network module thrown an exception while running.\n"
@@ -34,17 +34,16 @@ namespace core
 
         while (_running)
         {
-            while (requests.Size() == 0 && _running)
-                std::this_thread::yield();
+            _requests.Wait();
             if (!_running)
                 return;
-            _serveRequest(requests, responses);
+            _threadPool.run([this] { _serveRequest(_requests, _responses); });
         }
     }
 
     void Core::_serveRequest(
         modules::RequestOutputQueue &requests,
-        modules::ResponseInputQueue &responses)
+        modules::ResponseInputQueue &responses) const
     {
         ziapi::http::Response response{};
         auto req{requests.Pop()};
@@ -67,6 +66,8 @@ namespace core
 
     void Core::stop()
     {
+        _responses.StopWait();
+        _requests.StopWait();
         _networkModule->Terminate();
         _running = false;
     }

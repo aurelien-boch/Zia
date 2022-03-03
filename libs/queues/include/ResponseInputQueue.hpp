@@ -2,6 +2,8 @@
 #define RESPONSEINPUTQUEUE_HPP
 
 #include <queue>
+#include <mutex>
+#include <condition_variable>
 
 #include <ziapi/Http.hpp>
 #include <Loader.hpp>
@@ -31,8 +33,12 @@ namespace modules
 
             void Wait() noexcept override;
 
+            void StopWait() noexcept;
+
         private:
             std::queue<ResponsePair> _responses;
+            std::mutex _mutex;
+            std::condition_variable _condvar;
     };
 }
 

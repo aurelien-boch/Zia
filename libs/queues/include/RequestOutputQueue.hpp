@@ -2,6 +2,8 @@
 #define REQUESTOUTPUTQUEUE_HPP
 
 #include <queue>
+#include <mutex>
+#include <condition_variable>
 
 #include <ziapi/Http.hpp>
 #include <Loader.hpp>
@@ -25,7 +27,19 @@ namespace modules
 
             void Push(RequestPair &&req) override;
 
+            /**
+             * @brief Method that blocks until a request pushed or StopWait is called.
+             */
+            void Wait() noexcept;
+
+            /**
+             * @brief Method that stop the waiting of the Wait() method.
+             */
+            void StopWait() noexcept;
+
         private:
+            std::mutex _mutex;
+            std::condition_variable _cond_var;
             std::queue<RequestPair> _requests;
     };
 }

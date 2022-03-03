@@ -45,4 +45,5 @@ target_link_libraries(
         loader
         config_parser
         queues
+        thread_pool
 )

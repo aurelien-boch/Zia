@@ -16,7 +16,7 @@ namespace formatter {
 /**
  * @Class HttpFormatter
  *
- * @brief Formats Http responses into a string
+ * @brief Formats Http _responses into a string
  */
 class DllExport HttpFormatter {
 

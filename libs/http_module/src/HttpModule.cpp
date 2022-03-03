@@ -70,12 +70,10 @@ namespace modules
         std::jthread serviceRunner{[this]() -> void { _service.run(); }};
         while (_run) {
             try {
-                do {
-                    std::this_thread::yield();
-                    if (!_run)
-                        break;
-                } while (!responses.Size());
-                _sendResponses(responses);
+                responses.Wait();
+
+                if (responses.Size() != 0)
+                    _sendResponses(responses);
             } catch (const std::runtime_error &e) {
                 std::cerr << "ERROR(modules/http): " << e.what() << std::endl;
             }

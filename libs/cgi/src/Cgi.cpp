@@ -26,7 +26,11 @@ namespace modules
 
             if (req.method == "POST" || req.method == "PUT")
                 child << req.body;
-            child.wait();
+            try {
+                child.wait();
+            } catch (std::runtime_error const &e) {
+                std::cerr << e.what() << std::endl;
+            }
             child >> cgiResult;
         } catch (std::runtime_error const &e) {
             std::cerr << e.what() << std::endl;
@@ -73,7 +77,6 @@ namespace modules
     Cgi::Url Cgi::_parseUrl(const std::string &url)
     {
         Url res{};
-
         std::size_t domainBegin = url.find_first_of("://");
 
         if (domainBegin == std::string::npos)

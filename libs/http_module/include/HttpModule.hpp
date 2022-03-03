@@ -22,9 +22,9 @@ namespace modules
 
             explicit HttpModule();
 
-            ~HttpModule() = default;
+            ~HttpModule() override = default;
 
-            void Init(const ziapi::config::Node &cfg);
+            void Init(const ziapi::config::Node &cfg) override;
 
             [[nodiscard]] inline ziapi::Version GetVersion() const noexcept override;
 
