@@ -1,8 +1,11 @@
 modules:
   http:
     port: 8080
-    path: ../lib/libhttp_module.so
+#    path: ../lib/libhttp_module.so
+    path: http_module.dll
   cgi:
-    path: ../lib/libcgi.so
-    cgiPath: /usr/bin/php-cgi
+#    path: ../lib/libcgi.so
+#    cgiPath: /usr/bin/php-cgi
+    path: cgi.dll
+    cgiPath: ../../php/php-cgi.exe
     rootDirectory: .

@@ -46,6 +46,8 @@ namespace modules
             static std::string _getHostName();
 
             void _populateEnv(env::Manager &env, ziapi::http::Context &ctx, const ziapi::http::Request &req);
+
+            static void _parseResponse(std::string const &cgiResult, ziapi::http::Response &res) noexcept;
     };
 }
 

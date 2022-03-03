@@ -67,6 +67,8 @@ namespace core
             void _purgeData();
 
             void _loadModule(ziapi::config::Node const &cfg, std::string const &path, std::string const &name);
+
+            void registerModule(const std::shared_ptr<ziapi::IModule> &instance);
     };
 } // namespace core
 

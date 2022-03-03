@@ -62,8 +62,7 @@ namespace core
             if (e->ShouldPostProcess(ctx, request, response))
                 e->PostProcess(ctx, request, response);
         response.version = ziapi::http::Version::kV1;
-        response.status_code = ziapi::http::Code::kOK;
-        responses.Push({std::move(response), std::move(ctx)});
+            responses.Push({std::move(response), std::move(ctx)});
     }
 
     void Core::stop()
@@ -133,6 +132,11 @@ namespace core
                 << std::endl;
             return;
         }
+        registerModule(instance);
+    }
+
+    void Core::registerModule(std::shared_ptr<ziapi::IModule> const &instance)
+    {
         if (dynamic_cast<ziapi::IPreProcessorModule *>(instance.get()))
             _preProcessors.emplace_back(std::dynamic_pointer_cast<ziapi::IPreProcessorModule>(instance));
         if (dynamic_cast<ziapi::IHandlerModule *>(instance.get()))

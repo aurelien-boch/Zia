@@ -6,16 +6,18 @@
 
 #if _WIN32
     #include <Windows.h>
+    #define DllExport   __declspec( dllexport )
 #else
     #include <unistd.h>
     #include <sys/wait.h>
+    #define DllExport
 #endif
 
 #include <EnvManager.hpp>
 
 namespace execution
 {
-    class Executor
+    class DllExport Executor
     {
         public:
 #if _WIN32
