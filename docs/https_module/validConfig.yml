@@ -2,7 +2,6 @@ modules:
   https:
     port: 3000
     certificatePath: ./certificate/server.crt
-  otherModule:
-    ip: plouf
-    location: /etc/nginx/certs
-    id: 1234
+    certificateKey: ./certificate/server.key
+    certificateDhFile: ./certificate/dh2048.pem
+    certificateKeyPassword: password

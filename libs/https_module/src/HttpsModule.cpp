@@ -18,12 +18,19 @@ namespace modules
     {
         auto &httpsConfig = cfg["modules"]["https"];
         int port = httpsConfig["port"].AsInt();
+        network::https::AsioHttpsListener::CertificateData data{
+            .certificatePath = httpsConfig["certificatePath"].AsString(),
+            .certificateKey = httpsConfig["certificateKey"].AsString(),
+            .certificateDhFile = httpsConfig["certificateDhFile"].AsString(),
+            .certificateKeyPassword = httpsConfig["certificateKeyPassword"].AsString(),
+        };
 
-        _certificatePath = httpsConfig["certificatePath"].AsString();
+        _certificatePath = data.certificatePath;
+//        data.certificatePath = _certificatePath;
         if (port < 0)
             throw std::runtime_error("ERROR(modules/Https): Invalid port in configuration file");
         _port = port;
-        _listener = std::make_unique<network::https::AsioHttpsListener>(_service, _port, _certificatePath);
+        _listener = std::make_unique<network::https::AsioHttpsListener>(_service, _port, data);
     }
 
     ziapi::Version HttpsModule::GetVersion() const noexcept

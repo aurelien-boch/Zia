@@ -6,8 +6,8 @@
 
 namespace network::https
 {
-    AsioHttpsListener::AsioHttpsListener(asio::io_service &ctx, std::uint16_t port, std::string const &certificatePath) :
-        _certificatePath{certificatePath},
+    AsioHttpsListener::AsioHttpsListener(asio::io_service &ctx, std::uint16_t port, CertificateData const &data) :
+        _certificateData{data},
         _endpoint(asio::ip::tcp::v4(), port),
         _acceptor(ctx, _endpoint),
         _sslContext(asio::ssl::context::tls),
@@ -19,10 +19,10 @@ namespace network::https
                 asio::ssl::context::default_workarounds
                 | asio::ssl::context::no_sslv2);
         _sslContext.set_password_callback(std::bind(&AsioHttpsListener::_getPassword, this));
-        std::cout << "Certificate path: " << _certificatePath << std::endl;
-        _sslContext.use_certificate_chain_file(certificatePath);
-        _sslContext.use_private_key_file("./certificate/server.key", asio::ssl::context::pem);
-        _sslContext.use_tmp_dh_file("./certificate/dh2048.pem");
+        std::cout << "Certificate path: " << _certificateData.certificatePath << std::endl;
+        _sslContext.use_certificate_chain_file(_certificateData.certificatePath);
+        _sslContext.use_private_key_file(_certificateData.certificateKey, asio::ssl::context::pem);
+        _sslContext.use_tmp_dh_file(_certificateData.certificateDhFile);
     }
 
     void AsioHttpsListener::run(std::function<void (error::ErrorSocket const &, std::shared_ptr<IClient>)> &&callback) noexcept
@@ -46,10 +46,10 @@ namespace network::https
             run(std::forward<std::function<void (error::ErrorSocket const &, std::shared_ptr<IClient>)>>(callback));
         });
     }
-    
+
     std::string AsioHttpsListener::_getPassword() const
     {
-        return "password";
+        return _certificateData.certificateKeyPassword;
     }
 
 }

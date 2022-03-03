@@ -15,16 +15,24 @@ namespace network::https
     {
         public:
 
+            struct CertificateData
+            {
+                std::string certificatePath;
+                std::string certificateKey;
+                std::string certificateDhFile;
+                std::string certificateKeyPassword;
+            };
+
             using SslSocket = asio::ssl::stream<asio::ip::tcp::socket>;
 
             using IClient = ITCPClient<std::string, std::string>;
 
-            explicit AsioHttpsListener(asio::io_service &ctx, std::uint16_t port, std::string const &certificatePath);
+            explicit AsioHttpsListener(asio::io_service &ctx, std::uint16_t port, CertificateData const &data);
 
             void run(std::function<void (error::ErrorSocket const &, std::shared_ptr<IClient>)> &&callback) noexcept override;
 
         private:
-            std::string _certificatePath;
+            CertificateData _certificateData;
             asio::ip::tcp::endpoint _endpoint;
             asio::ip::tcp::acceptor _acceptor;
             asio::ssl::context _sslContext;
