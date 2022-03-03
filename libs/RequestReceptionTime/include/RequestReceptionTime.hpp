@@ -4,9 +4,9 @@
 #include "ziapi/Module.hpp"
 
 #ifdef _WIN32
-#define DllExport __declspec(dllexport)
+    #define DllExport __declspec(dllexport)
 #else
-#define DllExport
+    #define DllExport
 #endif
 
 namespace pre_process_modules {

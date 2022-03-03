@@ -1,6 +1,8 @@
 #ifndef ZIA_LOGGER_HPP
 #define ZIA_LOGGER_HPP
 
+#include <map>
+
 #include "ziapi/Module.hpp"
 #include "ziapi/Http.hpp"
 
@@ -84,6 +86,16 @@ private:
     static constexpr std::string_view s_magenta{"\033[97;45m"};
     static constexpr std::string_view s_cyan{"\033[97;46m"};
     static constexpr std::string_view s_reset{"\033[0m"};
+
+    const std::unordered_map<std::string_view, std::string_view> s_methodColors{
+            {"GET", s_blue},
+            {"POST", s_cyan},
+            {"PUT", s_yellow},
+            {"DELETE", s_red},
+            {"PATCH", s_green},
+            {"HEAD", s_magenta},
+            {"OPTIONS", s_white},
+    };
 
 };
 

@@ -38,17 +38,17 @@ inline const char *post_process_modules::Logger::GetDescription() const noexcept
 void post_process_modules::Logger::PostProcess(ziapi::http::Context &ctx, const ziapi::http::Request &req,
                                                ziapi::http::Response &res)
 {
-    const auto statusColor{_getStatusColor(res.status_code)};
-    const auto methodColor{_getMethodColor(req.method)};
+    const std::string_view statusColor{_getStatusColor(res.status_code)};
+    const std::string_view methodColor{_getMethodColor(req.method)};
     const auto receivedAtChrono{std::any_cast<std::chrono::time_point<std::chrono::system_clock>>(ctx["received_at"])};
-    const auto receivedAt{std::chrono::system_clock::to_time_t(receivedAtChrono)};
-    const auto duration{std::chrono::system_clock::now() - receivedAtChrono};
-    const auto durationWithUnit{_getDurationWithUnit(duration)};
-    const auto ip_address{_getIpAddress(std::any_cast<std::uint32_t>(ctx["REMOTE_ADDR"]))};
+    const std::time_t receivedAt{std::chrono::system_clock::to_time_t(receivedAtChrono)};
+    const auto requestDuration{std::chrono::system_clock::now() - receivedAtChrono};
+    const std::string requestDurationWithUnit{_getDurationWithUnit(requestDuration)};
+    const std::string ipAddress{_getIpAddress(std::any_cast<std::uint32_t>(ctx["REMOTE_ADDR"]))};
 
     fmt::print("[{}] {:%Y/%m/%d - %H:%M:%S} |{} {} {}| {:>13} | {:>15} |{} {:<8}{} {}\n",
                m_pipelineName, fmt::localtime(receivedAt), statusColor, static_cast<int>(res.status_code), s_reset,
-               durationWithUnit, ip_address, methodColor, req.method, s_reset, req.target);
+               requestDurationWithUnit, ipAddress, methodColor, req.method, s_reset, req.target);
 }
 
 inline double post_process_modules::Logger::GetPostProcessorPriority() const noexcept
@@ -66,51 +66,38 @@ inline bool post_process_modules::Logger::ShouldPostProcess(const ziapi::http::C
 inline const std::string_view post_process_modules::Logger::_getStatusColor(const ziapi::http::Code &status)
 const noexcept
 {
-    if (status >= ziapi::http::Code::kContinue && status < ziapi::http::Code::kOK) {
+    if (status >= ziapi::http::Code::kContinue && status < ziapi::http::Code::kOK)
         return s_blue;
-    } else if (status >= ziapi::http::Code::kOK && status < ziapi::http::Code::kMultipleChoices) {
+    else if (status >= ziapi::http::Code::kOK && status < ziapi::http::Code::kMultipleChoices)
         return s_green;
-    } else if (status >= ziapi::http::Code::kMultipleChoices && status < ziapi::http::Code::kBadRequest) {
+    else if (status >= ziapi::http::Code::kMultipleChoices && status < ziapi::http::Code::kBadRequest)
         return s_white;
-    } else if (status >= ziapi::http::Code::kBadRequest && status < ziapi::http::Code::kInternalServerError) {
+    else if (status >= ziapi::http::Code::kBadRequest && status < ziapi::http::Code::kInternalServerError)
         return s_yellow;
-    }
     return s_red;
 }
 
 inline const std::string_view post_process_modules::Logger::_getMethodColor(const std::string_view &method)
 const noexcept
 {
-    if (method == ziapi::http::method::kGet) {
-        return s_blue;
-    } else if (method == ziapi::http::method::kPost) {
-        return s_cyan;
-    } else if (method == ziapi::http::method::kPut) {
-        return s_yellow;
-    } else if (method == ziapi::http::method::kDelete) {
-        return s_red;
-    } else if (method == ziapi::http::method::kPatch) {
-        return s_green;
-    } else if (method == ziapi::http::method::kHead) {
-        return s_magenta;
-    } else if (method == ziapi::http::method::kOptions) {
-        return s_white;
+    try {
+        return s_methodColors.at(method);
+    } catch (const std::out_of_range &) {
+        return s_reset;
     }
-    return s_reset;
 }
 
 inline const std::string post_process_modules::Logger::_getDurationWithUnit(
         const std::chrono::system_clock::duration &duration) noexcept
 {
-    if (duration < 1us) {
+    if (duration < 1us)
         return {fmt::format("{:.6f}ns", static_cast<double>(duration.count()))};
-    } else if (duration < 1ms) {
+    else if (duration < 1ms)
         return {fmt::format("{:.6f}µs", static_cast<double>(duration.count()) / 1000)};
-    } else if (duration < 1s) {
+    else if (duration < 1s)
         return {fmt::format("{:.6f}ms", static_cast<double>(duration.count()) / (1000 * 1000))};
-    } else if (duration < 1min) {
+    else if (duration < 1min)
         return {fmt::format("{:.6f}s", static_cast<double>(duration.count()) / (1000 * 1000 * 1000))};
-    }
     return {fmt::format("{:.6f}min", static_cast<double>(duration.count()) / (1000UL * 1000UL * 1000UL * 60UL))};
 }
 
