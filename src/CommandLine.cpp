@@ -18,7 +18,8 @@ namespace cli
         if (_commands.find(_command) != _commands.end()) {
             _pipelineName = _line.substr(pos + 1, _line.find('\n'));
             _commands.at(_command)(*this);
-        }
+        } else
+            std::cerr << "Command not found, try typing help for available commands" << std::endl;
     }
 
     void CommandLine::_help()

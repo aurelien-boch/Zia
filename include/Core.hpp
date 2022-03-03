@@ -20,7 +20,7 @@ namespace core
     {
         public:
             /**
-             * @param[in] filepath this parameter refers to the config of the pipeline
+             * @param[in] filepath Refers to the config of the pipeline
              */
             Core(std::string &name, std::string &filepath) noexcept;
 
@@ -62,8 +62,7 @@ namespace core
             std::vector<std::shared_ptr<ziapi::IPostProcessorModule>> _postProcessors;
             std::vector<loader::Loader> _libs;
 
-            void _serveRequest(modules::RequestOutputQueue &requests,
-                               modules::ResponseInputQueue &responses);
+            void _serveRequest(modules::RequestOutputQueue &requests, modules::ResponseInputQueue &responses);
 
             void _purgeData();
 
