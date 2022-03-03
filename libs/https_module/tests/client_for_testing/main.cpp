@@ -28,7 +28,7 @@ int main(int ac, char **av)
     asio::io_context ctx;
 //    try {
         std::cout << "Creating client..." << std::endl;
-        network::https::AsioHttpsClient client(ctx);
+        network::https::AsioHttpsClient client(ctx, "./certificate/server.crt");
         std::cout << "Client created" << std::endl;
 
 //        try {

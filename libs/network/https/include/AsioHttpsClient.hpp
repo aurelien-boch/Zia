@@ -3,27 +3,39 @@
 
 #include <string>
 
+#include <asio.hpp>
 #include <asio/ssl.hpp>
 
-#include <AsioHttpClient.hpp>
+#include <ITCPClient.hpp>
+
+#ifdef _WIN32
+    #define DllExport   __declspec( dllexport )
+#else
+    #define DllExport
+#endif
 
 namespace network::https
 {
     /**
      * @class Implements an Http client with SSL using Asio library
      */
-    class AsioHttpsClient : http::AsioHttpClient
+    class DllExport AsioHttpsClient : public ITCPClient<std::string, std::string>
     {
         public:
+
+            using SslSocket = asio::ssl::stream<asio::ip::tcp::socket>;
+
             explicit AsioHttpsClient(asio::io_context &ctx, std::string const &certificatePath = "");
 
-            explicit AsioHttpsClient(asio::ip::tcp::socket &socket);
+            explicit AsioHttpsClient(asio::io_context &ctx, SslSocket &&socket);
 
             ~AsioHttpsClient() = default;
 
             void connect(Address const &peer) noexcept override;
 
             [[nodiscard]] std::size_t send(std::string const &data) noexcept override;
+
+            [[nodiscard]] std::string receive() noexcept override;
 
             void asyncSend(
                 std::string const &packet,
@@ -33,13 +45,25 @@ namespace network::https
                 std::function<void(error::ErrorSocket const &, std::string &)> &&callback
             ) noexcept override;
 
-        private:
-            asio::ssl::context _sslContext;
-            asio::ssl::stream<asio::ip::tcp::socket> _sslSocket;
-            asio::ip::tcp::socket::lowest_layer_type& _connectionSocket;
-            // asio::ip::tcp::resolver _resolver;
+            [[nodiscard]] inline Address const &getAddress() const noexcept override;
 
-            void _rec(std::string &str) override;
+        private:
+
+            Address _address;
+
+            asio::ssl::context _sslContext;
+            SslSocket _sslSocket;
+            asio::ip::tcp::resolver _resolver;
+
+            std::string _requestBuffer;
+            std::size_t _bodyLength;
+            std::size_t _totalBytesRead;
+
+            void _rec(std::string &str);
+
+            void _asyncRec(asio::error_code ec, std::function<void(error::ErrorSocket const &, std::string &)> &&cb, std::size_t bytesRead);
+
+            void _handshake() noexcept;
 
 
     };

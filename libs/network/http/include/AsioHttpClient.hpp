@@ -45,7 +45,7 @@ namespace network::http
             [[nodiscard]] inline Address const &getAddress() const noexcept override;
 
 
-        protected:
+        private:
             asio::ip::tcp::socket _socket;
             Address _address;
 
@@ -58,13 +58,9 @@ namespace network::http
 
             char _buffer[257];
 
-            virtual void _rec(std::string &str);
+            void _rec(std::string &str);
 
             void _asyncRec(asio::error_code ec, std::function<void(error::ErrorSocket const &, std::string &)> &&cb, std::size_t bytesRead);
-
-
-        private:
-
 
             [[nodiscard]] std::size_t _getContentLength(std::string const &header);
 

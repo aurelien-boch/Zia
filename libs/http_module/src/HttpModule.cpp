@@ -104,6 +104,7 @@ namespace modules
             c->asyncReceive([c, this, &requests] (error::ErrorSocket err, std::string &request) mutable {
                 _onPacket(requests, err, request, c);
             });
+            std::cerr << "NEW CONNECTION" << std::endl; // todo: remove
         }
     }
 
@@ -164,6 +165,7 @@ namespace modules
                          std::cerr << "ERROR(modules/Http): " << err << std::endl;
                      }
                  }
+                 std::cout << "RESPONSE SENT" << std::endl; // todo: remove
                  _clients.erase(std::remove(_clients.begin(), _clients.end(), client), _clients.end());
              });
         }

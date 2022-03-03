@@ -37,11 +37,12 @@ namespace network::http
 
         protected:
 
+            asio::io_context &_io_context;
+
             virtual void _emplaceClient(asio::ip::tcp::socket &peer,
                 std::function<void (error::ErrorSocket const &, std::shared_ptr<IClient>)> &&callback);
 
         private:
-            asio::io_context &_io_context;
             asio::ip::tcp::acceptor _acceptor;
     };
 }
