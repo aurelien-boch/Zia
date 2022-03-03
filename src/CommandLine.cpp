@@ -12,9 +12,11 @@ namespace cli
 
     void CommandLine::_checkCommand()
     {
-        _command = _line.substr(0, _line.find(' '));
+        std::size_t pos = _line.find(" ");
+
+        _command = _line.substr(0, pos);
         if (_commands.find(_command) != _commands.end()) {
-            _pipelineName = _line.substr(_line.find(' ') + 1, _line.find('\n'));
+            _pipelineName = _line.substr(pos + 1, _line.find('\n'));
             _commands.at(_command)(*this);
         }
     }
