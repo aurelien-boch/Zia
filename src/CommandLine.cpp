@@ -89,7 +89,8 @@ namespace cli
     void CommandLine::_exit()
     {
         for (auto &[name, pipeline] : _pipelines)
-            pipeline.stop();
+            if (pipeline.isRunning())
+                pipeline.stop();
         std::exit(0);
     }
 } // namespace cli
