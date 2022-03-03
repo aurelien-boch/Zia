@@ -31,6 +31,9 @@ namespace network::https
             SslSocket _sslSocket;
             asio::io_context &_io_context;
 
+            std::string _getPassword() const;
+
+
     };
 }
 

@@ -22,3 +22,7 @@ lib/
 # Binary
 
 zia
+
+#CMake
+CMakeCache.txt
+CMakeFiles/

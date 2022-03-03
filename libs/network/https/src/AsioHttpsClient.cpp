@@ -11,13 +11,17 @@ namespace network::https
         _sslContext(asio::ssl::context::tls),
         _sslSocket(io_context, _sslContext),
         _resolver(io_context)
-    {}
+    {
+
+    }
 
     AsioHttpsClient::AsioHttpsClient(asio::io_context &io_context, SslSocket &&socket) :
         _sslContext(asio::ssl::context::tls),
         _sslSocket(std::move(socket)),
         _resolver(io_context)
-    {}
+    {
+//        _sslSocket.handshake(asio::ssl::stream_base::server);
+    }
 
     void AsioHttpsClient::connect(Address const &peer) noexcept
     {
@@ -29,13 +33,13 @@ namespace network::https
 
     std::size_t AsioHttpsClient::send(std::string const &data) noexcept
     {
-//        try {
-//            std::cout << "Sending data" << std::endl; // TODO: remove line
-//            return asio::write(_sslSocket, asio::buffer(data.data(), sizeof(char) * data.size()));
-//        } catch (std::system_error const &err) {
-//            std::cerr << "ERROR(network/AsioHttpsClient): " << err.what() << std::endl;
-//            return 0;
-//        }
+        try {
+            std::cout << "Sending data" << std::endl; // TODO: remove line
+            return asio::write(_sslSocket, asio::buffer(data.data(), sizeof(char) * data.size()));
+        } catch (std::system_error const &err) {
+            std::cerr << "ERROR(network/AsioHttpsClient): " << err.what() << std::endl;
+            return 0;
+        }
     }
 
     std::string AsioHttpsClient::receive() noexcept // TODO
@@ -46,21 +50,21 @@ void AsioHttpsClient::asyncSend(
         std::string const &packet,
         std::function<void(error::ErrorSocket const &)> &&cb) noexcept
     {
-//        std::cout << "Sending data" << std::endl; // TODO: remove line
-//        asio::async_write(_sslSocket, asio::buffer(packet.data(), sizeof(char) * packet.size()),
-//            [cb = std::forward<std::function<void (error::ErrorSocket const &)>>(cb)] (asio::error_code const &ec, std::size_t) {
-//                if (ec) {
-//                    const auto it = error::AsioErrorTranslator.find(ec);
-//
-//                    if (it == error::AsioErrorTranslator.end())
-//                        std::cerr << "ERROR(network/AsioHttpsClient): " << ec << std::endl;
-//                    else
-//                        cb(it->second);
-//                } else {
-//                    std::cout << "Data sent" << std::endl ; // TODO: remove line
-//                    cb(error::SOCKET_NO_ERROR);
-//                }
-//        });
+        std::cout << "Sending data" << std::endl; // TODO: remove line
+        asio::async_write(_sslSocket, asio::buffer(packet.data(), sizeof(char) * packet.size()),
+            [cb = std::forward<std::function<void (error::ErrorSocket const &)>>(cb)] (asio::error_code const &ec, std::size_t) {
+                if (ec) {
+                    const auto it = error::AsioErrorTranslator.find(ec);
+
+                    if (it == error::AsioErrorTranslator.end())
+                        std::cerr << "ERROR(network/AsioHttpsClient): " << ec << std::endl;
+                    else
+                        cb(it->second);
+                } else {
+                    std::cout << "Data sent" << std::endl ; // TODO: remove line
+                    cb(error::SOCKET_NO_ERROR);
+                }
+        });
     }
 
     void AsioHttpsClient::asyncReceive(
@@ -73,19 +77,17 @@ void AsioHttpsClient::asyncSend(
     }
 
     Address const &AsioHttpsClient::getAddress() const noexcept
-    {}
+    {
+        return _address;
+    }
 
 
 void AsioHttpsClient::_rec(std::string &str)
     {
-//        char buff[257]{};
-//
-//        asio::read(_sslSocket, asio::buffer(buff, sizeof(char) * 256));
-//        str += buff;
-    }
+        char buff[257]{};
 
-    void AsioHttpsClient::_handshake() noexcept
-    {
+        asio::read(_sslSocket, asio::buffer(buff, sizeof(char) * 256));
+        str += buff;
     }
 
 }

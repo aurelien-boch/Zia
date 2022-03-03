@@ -44,6 +44,7 @@ namespace network::http
 
         private:
             asio::ip::tcp::acceptor _acceptor;
+
     };
 }
 

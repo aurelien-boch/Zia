@@ -21,8 +21,9 @@ fi
 cd certificate/
 
 # Certificate generation
-openssl genrsa -aes256 -passout pass:gsahdg -out server.pass.key 4096
-openssl rsa -passin pass:gsahdg -in server.pass.key -out server.key
-rm server.pass.key
+openssl genrsa -des3 -out server.key 1024
 openssl req -new -key server.key -out server.csr
-openssl x509 -req -sha256 -days 365 -in server.csr -signkey server.key -out server.crt
+openssl x509 -req -days 3650 -in server.csr -signkey server.key -out server.crt
+cp server.key server.key.secure
+cp server.key server.key.secure
+openssl dhparam -out dh2048.pem 2048

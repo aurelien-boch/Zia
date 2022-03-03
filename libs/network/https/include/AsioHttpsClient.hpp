@@ -63,7 +63,6 @@ namespace network::https
 
             void _asyncRec(asio::error_code ec, std::function<void(error::ErrorSocket const &, std::string &)> &&cb, std::size_t bytesRead);
 
-            void _handshake() noexcept;
 
 
     };
