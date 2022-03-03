@@ -17,7 +17,8 @@ namespace network::https
 
         _sslContext.set_options(
                 asio::ssl::context::default_workarounds
-                | asio::ssl::context::no_sslv2);
+                | asio::ssl::context::no_sslv2
+                | asio::ssl::context::single_dh_use);
         _sslContext.set_password_callback(std::bind(&AsioHttpsListener::_getPassword, this));
         std::cout << "Certificate path: " << _certificateData.certificatePath << std::endl;
         _sslContext.use_certificate_chain_file(_certificateData.certificatePath);

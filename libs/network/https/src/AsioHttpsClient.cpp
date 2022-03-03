@@ -20,7 +20,8 @@ namespace network::https
         _sslSocket(std::move(socket)),
         _resolver(io_context)
     {
-//        _sslSocket.handshake(asio::ssl::stream_base::server);
+        _sslSocket.handshake(asio::ssl::stream_base::server);
+        std::cout << "Handshake done" << std::endl;
     }
 
     void AsioHttpsClient::connect(Address const &peer) noexcept
