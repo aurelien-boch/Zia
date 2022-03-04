@@ -5,12 +5,13 @@
 #include <iostream>
 #include <yaml-cpp/yaml.h>
 #include <ziapi/Config.hpp>
-#include <Loader.hpp>
 
-#ifdef _WIN32
-    #define DllExport __declspec(dllexport)
-#else
-    #define DllExport
+#ifndef DllExport
+    #ifdef _WIN32
+        #define DllExport __declspec(dllexport)
+    #else
+        #define DllExport
+    #endif
 #endif
 
 namespace parser

@@ -9,10 +9,12 @@
 #include "ziapi/Http.hpp"
 #include "ziapi/HttpConstants.hpp"
 
-#ifdef _WIN32
-    #define DllExport __declspec(dllexport)
-#else
-    #define DllExport
+#ifndef DllExport
+    #ifdef _WIN32
+        #define DllExport __declspec(dllexport)
+    #else
+        #define DllExport
+    #endif
 #endif
 
 namespace parser {

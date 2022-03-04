@@ -6,11 +6,17 @@
 
 #if _WIN32
     #include <Windows.h>
-    #define DllExport   __declspec( dllexport )
 #else
     #include <unistd.h>
     #include <sys/wait.h>
-    #define DllExport
+#endif
+
+#ifndef DllExport
+    #ifdef _WIN32
+        #define DllExport __declspec(dllexport)
+    #else
+        #define DllExport
+    #endif
 #endif
 
 #include <EnvManager.hpp>

@@ -6,13 +6,21 @@
 #include <condition_variable>
 #include <queue>
 
+#ifndef DllExport
+    #ifdef _WIN32
+        #define DllExport __declspec(dllexport)
+    #else
+        #define DllExport
+    #endif
+#endif
+
 namespace thread
 {
     /**
      * @class ThreadPool
      * @brief A simple thread pool.
      */
-    class ThreadPool
+    class DllExport ThreadPool
     {
         public:
             using callableObject = std::function<void (void)>;

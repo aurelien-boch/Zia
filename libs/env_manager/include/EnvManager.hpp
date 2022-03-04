@@ -15,12 +15,20 @@
     #include <unistd.h>
 #endif
 
+#ifndef DllExport
+    #ifdef _WIN32
+        #define DllExport __declspec(dllexport)
+    #else
+        #define DllExport
+    #endif
+#endif
+
 namespace env
 {
     /**
      * @brief A small class that manages environment variables.
      */
-    class Manager
+    class DllExport Manager
     {
         public:
             /**
