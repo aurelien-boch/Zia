@@ -74,7 +74,7 @@ namespace modules
         return true;
     }
 
-    Cgi::Url Cgi::_parseUrl(const std::string &url)
+    Cgi::Url Cgi::_parseUrl(std::string const &url)
     {
         Url res{};
         std::size_t domainBegin{url.find_first_of("://")};
