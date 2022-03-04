@@ -40,13 +40,15 @@ namespace modules
     {
         std::unique_lock<std::mutex> lock{_mutex};
 
+        _shouldUnlock = false;
         if (!_responses.empty())
             return;
-        _condvar.wait(lock, [this] { return !_responses.empty(); });
+        _condvar.wait(lock, [this] { return !_responses.empty() || _shouldUnlock; });
     }
 
     void ResponseInputQueue::StopWait() noexcept
     {
+        _shouldUnlock = true;
         _condvar.notify_all();
     }
 }

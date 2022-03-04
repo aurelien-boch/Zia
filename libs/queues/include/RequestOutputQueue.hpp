@@ -38,6 +38,7 @@ namespace modules
             void StopWait() noexcept;
 
         private:
+            bool _shouldUnlock;
             std::mutex _mutex;
             std::condition_variable _cond_var;
             std::queue<RequestPair> _requests;

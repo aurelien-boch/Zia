@@ -12,7 +12,8 @@ namespace core
         _running{false},
         _configLoaded{false},
         _filepath{std::forward<std::string>(filepath)},
-        _parser{_filepath}
+        _parser{_filepath},
+        _threadPool{2}
     {}
 
     void Core::run()
@@ -66,10 +67,10 @@ namespace core
 
     void Core::stop()
     {
+        _running = false;
         _responses.StopWait();
         _requests.StopWait();
         _networkModule->Terminate();
-        _running = false;
     }
 
     void Core::config() noexcept
