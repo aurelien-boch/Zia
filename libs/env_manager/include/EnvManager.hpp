@@ -118,7 +118,7 @@ namespace env
              * @brief Returns the environment variable with name \bkey
              * @param [in]key The name of the variable to return
              * @return The environment variable as a reference to a std::string
-             * @throw If The variable is not defined, a VariableNotDefinedException will be thrown
+             * @throw VariableNotDefinedException if the variable is not defined
              */
             [[nodiscard]] inline std::string &operator[](std::string const &str);
 
