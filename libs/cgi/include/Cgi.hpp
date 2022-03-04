@@ -30,9 +30,9 @@ namespace modules
             [[nodiscard]] bool ShouldHandle(const ziapi::http::Context &ctx, const ziapi::http::Request &req) const override;
 
         private:
-            std::string _cgiPath;
-            std::string _rootDirectory;
-            env::Manager _env;
+            std::string _cgiPath{};
+            std::string _rootDirectory{};
+            env::Manager _env{};
 
             struct Url
             {
