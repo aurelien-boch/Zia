@@ -72,8 +72,8 @@ namespace execution
             void wait() const;
 
             /**
-             * @brief Kill the process.
-             * @param exitCode The exit code to end the process with (only works on windows
+             * @brief Kills the process.
+             * @param[in] exitCode The exit code to end the process with (only works on windows
              * sigkill will always be send on linux)
              */
             void kill(std::uint32_t exitCode) const;
