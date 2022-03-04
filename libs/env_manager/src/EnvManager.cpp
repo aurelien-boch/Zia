@@ -43,7 +43,7 @@ namespace env
             throw VariableAlreadyDefinedException{key};
     }
 
-    void Manager::pushEnvVariable(const char *key, const char *value)
+    void Manager::pushEnvVariable(char const *key, char const *value)
     {
         auto [data, success] = _internalEnv.insert({key, value});
 
