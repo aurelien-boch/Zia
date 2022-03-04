@@ -1,18 +1,15 @@
 #pragma comment(lib, "Ws2_32.lib")
 
-#include <filesystem>
+#include "Cgi.hpp"
+
 #include <EnvManager.hpp>
 #include <Executor.hpp>
+#include <filesystem>
 #include <iostream>
-
-#include "Cgi.hpp"
 
 namespace modules
 {
-    Cgi::Cgi()
-    {
-        _env.loadFromEnvironment();
-    }
+    Cgi::Cgi() { _env.loadFromEnvironment(); }
 
     void Cgi::Handle(ziapi::http::Context &ctx, const ziapi::http::Request &req, ziapi::http::Response &res)
     {
@@ -22,9 +19,9 @@ namespace modules
         _populateEnv(manager, ctx, req);
         res.status_code = ziapi::http::Code::kOK;
         try {
-            execution::Executor child {_cgiPath, {manager.getEnvVariable("PATH_TRANSLATED")}, manager};
+            execution::Executor child{_cgiPath, {manager.getEnvVariable("PATH_TRANSLATED")}, manager};
 
-            if (req.method == ziapi::http::kPost || req.method == ziapi::http::kPut)
+            if (req.method == ziapi::http::method::kPost || req.method == ziapi::http::method::kPut)
                 child << req.body;
             try {
                 child.wait();
@@ -44,35 +41,17 @@ namespace modules
         _rootDirectory = cfg["modules"]["cgi"]["rootDirectory"].AsString();
     }
 
-    ziapi::Version Cgi::GetVersion() const noexcept
-    {
-        return {1, 0, 0};
-    }
+    ziapi::Version Cgi::GetVersion() const noexcept { return {1, 0, 0}; }
 
-    ziapi::Version Cgi::GetCompatibleApiVersion() const noexcept
-    {
-        return {5, 0, 0};
-    }
+    ziapi::Version Cgi::GetCompatibleApiVersion() const noexcept { return {5, 0, 0}; }
 
-    const char *Cgi::GetName() const noexcept
-    {
-        return "Cgi";
-    }
+    const char *Cgi::GetName() const noexcept { return "Cgi"; }
 
-    const char *Cgi::GetDescription() const noexcept
-    {
-        return "A simple module that process cgi on the request";
-    }
+    const char *Cgi::GetDescription() const noexcept { return "A simple module that process cgi on the request"; }
 
-    double Cgi::GetHandlerPriority() const noexcept
-    {
-        return 1;
-    }
+    double Cgi::GetHandlerPriority() const noexcept { return 1; }
 
-    bool Cgi::ShouldHandle(const ziapi::http::Context &ctx, const ziapi::http::Request &req) const
-    {
-        return true;
-    }
+    bool Cgi::ShouldHandle(const ziapi::http::Context &ctx, const ziapi::http::Request &req) const { return true; }
 
     Cgi::Url Cgi::_parseUrl(std::string const &url)
     {
@@ -116,15 +95,11 @@ namespace modules
         env.pushEnvVariable("GATEWAY_INTERFACE", "CGI/1.1");
         env.pushEnvVariable("PATH_INFO", filepath);
         env.pushEnvVariable("PATH_TRANSLATED", std::filesystem::absolute(filepath).string());
-        env.pushEnvVariable("QUERY_STRING",
-                            queryParams != std::string::npos ?
-                                req.target.substr(queryParams + 1, req.target.size())
-                                : "");
-        env.pushEnvVariable("REMOTE_ADDR",
-                                std::to_string(converted[0]) + "." +
-                                std::to_string(converted[1]) + "." +
-                                std::to_string(converted[2]) + "." +
-                                std::to_string(converted[3]));
+        env.pushEnvVariable("QUERY_STRING", queryParams != std::string::npos
+                                                ? req.target.substr(queryParams + 1, req.target.size())
+                                                : "");
+        env.pushEnvVariable("REMOTE_ADDR", std::to_string(converted[0]) + "." + std::to_string(converted[1]) + "."
+                                               + std::to_string(converted[2]) + "." + std::to_string(converted[3]));
         env.pushEnvVariable("REMOTE_HOST", "");
         env.pushEnvVariable("REQUEST_METHOD", req.method);
         env.pushEnvVariable("SCRIPT_NAME", filepath);
@@ -142,17 +117,14 @@ namespace modules
         if (bodyOffset == std::string::npos)
             res.status_code = ziapi::http::Code::kInternalServerError;
         else {
-            for (std::size_t currentIndex {0}; currentIndex < bodyOffset;) {
+            for (std::size_t currentIndex{0}; currentIndex < bodyOffset;) {
                 const std::size_t headerEnd = cgiResult.find("\r\n", currentIndex);
                 const std::size_t headerSeparator = cgiResult.find(':', currentIndex);
-                const std::string headerName {cgiResult.substr(currentIndex, headerSeparator - currentIndex)};
-                const std::string headerValue {
-                    cgiResult.substr(
-                        headerSeparator + (cgiResult[headerSeparator + 1] == ' ' ? 2 : 1),
-                        headerEnd - headerSeparator - (cgiResult[headerSeparator + 1] == ' ' ? 2 : 1)
-                    )
-                };
-                auto const &[_, success] {res.headers.try_emplace(headerName, headerValue)};
+                const std::string headerName{cgiResult.substr(currentIndex, headerSeparator - currentIndex)};
+                const std::string headerValue{
+                    cgiResult.substr(headerSeparator + (cgiResult[headerSeparator + 1] == ' ' ? 2 : 1),
+                                     headerEnd - headerSeparator - (cgiResult[headerSeparator + 1] == ' ' ? 2 : 1))};
+                auto const &[_, success]{res.headers.try_emplace(headerName, headerValue)};
 
                 if (!success) {
                     res.status_code = ziapi::http::Code::kInternalServerError;
@@ -166,4 +138,4 @@ namespace modules
                 res.body = cgiResult.substr(bodyOffset + 4, cgiResult.size() - bodyOffset);
         }
     }
-}
+} // namespace modules
