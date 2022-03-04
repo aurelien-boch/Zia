@@ -68,7 +68,7 @@ namespace modules
         return false;
     }
 
-    void StaticServe::_serveDir(const std::string &path, ziapi::http::Response &res) const noexcept
+    void StaticServe::_serveDir(std::string const &path, ziapi::http::Response &res) const noexcept
     {
         std::string parentPath{std::filesystem::path(path).parent_path()};
         _setupHtml(path, res);
