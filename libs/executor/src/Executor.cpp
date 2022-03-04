@@ -67,8 +67,8 @@ namespace execution
         _processPid {}
 #endif
     {
-        auto[stdinRead, stdinWrite] = _createPipe();
-        auto[stdoutRead, stdoutWrite] = _createPipe();
+        const auto [stdinRead, stdinWrite] = _createPipe();
+        const auto [stdoutRead, stdoutWrite] = _createPipe();
         env::Manager environmentManager;
 
         _invokeProcess(
@@ -204,6 +204,9 @@ namespace execution
 
     Executor::~Executor()
     {
+        try {
+            wait();
+        } catch (std::runtime_error const &) {}
 #if _WIN32
         CloseHandle(_childStdin);
         CloseHandle(_childStdout);
@@ -212,8 +215,6 @@ namespace execution
         CloseHandle(_processInfo.hProcess);
         CloseHandle(_processInfo.hThread);
 #else
-        pid_t res = waitpid(_processPid, nullptr, {});
-
         close(_childStdin);
         close(_childStdout);
         close(_childStdinClientDescriptor);

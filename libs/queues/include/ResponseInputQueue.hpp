@@ -33,6 +33,9 @@ namespace modules
 
             void Wait() noexcept override;
 
+            /**
+             * @brief Stops the Wait method.
+             */
             void StopWait() noexcept;
 
         private:

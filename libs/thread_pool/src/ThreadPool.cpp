@@ -3,12 +3,12 @@
 
 namespace thread
 {
-    thread::ThreadPool::ThreadPool(std::size_t maxThreads) :
+    thread::ThreadPool::ThreadPool(std::size_t threads) :
         _running{true}
     {
-        if (maxThreads < 2)
+        if (threads < 2)
             throw std::runtime_error{"Error, threadpool can't have less than two threads"};
-        for (; maxThreads > 0; --maxThreads)
+        for (; threads > 0; --threads)
             _threads.emplace_back([this]() -> void { return _driverProgram(); });
     }
 

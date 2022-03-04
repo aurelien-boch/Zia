@@ -37,7 +37,7 @@ namespace env
 
     void Manager::pushEnvVariable(std::string const &key, std::string const &value)
     {
-        auto [data, success] = _internalEnv.insert({key, value});
+        auto [_, success] = _internalEnv.insert({key, value});
 
         if (!success)
             throw VariableAlreadyDefinedException{key};
@@ -45,7 +45,7 @@ namespace env
 
     void Manager::pushEnvVariable(char const *key, char const *value)
     {
-        auto [data, success] = _internalEnv.insert({key, value});
+        auto [_, success] = _internalEnv.insert({key, value});
 
         if (!success)
             throw VariableAlreadyDefinedException{key};

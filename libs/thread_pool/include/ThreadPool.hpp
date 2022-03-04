@@ -8,25 +8,25 @@
 
 namespace thread
 {
+    /**
+     * @class ThreadPool
+     * @brief A simple thread pool.
+     */
     class ThreadPool
     {
         public:
-            /**
-             *
-             */
             using callableObject = std::function<void (void)>;
 
             /**
-             *
-             * @param maxThreads
+             * @param[in] threads the number of threads the thread pool must use.
              */
-            explicit ThreadPool(std::size_t maxThreads = std::thread::hardware_concurrency());
+            explicit ThreadPool(std::size_t threads = std::thread::hardware_concurrency());
 
             ~ThreadPool();
 
             /**
-             *
-             * @param f
+             * @brief Adds a callableObject to the queue of callables that must be ran asynchronously.
+             * @param[in] f A rvalue ref to the callableObject that must be ran asynchronously.
              */
             void run(callableObject &&f) noexcept;
 

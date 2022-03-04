@@ -152,7 +152,7 @@ namespace modules
                         headerEnd - headerSeparator - (cgiResult[headerSeparator + 1] == ' ' ? 2 : 1)
                     )
                 };
-                auto const &[instance, success] {res.headers.try_emplace(headerName, headerValue)};
+                auto const &[_, success] {res.headers.try_emplace(headerName, headerValue)};
 
                 if (!success) {
                     res.status_code = ziapi::http::Code::kInternalServerError;

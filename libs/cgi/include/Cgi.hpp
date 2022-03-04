@@ -6,6 +6,10 @@
 
 namespace modules
 {
+    /**
+     * @class Cgi
+     * @brief Implements a generic CGI module
+     */
     class Cgi : public ziapi::IHandlerModule
     {
         public:
