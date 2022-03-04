@@ -3,15 +3,14 @@
 
 #include <vector>
 #include <unordered_map>
+#include <cstdio>
 
 #include "VariableAlreadyDefinedException.hpp"
 #include "VariableNotFoundException.hpp"
 
 #if _WIN32
     #include <Windows.h>
-    #include <cstdio>
 #else
-    #include <stdio.h>
     #include <stdlib.h>
     #include <unistd.h>
 #endif
