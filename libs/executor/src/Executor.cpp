@@ -8,7 +8,7 @@ namespace execution
 {
     Executor::Executor(
         std::string binaryPath,
-        std::vector<std::string> args,
+        std::vector<std::string> &&args,
         env::Manager const &environmentManager) :
 #ifdef _WIN32
         _processInfo {}
@@ -24,7 +24,7 @@ namespace execution
             stdoutWrite,
             environmentManager,
             std::move(binaryPath),
-            std::move(args)
+            std::forward<std::vector<std::string>>(args)
         );
         _childStdin = stdinWrite;
         _childStdout = stdoutRead;
@@ -49,8 +49,8 @@ namespace execution
             stdinRead,
             stdoutWrite,
             environmentManager,
-            std::move(binaryPath),
-            std::move(args)
+            std::forward<std::string>(binaryPath),
+            std::forward<std::vector<std::string>>(args)
         );
         _childStdin = stdinWrite;
         _childStdout = stdoutRead;
@@ -59,8 +59,8 @@ namespace execution
     }
 
     Executor::Executor(
-        std::string binaryPath,
-        std::vector<std::string> args) :
+        std::string &&binaryPath,
+        std::vector<std::string> &&args) :
 #ifdef _WIN32
         _processInfo {}
 #else
@@ -75,8 +75,8 @@ namespace execution
             stdinRead,
             stdoutWrite,
             environmentManager,
-            std::move(binaryPath),
-            std::move(args)
+            std::forward<std::string>(binaryPath),
+            std::forward<std::vector<std::string>>(args)
         );
         _childStdin = stdinWrite;
         _childStdout = stdoutRead;

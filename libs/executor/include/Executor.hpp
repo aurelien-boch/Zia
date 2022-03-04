@@ -37,7 +37,7 @@ namespace execution
              */
             Executor(
                 std::string binaryPath,
-                std::vector <std::string> args,
+                std::vector <std::string> &&args,
                 env::Manager const &environmentManager
             );
 
@@ -55,8 +55,8 @@ namespace execution
              * @param[in] args The args to provide to the binary.
              */
             Executor(
-                std::string binaryPath,
-                std::vector <std::string> args
+                std::string &&binaryPath,
+                std::vector <std::string> &&args
             );
 
             /**
