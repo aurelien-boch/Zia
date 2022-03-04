@@ -60,7 +60,7 @@ namespace env
             /**
              * @brief Remove the environment variable with name \bkey
              * @param [in]key The name of the variable to remove
-             * @throw If The variable is not defined, a VariableNotDefinedException will be thrown
+             * @throw VariableNotDefinedException if the variable is not defined
              */
             void removeEnvVariable(std::string const &key);
 
