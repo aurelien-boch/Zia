@@ -20,7 +20,7 @@ namespace parser {
 /**
  * @Class HttpParser
  *
- * @brief Parses HTTP _requests on each `parse` call
+ * @brief Parses HTTP requests on each `parse` call
  */
 class DllExport HttpParser {
 
