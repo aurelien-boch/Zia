@@ -56,7 +56,7 @@ namespace modules
         return true;
     }
 
-    bool StaticServe::_mayBeServed(const std::string &path) const noexcept
+    bool StaticServe::_mayBeServed(std::string const &path) const noexcept
     {
         std::filesystem::path p{path};
 
