@@ -1,7 +1,7 @@
 #ifndef ZIA_LOGGER_HPP
 #define ZIA_LOGGER_HPP
 
-#include <map>
+#include <unordered_map>
 
 #include "ziapi/Module.hpp"
 #include "ziapi/Http.hpp"

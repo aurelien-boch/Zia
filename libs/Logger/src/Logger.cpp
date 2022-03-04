@@ -93,11 +93,11 @@ inline const std::string_view modules::Logger::_getStatusColor(const ziapi::http
 
 inline const std::string_view modules::Logger::_getMethodColor(const std::string_view &method) const noexcept
 {
-    try {
-        return s_methodColors.at(method);
-    } catch (const std::out_of_range &) {
+    const auto &it = s_methodColors.find(method);
+
+    if (it == s_methodColors.cend())
         return s_reset;
-    }
+    return it->second;
 }
 
 inline const std::string modules::Logger::_getDurationWithUnit(const std::chrono::system_clock::duration &duration)
