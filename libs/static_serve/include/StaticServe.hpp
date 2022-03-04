@@ -36,7 +36,7 @@ namespace modules
 
             [[nodiscard]] bool _mayBeServed(std::string const &path) const noexcept;
 
-            static void _serveDir(std::string const &path, ziapi::http::Response &res) noexcept;
+            void _serveDir(std::string const &path, ziapi::http::Response &res) const noexcept;
 
             static void _setupHtml(std::string const &path, ziapi::http::Response &res) noexcept;
 

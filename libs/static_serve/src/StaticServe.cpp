@@ -23,7 +23,7 @@ namespace modules
 
     void StaticServe::Init(const ziapi::config::Node &cfg)
     {
-        _serveDirPath = absolute(std::filesystem::path(cfg["modules"]["staticserve"]["dirpath"].AsString()));
+        _serveDirPath = std::filesystem::absolute(cfg["modules"]["staticserve"]["dirpath"].AsString());
     }
 
     ziapi::Version StaticServe::GetVersion() const noexcept
@@ -58,22 +58,22 @@ namespace modules
 
     bool StaticServe::_mayBeServed(const std::string &path) const noexcept
     {
-        std::string parent = path;
-        std::filesystem::path instanciatedPath{parent};
+        std::filesystem::path p{path};
 
-        while (instanciatedPath.has_parent_path() && parent != "/") {
-            if (instanciatedPath == _serveDirPath)
+        while (p != "/" && p.has_parent_path()) {
+            if (p.string() == _serveDirPath.string())
                 return true;
-            parent = instanciatedPath.parent_path().string();
-            instanciatedPath = instanciatedPath.parent_path();
+            p = p.parent_path();
         }
         return false;
     }
 
-    void StaticServe::_serveDir(const std::string &path, ziapi::http::Response &res) noexcept
+    void StaticServe::_serveDir(const std::string &path, ziapi::http::Response &res) const noexcept
     {
+        std::string parentPath{std::filesystem::path(path).parent_path()};
         _setupHtml(path, res);
-        res.body +="<tr><td><a href=\"..\"/>[parent directory]</a></td></tr>";
+        if (_mayBeServed(parentPath))
+            res.body +="<tr><td><a href=\"" + parentPath + "\"/>[parent directory]</a></td></tr>";
         std::filesystem::directory_iterator it;
 
         try {
@@ -95,7 +95,6 @@ namespace modules
     void StaticServe::_appendFile(ziapi::http::Response &res, std::filesystem::directory_entry const &e)
     {
         time_t lastWrite{std::chrono::system_clock::to_time_t(std::chrono::file_clock::to_sys(e.last_write_time()))};
-        uintmax_t filesize;
         char formattedTime[18]{};
         std::string result{"<tr>"};
 

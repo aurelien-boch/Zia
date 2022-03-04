@@ -4,6 +4,7 @@ modules:
     path: ../lib/libhttp_module.so
   staticserve:
     path: ../lib/libstatic_serve.so
+    dirpath: /home/mina
     dirpath: .
 #    path: http_module.dll
   #cgi:
