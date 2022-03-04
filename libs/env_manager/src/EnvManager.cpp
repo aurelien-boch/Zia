@@ -67,7 +67,7 @@ namespace env
             throw VariableNotDefinedException{key};
     }
 
-    const std::string &Manager::getEnvVariable(const std::string &key) const
+    const std::string &Manager::getEnvVariable(std::string const &key) const
     {
         try {
             return _internalEnv.at(key);
