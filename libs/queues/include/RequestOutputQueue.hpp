@@ -28,7 +28,7 @@ namespace modules
             void Push(RequestPair &&req) override;
 
             /**
-             * @brief Method that blocks until a request pushed or StopWait is called.
+             * @brief Blocks until a request pushed or StopWait is called.
              */
             void Wait() noexcept;
 
