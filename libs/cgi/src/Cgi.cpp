@@ -24,7 +24,7 @@ namespace modules
         try {
             execution::Executor child {_cgiPath, {manager.getEnvVariable("PATH_TRANSLATED")}, manager};
 
-            if (req.method == "POST" || req.method == "PUT")
+            if (req.method == ziapi::http::kPost || req.method == ziapi::http::kPut)
                 child << req.body;
             try {
                 child.wait();
