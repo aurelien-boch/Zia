@@ -10,6 +10,16 @@
 
 using namespace std::chrono_literals;
 
+const std::unordered_map<std::string_view, std::string_view> modules::Logger::s_methodColors{
+    {"GET", s_blue},
+    {"POST", s_cyan},
+    {"PUT", s_yellow},
+    {"DELETE", s_red},
+    {"PATCH", s_green},
+    {"HEAD", s_magenta},
+    {"OPTIONS", s_white},
+};
+
 void modules::Logger::Init(const ziapi::config::Node &cfg)
 {
     m_pipelineName = cfg["pipelineName"].AsString();
