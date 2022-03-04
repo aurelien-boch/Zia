@@ -104,11 +104,11 @@ namespace modules
 
     void Cgi::_populateEnv(env::Manager &env, ziapi::http::Context &ctx, const ziapi::http::Request &req)
     {
-        std::size_t queryParams = req.target.find('?');
-        std::string filepath = _rootDirectory + req.target.substr(0, queryParams);
+        std::size_t queryParams{req.target.find('?')};
+        std::string filepath{_rootDirectory + req.target.substr(0, queryParams)};
         auto port{std::any_cast<std::uint16_t>(ctx["PORT"])};
         auto addr{std::any_cast<std::uint32_t>(ctx["REMOTE_ADDR"])};
-        auto *converted = reinterpret_cast<std::uint8_t *>(&addr);
+        auto *converted{reinterpret_cast<std::uint8_t *>(&addr)};
 
         env.pushEnvVariable("AUTH_TYPE", "");
         env.pushEnvVariable("CONTENT_LENGTH", std::to_string(req.body.size()));
