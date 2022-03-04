@@ -131,7 +131,7 @@ namespace execution
     void Executor::_invokeProcess(
         Executor::pipeDescriptor stdinDescriptor,
         Executor::pipeDescriptor stdoutDescriptor,
-        const env::Manager &env,
+        env::Manager const &env,
         std::string commandLine,
         std::vector<std::string> args)
     {
