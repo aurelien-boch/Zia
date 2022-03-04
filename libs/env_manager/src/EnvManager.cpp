@@ -5,7 +5,7 @@
 
 namespace env
 {
-    Manager::Manager(const char **env) :
+    Manager::Manager( char const **env) :
         _internalEnv {}
     {
         for (std::size_t i = 0; env[i] != nullptr; ++i) {
