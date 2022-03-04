@@ -155,7 +155,7 @@ namespace env
         }
     }
 
-    std::string &Manager::operator[](const std::string &str)
+    std::string &Manager::operator[](std::string const &str)
     {
         return this->getEnvVariable(str);
     }
