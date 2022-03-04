@@ -23,7 +23,7 @@ namespace env
     {
         for (auto const &e: env) {
             const std::string converted{e};
-            const auto pos = static_cast<int64_t>(converted.find('='));
+            const auto pos{static_cast<int64_t>(converted.find('='))};
             std::string key{converted.cbegin(), converted.cbegin() + pos};
             std::string value{converted.cbegin() + pos + 1, converted.cend()};
 
