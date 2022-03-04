@@ -17,7 +17,7 @@ namespace modules
     void Cgi::Handle(ziapi::http::Context &ctx, const ziapi::http::Request &req, ziapi::http::Response &res)
     {
         env::Manager manager{_env};
-        std::string cgiResult;
+        std::string cgiResult{};
 
         _populateEnv(manager, ctx, req);
         res.status_code = ziapi::http::Code::kOK;
