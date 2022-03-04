@@ -59,7 +59,7 @@ namespace env
             throw VariableNotDefinedException{key};
     }
 
-    void Manager::removeEnvVariable(const char *key)
+    void Manager::removeEnvVariable(char const *key)
     {
         std::size_t success{_internalEnv.erase(key)};
 
