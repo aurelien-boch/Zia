@@ -255,7 +255,7 @@ namespace execution
 #endif
     }
 
-    std::uint32_t Executor::operator<<(const std::string &str) const
+    std::uint32_t Executor::operator<<(std::string const &str) const
     {
 #if _WIN32
         DWORD numBytesWritten;
