@@ -124,7 +124,7 @@ namespace execution
             void _invokeProcess(
                 pipeDescriptor stdinDescriptor,
                 pipeDescriptor stdoutDescriptor,
-                const env::Manager &env,
+                env::Manager const &env,
                 std::string commandLine,
                 std::vector<std::string> args);
 
