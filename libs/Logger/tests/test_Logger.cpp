@@ -12,7 +12,7 @@
 TEST_CASE("Logging Successful Get", "[Logger]")
 {
     ziapi::config::Dict cfg{{"pipelineName", std::make_shared<ziapi::config::Node>("Successful Get")}};
-    post_process_modules::Logger logger{};
+    modules::Logger logger{};
     ziapi::http::Request req{
         .version{ziapi::http::Version::kV1_1},
         .target{"/user?id=6942"},
@@ -31,14 +31,10 @@ TEST_CASE("Logging Successful Get", "[Logger]")
         },
         .body{"toto"},
     };
-    ziapi::http::Context ctx{
-        {
-            "received_at",
-            std::make_any<std::chrono::time_point<std::chrono::system_clock>>(std::chrono::system_clock::now())},
-        {"REMOTE_ADDR", std::make_any<std::uint32_t>(0xC0A8002A)},
-    };
+    ziapi::http::Context ctx{{"REMOTE_ADDR", std::make_any<std::uint32_t>(0xC0A8002A)}};
 
     logger.Init(cfg);
+    logger.PreProcess(ctx, req);
     logger.PostProcess(ctx, req, res);
     SUCCEED();
 }
@@ -46,7 +42,7 @@ TEST_CASE("Logging Successful Get", "[Logger]")
 TEST_CASE("Logging Redirection Post", "[Logger]")
 {
     ziapi::config::Dict cfg{{"pipelineName", std::make_shared<ziapi::config::Node>("Redirection Post")}};
-    post_process_modules::Logger logger{};
+    modules::Logger logger{};
     ziapi::http::Request req{
             .version{ziapi::http::Version::kV1_1},
             .target{"/signup"},
@@ -65,15 +61,11 @@ TEST_CASE("Logging Redirection Post", "[Logger]")
             },
             .body{"toto"},
     };
-    ziapi::http::Context ctx{
-            {
-                "received_at",
-                std::make_any<std::chrono::time_point<std::chrono::system_clock>>(std::chrono::system_clock::now())},
-            {"REMOTE_ADDR", std::make_any<std::uint32_t>(0xAC8E00A9)},
-    };
-    std::this_thread::sleep_for(std::chrono::nanoseconds(569));
+    ziapi::http::Context ctx{{"REMOTE_ADDR", std::make_any<std::uint32_t>(0xAC8E00A9)}};
 
     logger.Init(cfg);
+    logger.PreProcess(ctx, req);
+    std::this_thread::sleep_for(std::chrono::nanoseconds(569));
     logger.PostProcess(ctx, req, res);
     SUCCEED();
 }
@@ -81,7 +73,7 @@ TEST_CASE("Logging Redirection Post", "[Logger]")
 TEST_CASE("Logging User Error Put", "[Logger]")
 {
     ziapi::config::Dict cfg{{"pipelineName", std::make_shared<ziapi::config::Node>("User Error Put")}};
-    post_process_modules::Logger logger{};
+    modules::Logger logger{};
     ziapi::http::Request req{
             .version{ziapi::http::Version::kV1_1},
             .target{"/profile?id=not-an-id"},
@@ -100,15 +92,11 @@ TEST_CASE("Logging User Error Put", "[Logger]")
             },
             .body{"toto"},
     };
-    ziapi::http::Context ctx{
-            {
-                "received_at",
-                std::make_any<std::chrono::time_point<std::chrono::system_clock>>(std::chrono::system_clock::now())},
-            {"REMOTE_ADDR", std::make_any<std::uint32_t>(0xFFFFFFFF)},
-    };
-    std::this_thread::sleep_for(std::chrono::microseconds(342));
+    ziapi::http::Context ctx{{"REMOTE_ADDR", std::make_any<std::uint32_t>(0xFFFFFFFF)}};
 
     logger.Init(cfg);
+    logger.PreProcess(ctx, req);
+    std::this_thread::sleep_for(std::chrono::microseconds(342));
     logger.PostProcess(ctx, req, res);
     SUCCEED();
 }
@@ -116,7 +104,7 @@ TEST_CASE("Logging User Error Put", "[Logger]")
 TEST_CASE("Logging Server Error Delete", "[Logger]")
 {
     ziapi::config::Dict cfg{{"pipelineName", std::make_shared<ziapi::config::Node>("Server Error Delete")}};
-    post_process_modules::Logger logger{};
+    modules::Logger logger{};
     ziapi::http::Request req{
             .version{ziapi::http::Version::kV1_1},
             .target{"/account/delete?id=6942"},
@@ -135,15 +123,11 @@ TEST_CASE("Logging Server Error Delete", "[Logger]")
             },
             .body{"toto"},
     };
-    ziapi::http::Context ctx{
-            {
-                "received_at",
-                std::make_any<std::chrono::time_point<std::chrono::system_clock>>(std::chrono::system_clock::now())},
-            {"REMOTE_ADDR", std::make_any<std::uint32_t>(0x2A2A2A2A)},
-    };
-    std::this_thread::sleep_for(std::chrono::milliseconds(69));
+    ziapi::http::Context ctx{{"REMOTE_ADDR", std::make_any<std::uint32_t>(0x2A2A2A2A)},};
 
     logger.Init(cfg);
+    logger.PreProcess(ctx, req);
+    std::this_thread::sleep_for(std::chrono::milliseconds(69));
     logger.PostProcess(ctx, req, res);
     SUCCEED();
 }
@@ -151,7 +135,7 @@ TEST_CASE("Logging Server Error Delete", "[Logger]")
 TEST_CASE("Logging Continue Patch", "[Logger]")
 {
     ziapi::config::Dict cfg{{"pipelineName", std::make_shared<ziapi::config::Node>("Continue Patch")}};
-    post_process_modules::Logger logger{};
+    modules::Logger logger{};
     ziapi::http::Request req{
             .version{ziapi::http::Version::kV1_1},
             .target{"/account?username=toto"},
@@ -170,15 +154,11 @@ TEST_CASE("Logging Continue Patch", "[Logger]")
             },
             .body{"toto"},
     };
-    ziapi::http::Context ctx{
-            {
-                "received_at",
-                std::make_any<std::chrono::time_point<std::chrono::system_clock>>(std::chrono::system_clock::now())},
-            {"REMOTE_ADDR", std::make_any<std::uint32_t>(0x45454545)},
-    };
-    std::this_thread::sleep_for(std::chrono::milliseconds(342));
+    ziapi::http::Context ctx{{"REMOTE_ADDR", std::make_any<std::uint32_t>(0x45454545)},};
 
     logger.Init(cfg);
+    logger.PreProcess(ctx, req);
+    std::this_thread::sleep_for(std::chrono::milliseconds(342));
     logger.PostProcess(ctx, req, res);
     SUCCEED();
 }
@@ -186,7 +166,7 @@ TEST_CASE("Logging Continue Patch", "[Logger]")
 TEST_CASE("Logging No Content Options", "[Logger]")
 {
     ziapi::config::Dict cfg{{"pipelineName", std::make_shared<ziapi::config::Node>("No Content Options")}};
-    post_process_modules::Logger logger{};
+    modules::Logger logger{};
     ziapi::http::Request req{
             .version{ziapi::http::Version::kV1_1},
             .target{"/health"},
@@ -205,15 +185,11 @@ TEST_CASE("Logging No Content Options", "[Logger]")
             },
             .body{"toto"},
     };
-    ziapi::http::Context ctx{
-            {
-                "received_at",
-                std::make_any<std::chrono::time_point<std::chrono::system_clock>>(std::chrono::system_clock::now())},
-            {"REMOTE_ADDR", std::make_any<std::uint32_t>(0x7F7F7F7F)},
-    };
-    std::this_thread::sleep_for(std::chrono::milliseconds(1426));
+    ziapi::http::Context ctx{{"REMOTE_ADDR", std::make_any<std::uint32_t>(0x7F7F7F7F)},};
 
     logger.Init(cfg);
+    logger.PreProcess(ctx, req);
+    std::this_thread::sleep_for(std::chrono::milliseconds(1426));
     logger.PostProcess(ctx, req, res);
     SUCCEED();
 }
@@ -221,7 +197,7 @@ TEST_CASE("Logging No Content Options", "[Logger]")
 TEST_CASE("Logging Not Found Head", "[Logger]")
 {
     ziapi::config::Dict cfg{{"pipelineName", std::make_shared<ziapi::config::Node>("Not Found Head")}};
-    post_process_modules::Logger logger{};
+    modules::Logger logger{};
     ziapi::http::Request req{
             .version{ziapi::http::Version::kV1_1},
             .target{"/toto"},
@@ -240,14 +216,10 @@ TEST_CASE("Logging Not Found Head", "[Logger]")
             },
             .body{"toto"},
     };
-    ziapi::http::Context ctx{
-            {
-                "received_at",
-                std::make_any<std::chrono::time_point<std::chrono::system_clock>>(std::chrono::system_clock::now())},
-            {"REMOTE_ADDR", std::make_any<std::uint32_t>(0xACF248B5)},
-    };
+    ziapi::http::Context ctx{{"REMOTE_ADDR", std::make_any<std::uint32_t>(0xACF248B5)},};
 
     logger.Init(cfg);
+    logger.PreProcess(ctx, req);
     logger.PostProcess(ctx, req, res);
     SUCCEED();
 }
