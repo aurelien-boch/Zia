@@ -118,7 +118,7 @@ namespace core
 
         try {
             symbol = loader.getSymbol<ziapi::IModule *()>("LoadZiaModule");
-        } catch (std::runtime_error &e) {
+        } catch (std::runtime_error const &e) {
             std::cerr << "Error, cannot find LoadZiaModule method on " << path << " library. " << std::endl;
             return;
         }
