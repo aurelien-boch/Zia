@@ -84,7 +84,7 @@ namespace execution
         _childStdoutClientDescriptor = stdoutWrite;
     }
 
-    Executor::Executor(const std::string &binaryPath) :
+    Executor::Executor(std::string const &binaryPath) :
 #ifdef _WIN32
     _processInfo {}
 #else
