@@ -9,7 +9,7 @@ namespace modules
 
     std::optional<ResponseInputQueue::ResponsePair> ResponseInputQueue::Pop()
     {
-        std::lock_guard<std::mutex> lock(_mutex);
+        std::lock_guard<std::mutex> lock{_mutex};
         ResponsePair response{};
 
         if (_responses.empty())
