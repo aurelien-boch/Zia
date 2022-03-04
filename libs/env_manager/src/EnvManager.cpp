@@ -51,7 +51,7 @@ namespace env
             throw VariableAlreadyDefinedException{key};
     }
 
-    void Manager::removeEnvVariable(const std::string &key)
+    void Manager::removeEnvVariable(std::string const &key)
     {
         std::size_t success = _internalEnv.erase(key);
 
