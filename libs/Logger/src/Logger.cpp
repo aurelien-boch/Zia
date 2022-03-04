@@ -10,33 +10,49 @@
 
 using namespace std::chrono_literals;
 
-void post_process_modules::Logger::Init(const ziapi::config::Node &cfg)
+void modules::Logger::Init(const ziapi::config::Node &cfg)
 {
     m_pipelineName = cfg["pipelineName"].AsString();
 }
 
-inline ziapi::Version post_process_modules::Logger::GetVersion() const noexcept
+inline ziapi::Version modules::Logger::GetVersion() const noexcept
 {
     return {1, 0, 0};
 }
 
-inline ziapi::Version post_process_modules::Logger::GetCompatibleApiVersion() const noexcept
+inline ziapi::Version modules::Logger::GetCompatibleApiVersion() const noexcept
 {
     return {5, 0, 0};
 }
 
-inline const char *post_process_modules::Logger::GetName() const noexcept
+inline const char *modules::Logger::GetName() const noexcept
 {
     return "Logger";
 }
 
-inline const char *post_process_modules::Logger::GetDescription() const noexcept
+inline const char *modules::Logger::GetDescription() const noexcept
 {
     return "Logs parts of the requests and responses so that they can be analyzed in case of weird behaviour";
 }
 
-void post_process_modules::Logger::PostProcess(ziapi::http::Context &ctx, const ziapi::http::Request &req,
-                                               ziapi::http::Response &res)
+inline void modules::Logger::PreProcess(ziapi::http::Context &ctx, ziapi::http::Request &)
+{
+    ctx.emplace("received_at",
+                std::make_any<std::chrono::time_point<std::chrono::system_clock>>(std::chrono::system_clock::now()));
+}
+
+inline double modules::Logger::GetPreProcessorPriority() const noexcept
+{
+    return 1;
+}
+
+inline bool modules::Logger::ShouldPreProcess(const ziapi::http::Context &, const ziapi::http::Request &) const
+{
+    return true;
+}
+
+void modules::Logger::PostProcess(ziapi::http::Context &ctx, const ziapi::http::Request &req,
+                                  ziapi::http::Response &res)
 {
     const std::string_view statusColor{_getStatusColor(res.status_code)};
     const std::string_view methodColor{_getMethodColor(req.method)};
@@ -51,20 +67,18 @@ void post_process_modules::Logger::PostProcess(ziapi::http::Context &ctx, const 
                requestDurationWithUnit, ipAddress, methodColor, req.method, s_reset, req.target);
 }
 
-inline double post_process_modules::Logger::GetPostProcessorPriority() const noexcept
+inline double modules::Logger::GetPostProcessorPriority() const noexcept
 {
     return 0;
 }
 
-inline bool post_process_modules::Logger::ShouldPostProcess(const ziapi::http::Context &,
-                                                            const ziapi::http::Request &,
-                                                            const ziapi::http::Response &) const noexcept
+inline bool modules::Logger::ShouldPostProcess(const ziapi::http::Context &, const ziapi::http::Request &,
+                                               const ziapi::http::Response &) const noexcept
 {
     return true;
 }
 
-inline const std::string_view post_process_modules::Logger::_getStatusColor(const ziapi::http::Code &status)
-const noexcept
+inline const std::string_view modules::Logger::_getStatusColor(const ziapi::http::Code &status) const noexcept
 {
     if (status >= ziapi::http::Code::kContinue && status < ziapi::http::Code::kOK)
         return s_blue;
@@ -77,8 +91,7 @@ const noexcept
     return s_red;
 }
 
-inline const std::string_view post_process_modules::Logger::_getMethodColor(const std::string_view &method)
-const noexcept
+inline const std::string_view modules::Logger::_getMethodColor(const std::string_view &method) const noexcept
 {
     try {
         return s_methodColors.at(method);
@@ -87,8 +100,8 @@ const noexcept
     }
 }
 
-inline const std::string post_process_modules::Logger::_getDurationWithUnit(
-        const std::chrono::system_clock::duration &duration) noexcept
+inline const std::string modules::Logger::_getDurationWithUnit(const std::chrono::system_clock::duration &duration)
+noexcept
 {
     if (duration < 1us)
         return {fmt::format("{:.6f}ns", static_cast<double>(duration.count()))};
@@ -101,8 +114,7 @@ inline const std::string post_process_modules::Logger::_getDurationWithUnit(
     return {fmt::format("{:.6f}min", static_cast<double>(duration.count()) / (1000UL * 1000UL * 1000UL * 60UL))};
 }
 
-inline const std::string post_process_modules::Logger::_getIpAddress(const std::uint32_t &numericIpAddress)
-const noexcept
+inline const std::string modules::Logger::_getIpAddress(const std::uint32_t &numericIpAddress) const noexcept
 {
     std::ostringstream oss{};
 
@@ -112,4 +124,11 @@ const noexcept
     (numericIpAddress & 0xFF);
 
     return {oss.str()};
+}
+
+extern "C" {
+    DllExport ziapi::IModule *LoadZiaModule()
+    {
+        return new modules::Logger{};
+    }
 }

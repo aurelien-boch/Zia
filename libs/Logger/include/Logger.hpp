@@ -12,34 +12,35 @@
     #define DllExport
 #endif
 
-namespace post_process_modules {
+namespace modules {
 
 /**
  * @Class Logger
  * @brief Logs the requests received by the server.
  */
-class DllExport Logger : public ziapi::IPostProcessorModule {
+class DllExport Logger : public ziapi::IPreProcessorModule, public ziapi::IPostProcessorModule {
 
 public:
 
     Logger() = default;
-
     ~Logger() override = default;
 
+    /* Functions from IModule */
     void Init(const ziapi::config::Node &cfg) override;
-
     [[nodiscard]] inline ziapi::Version GetVersion() const noexcept override;
-
     [[nodiscard]] inline ziapi::Version GetCompatibleApiVersion() const noexcept override;
-
     [[nodiscard]] inline const char *GetName() const noexcept override;
-
     [[nodiscard]] inline const char *GetDescription() const noexcept override;
 
+    /* Functions from IPreProcessorModule */
+    inline void PreProcess(ziapi::http::Context &ctx, ziapi::http::Request &req) override;
+    [[nodiscard]] inline double GetPreProcessorPriority() const noexcept override;
+    [[nodiscard]] inline bool ShouldPreProcess(const ziapi::http::Context &ctx, const ziapi::http::Request &req)
+    const override;
+
+    /* Functions from IPostProcessorModule */
     void PostProcess(ziapi::http::Context &ctx, const ziapi::http::Request &req, ziapi::http::Response &res) override;
-
     [[nodiscard]] inline double GetPostProcessorPriority() const noexcept override;
-
     [[nodiscard]] inline bool ShouldPostProcess(const ziapi::http::Context &ctx, const ziapi::http::Request &req,
                                                 const ziapi::http::Response &res) const noexcept override;
 
