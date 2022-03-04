@@ -53,8 +53,8 @@ namespace network::http
             std::size_t _bodyLength;
             std::size_t _totalBytesRead;
 
-            std::string _header;
-            std::string _body;
+//            std::string _header;
+//            std::string _body;
 
             char _buffer[257];
 
@@ -62,9 +62,6 @@ namespace network::http
 
             void _asyncRec(asio::error_code ec, std::function<void(error::ErrorSocket const &, std::string &)> &&cb, std::size_t bytesRead);
 
-            [[nodiscard]] std::size_t _getContentLength(std::string const &header);
-
-            void _cleanHeader(std::string &header, std::string &body);
     };
 }
 

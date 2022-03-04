@@ -1,6 +1,7 @@
 #include <cstring>
 
 #include "AsioHttpClient.hpp"
+#include "RequestHelper.hpp"
 
 namespace network::http
 {
@@ -54,9 +55,9 @@ namespace network::http
 
         while(header.find("\r\n\r\n") == std::string::npos)
             _rec(header);
-        _cleanHeader(header, body);
+        RequestHelper::cleanHeader(header, body);
         try {
-            bodyLength = _getContentLength(header);
+            bodyLength = RequestHelper::getContentLength(header);
         } catch (std::runtime_error const &e) {
             std::cerr << e.what() << std::endl;
             asyncSend("HTTP/1.1 400 Bad request\r\nContent-Length: 0\r\n\r\n", [](error::ErrorSocket const &){});
@@ -98,41 +99,12 @@ namespace network::http
         );
     }
 
-    std::size_t AsioHttpClient::_getContentLength(std::string const &header)
-    {
-        std::size_t pos = header.find("Content-Length:");
-        std::size_t bodyLength;
-
-        if (pos == std::string::npos)
-            throw std::runtime_error{"No Content-Length header"};
-        std::size_t pos2 = header.substr(pos + 16).find("\r\n");
-
-        if (pos2 == std::string::npos)
-            throw std::invalid_argument("Invalid Content-Length header");
-        try {
-            return std::stol(header.substr(pos, pos2));
-        } catch (std::invalid_argument const &) {
-            throw std::invalid_argument("Invalid Content-Length header");
-        }
-    }
-
     void AsioHttpClient::_rec(std::string &str)
     {
         char buff[257]{};
 
         _socket.receive(asio::buffer(&buff, sizeof(char) * 256));
         str += buff;
-    }
-
-    void AsioHttpClient::_cleanHeader(std::string &header, std::string &body)
-    {
-        std::string toFind = "\r\n\r\n";
-        std::size_t pos = header.find(toFind);
-
-        if (pos == std::string::npos)
-            throw std::runtime_error("ERROR(network/    AsioHttpClient): Invalid header");
-        body = header.substr(pos + toFind.size());
-        header = header.substr(0, pos + toFind.size());
     }
 
     Address const &AsioHttpClient::getAddress() const noexcept
@@ -153,7 +125,7 @@ namespace network::http
         } else {
             if (_requestBuffer.find("\r\n\r\n") != std::string::npos && _bodyLength == 0) {
                 try {
-                    _bodyLength = _getContentLength(_requestBuffer); // body length is now known
+                    _bodyLength = RequestHelper::getContentLength(_requestBuffer); // body length is now known
             } catch (std::runtime_error &) { // DISCARDS BODY
                 cb(error::SOCKET_NO_ERROR, _requestBuffer);
             } catch (std::invalid_argument &) { // invalid header

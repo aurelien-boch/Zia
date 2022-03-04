@@ -58,12 +58,11 @@ namespace network::https
             std::string _requestBuffer;
             std::size_t _bodyLength;
             std::size_t _totalBytesRead;
+            char _buffer[257];
 
             void _rec(std::string &str);
 
             void _asyncRec(asio::error_code ec, std::function<void(error::ErrorSocket const &, std::string &)> &&cb, std::size_t bytesRead);
-
-
 
     };
 }

@@ -1,9 +1,11 @@
 #include <asio/write.hpp>
 #include <asio/read.hpp>
 
+#include <RequestHelper.hpp>
+
 #include "AsioHttpsClient.hpp"
 
-// openssl s_client -connect localhost:4443
+// openssl s_client -connect localhost:4443 // TODO: remove
 
 namespace network::https
 {
@@ -11,9 +13,7 @@ namespace network::https
         _sslContext(asio::ssl::context::tls),
         _sslSocket(io_context, _sslContext),
         _resolver(io_context)
-    {
-
-    }
+    {}
 
     AsioHttpsClient::AsioHttpsClient(asio::io_context &io_context, SslSocket &&socket) :
         _sslContext(asio::ssl::context::tls),
@@ -39,7 +39,6 @@ namespace network::https
     std::size_t AsioHttpsClient::send(std::string const &data) noexcept
     {
         try {
-            std::cout << "Sending data" << std::endl; // TODO: remove line
             return asio::write(_sslSocket, asio::buffer(data.data(), sizeof(char) * data.size()));
         } catch (std::system_error const &err) {
             std::cerr << "ERROR(network/AsioHttpsClient): " << err.what() << std::endl;
@@ -55,7 +54,6 @@ void AsioHttpsClient::asyncSend(
         std::string const &packet,
         std::function<void(error::ErrorSocket const &)> &&cb) noexcept
     {
-        std::cout << "Sending data" << std::endl; // TODO: remove line
         asio::async_write(_sslSocket, asio::buffer(packet.data(), sizeof(char) * packet.size()),
             [cb = std::forward<std::function<void (error::ErrorSocket const &)>>(cb)] (asio::error_code const &ec, std::size_t) {
                 if (ec) {
@@ -65,20 +63,18 @@ void AsioHttpsClient::asyncSend(
                         std::cerr << "ERROR(network/AsioHttpsClient): " << ec << std::endl;
                     else
                         cb(it->second);
-                } else {
-                    std::cout << "Data sent" << std::endl ; // TODO: remove line
+                } else
                     cb(error::SOCKET_NO_ERROR);
-                }
         });
     }
 
     void AsioHttpsClient::asyncReceive(
         std::function<void(error::ErrorSocket const &, std::string &)> &&cb) noexcept
     {
-//        asio::async_read(_sslSocket, asio::buffer(_buffer, sizeof(char) * 256),
-//            [cb = std::forward<std::function<void (error::ErrorSocket const &, std::string &)>>(cb), this] (asio::error_code ec, std::size_t bytesRead) mutable {
-//                _asyncRec(ec, std::forward<std::function<void (error::ErrorSocket const &, std::string &)>>(cb), bytesRead);
-//        });
+        asio::async_read(_sslSocket, asio::buffer(_buffer, sizeof(char) * 256),
+            [cb = std::forward<std::function<void (error::ErrorSocket const &, std::string &)>>(cb), this] (asio::error_code ec, std::size_t bytesRead) mutable {
+                _asyncRec(ec, std::forward<std::function<void (error::ErrorSocket const &, std::string &)>>(cb), bytesRead);
+        });
     }
 
     Address const &AsioHttpsClient::getAddress() const noexcept
@@ -87,12 +83,45 @@ void AsioHttpsClient::asyncSend(
     }
 
 
-void AsioHttpsClient::_rec(std::string &str)
+    void AsioHttpsClient::_rec(std::string &str)
     {
         char buff[257]{};
 
         asio::read(_sslSocket, asio::buffer(buff, sizeof(char) * 256));
         str += buff;
+    }
+
+    void AsioHttpsClient::_asyncRec(asio::error_code ec, std::function<void(error::ErrorSocket const &, std::string &)> &&cb, std::size_t bytesRead)
+    {
+        _requestBuffer += std::string{_buffer, _buffer + bytesRead};
+
+        if (ec) {
+            try {
+                cb(error::AsioErrorTranslator.at(ec), _requestBuffer);
+            } catch (std::out_of_range const &) {
+                std::cerr << "ERROR(network/AsioHttpsClient): " << ec << std::endl;
+            }
+        } else {
+            if (_requestBuffer.find("\r\n\r\n") != std::string::npos && _bodyLength == 0) {
+                try {
+                    _bodyLength = http::RequestHelper::getContentLength(_requestBuffer); // body length is now known
+                } catch (std::runtime_error &) { // DISCARDS BODY
+                     cb(error::SOCKET_NO_ERROR, _requestBuffer);
+                } catch (std::invalid_argument &) { // invalid header
+                    send("HTTP1/1.1 400 Bad request\r\nContent-Length: 0\r\n\r\n");
+                }
+            } else
+                if (_bodyLength != 0) {
+                    _totalBytesRead = bytesRead;
+                    _requestBuffer += _buffer;
+                    if (_totalBytesRead != _bodyLength)
+                        asyncReceive(std::forward<std::function<void (error::ErrorSocket const &, std::string &)>>(cb));
+                    else
+                        cb(error::SOCKET_NO_ERROR, _requestBuffer);
+                } else
+                    asyncReceive(std::forward<std::function<void (error::ErrorSocket const &, std::string &)>>(cb));
+        }
+        asyncReceive(std::move(cb));
     }
 
 }
