@@ -46,7 +46,7 @@ Follow that [guide](https://chris.beams.io/posts/git-commit/) to see how to writ
 
 ## GitHub workflow
 
-The recommended workflow is to clone the repository from `EpitechPromo2024/B-YEP-500-PAR-5-1-zia-aurelien.boch` and open pull _requests directly from the repository.
+The recommended workflow is to clone the repository from `EpitechPromo2024/B-YEP-500-PAR-5-1-zia-aurelien.boch` and open pull requests directly from the repository.
 
 ### 1 - Clone the repository
 
