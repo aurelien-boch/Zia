@@ -77,7 +77,7 @@ namespace modules
     Cgi::Url Cgi::_parseUrl(const std::string &url)
     {
         Url res{};
-        std::size_t domainBegin = url.find_first_of("://");
+        std::size_t domainBegin{url.find_first_of("://")};
 
         if (domainBegin == std::string::npos)
             throw std::runtime_error{"Malformed url"};
