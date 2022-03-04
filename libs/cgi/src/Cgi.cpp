@@ -96,7 +96,7 @@ namespace modules
 
     std::string Cgi::_getHostName()
     {
-        char hostname[1024];
+        char hostname[1024]{};
 
         gethostname(hostname, 1024);
         return {hostname};
