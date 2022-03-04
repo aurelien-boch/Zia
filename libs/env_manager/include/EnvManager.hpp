@@ -81,7 +81,7 @@ namespace env
             /**
              * @brief Returns the environment variable with name \bkey
              * @param [in]key The name of the variable to return
-             * @return The environment variable as a reference to a std::string
+             * @return The environment variable as a reference to an std::string
              * @throw VariableNotDefinedException if the variable is not defined
              */
             [[nodiscard]] std::string &getEnvVariable(std::string const &key);
