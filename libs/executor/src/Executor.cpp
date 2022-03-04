@@ -34,7 +34,7 @@ namespace execution
 
     Executor::Executor(
         std::string binaryPath,
-        const env::Manager &environmentManager) :
+        env::Manager const &environmentManager) :
 #ifdef _WIN32
         _processInfo {}
 #else
