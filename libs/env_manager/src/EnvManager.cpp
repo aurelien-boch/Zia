@@ -160,7 +160,7 @@ namespace env
         return this->getEnvVariable(str);
     }
 
-    std::string &Manager::operator[](const char *str)
+    std::string &Manager::operator[](char const *str)
     {
         return this->getEnvVariable(str);
     }
