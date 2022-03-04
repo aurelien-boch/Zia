@@ -137,7 +137,7 @@ namespace modules
 
     void Cgi::_parseResponse(std::string const &cgiResult, ziapi::http::Response &res) noexcept
     {
-        std::size_t bodyOffset = cgiResult.find("\r\n\r\n");
+        std::size_t bodyOffset{cgiResult.find("\r\n\r\n")};
 
         if (bodyOffset == std::string::npos)
             res.status_code = ziapi::http::Code::kInternalServerError;
