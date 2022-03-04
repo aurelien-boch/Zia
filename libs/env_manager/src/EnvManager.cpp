@@ -35,7 +35,7 @@ namespace env
         _internalEnv{}
     {}
 
-    void Manager::pushEnvVariable(const std::string &key, const std::string &value)
+    void Manager::pushEnvVariable(std::string const &key, std::string const &value)
     {
         auto [data, success] = _internalEnv.insert({key, value});
 
