@@ -43,8 +43,8 @@ namespace env
 
             /**
              * @brief Adds a new environment variable with name \bkey and value \bvalue
-             * @param [in]key The name of the environment variable
-             * @param [in]value The value of the environment variable
+             * @param[in] key The name of the environment variable
+             * @param[in] value The value of the environment variable
              * @throw VariableAlreadyDefinedException if the variable is already defined
              */
             void pushEnvVariable(std::string const &key, std::string const &value);
