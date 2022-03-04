@@ -151,7 +151,7 @@ namespace modules
         return {std::to_string(size) + _sizes[index]};
     }
 
-    void StaticServe::_serveFile(const std::string &path, ziapi::http::Response &response)
+    void StaticServe::_serveFile(std::string const &path, ziapi::http::Response &response)
     {
         std::ifstream stream{path};
         stream.seekg(0, std::ios::end);
