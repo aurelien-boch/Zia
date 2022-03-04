@@ -71,7 +71,7 @@ namespace env
     {
         try {
             return _internalEnv.at(key);
-        } catch (std::out_of_range &e){
+        } catch (std::out_of_range &e) {
             throw VariableNotDefinedException{key};
         }
     }
