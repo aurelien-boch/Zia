@@ -30,13 +30,13 @@ namespace modules
             [[nodiscard]] bool ShouldHandle(const ziapi::http::Context &ctx, const ziapi::http::Request &req) const override;
 
         private:
-            std::string _serveDirPath;
+            std::filesystem::path _serveDirPath;
 
             static const std::array<std::string, 5> _sizes;
 
             [[nodiscard]] bool _mayBeServed(std::string const &path) const noexcept;
 
-            void _serveDir(std::string const &path, ziapi::http::Response &res) const noexcept;
+            static void _serveDir(std::string const &path, ziapi::http::Response &res) noexcept;
 
             static void _setupHtml(std::string const &path, ziapi::http::Response &res) noexcept;
 

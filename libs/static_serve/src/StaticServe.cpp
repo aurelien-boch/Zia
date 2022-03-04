@@ -23,7 +23,7 @@ namespace modules
 
     void StaticServe::Init(const ziapi::config::Node &cfg)
     {
-        _serveDirPath = cfg["modules"]["staticserve"]["dirpath"].AsString();
+        _serveDirPath = absolute(std::filesystem::path(cfg["modules"]["staticserve"]["dirpath"].AsString()));
     }
 
     ziapi::Version StaticServe::GetVersion() const noexcept
@@ -58,10 +58,19 @@ namespace modules
 
     bool StaticServe::_mayBeServed(const std::string &path) const noexcept
     {
-        return true; //TODO
+        std::string parent = path;
+        std::filesystem::path instanciatedPath{parent};
+
+        while (instanciatedPath.has_parent_path() && parent != "/") {
+            if (instanciatedPath == _serveDirPath)
+                return true;
+            parent = instanciatedPath.parent_path().string();
+            instanciatedPath = instanciatedPath.parent_path();
+        }
+        return false;
     }
 
-    void StaticServe::_serveDir(const std::string &path, ziapi::http::Response &res) const noexcept
+    void StaticServe::_serveDir(const std::string &path, ziapi::http::Response &res) noexcept
     {
         _setupHtml(path, res);
         res.body +="<tr><td><a href=\"..\"/>[parent directory]</a></td></tr>";
