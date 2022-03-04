@@ -9,7 +9,7 @@ namespace modules
 
     std::optional<RequestOutputQueue::RequestPair> RequestOutputQueue::Pop()
     {
-        std::lock_guard<std::mutex> lock(_mutex);
+        std::lock_guard<std::mutex> lock{_mutex};
         RequestPair request{};
 
         if (_requests.empty())
