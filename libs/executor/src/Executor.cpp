@@ -137,7 +137,7 @@ namespace execution
     {
 #if _WIN32
         std::string convertedArgs {commandLine + " "};
-        std::string convertedEnv = env;
+        std::string convertedEnv{env};
         std::string path{std::filesystem::current_path().string()};
         BOOL res;
         STARTUPINFOA startupInfo {
