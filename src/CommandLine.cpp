@@ -36,7 +36,7 @@ namespace cli
         if (it != _pipelines.end())
             if (it->second.isRunning())
                 std::cerr << "Error: the pipeline is already running" << std::endl;
-            else
+            else {
                 _pipelinesThreads.try_emplace(_pipelineName, [it]() {
                     try {
                         it->second.run();
@@ -44,6 +44,8 @@ namespace cli
                         std::cerr << "Error: the pipeline has crashed" << std::endl;
                     }
                 });
+                std::cout << "Pipeline " << it->first << " has been started" << std::endl;
+            }
         else
             std::cerr << "Error: the pipeline " << _pipelineName << " doesn't exist" << std::endl;
     }
@@ -55,6 +57,7 @@ namespace cli
         if (it != _pipelines.end()) {
             try {
                 it->second.stop();
+                std::cout << "Pipeline " << it->first << " has been stopped" << std::endl;
                 _pipelinesThreads.erase(_pipelineName);
             } catch (std::runtime_error) {
                 std::cerr << "Error: the pipeline has crashed" << std::endl;
@@ -67,9 +70,10 @@ namespace cli
     {
         auto it = _pipelines.find(_pipelineName);
 
-        if (it != _pipelines.end())
+        if (it != _pipelines.end()) {
             it->second.config();
-        else
+            std::cout << "Pipeline " << _pipelineName << " has been configured" << std::endl;
+        } else
             std::cerr << "Error: the pipeline " << _pipelineName << " doesn't exist" << std::endl;
     }
 
@@ -91,6 +95,7 @@ namespace cli
         for (auto &[name, pipeline] : _pipelines)
             if (pipeline.isRunning())
                 pipeline.stop();
+        std::cout << "Every pipeline has been stopped" << std::endl;
         std::exit(0);
     }
 } // namespace cli

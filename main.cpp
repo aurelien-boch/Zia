@@ -6,7 +6,10 @@ int main()
 {
     std::vector<parser::LibInfo> pipelines = parser::ConfigParser::getConfigsPaths("../../pipelines.txt");
     std::unordered_map<std::string, core::Core> pipelinesMap;
-    pipelinesMap.try_emplace(pipelines[0].name, pipelines[0].name, pipelines[0].configPath);
+
+    for (int i = 0; i != pipelines.size(); ++i) {
+        pipelinesMap.try_emplace(pipelines[i].name, pipelines[i].name, pipelines[i].configPath);
+    }
     cli::CommandLine cli(pipelinesMap);
 
     cli.run();

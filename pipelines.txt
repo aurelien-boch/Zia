@@ -1,1 +1,2 @@
 plouf::../../config.yml::../lib/libhttps_module.so
+plif::../../tests/config_tests.yml::../lib/libhttp_module.so

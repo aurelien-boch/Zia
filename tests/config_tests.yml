@@ -1,0 +1,4 @@
+modules:
+  http:
+    port: 8080
+    path: ../lib/libhttp_module.so
