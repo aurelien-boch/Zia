@@ -18,7 +18,7 @@ namespace env
         }
     }
 
-    Manager::Manager(const std::vector<char *> &env) :
+    Manager::Manager(std::vector<char *> const &env) :
         _internalEnv{}
     {
         for (auto const &e: env) {
