@@ -85,7 +85,7 @@ namespace execution
             [[nodiscard]] pid getPid() const;
 
             /**
-             * Return a boolean that refers to the state of the process (running or not).
+             * Returns a boolean that refers to the state of the process (running or not).
              */
             [[nodiscard]] bool isRunning() const;
 
