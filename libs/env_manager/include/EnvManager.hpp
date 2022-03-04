@@ -32,7 +32,7 @@ namespace env
 
             /**
              * @brief Constructs an Manager from a vector of C strings
-             * @param [in]env A reference to the vector containing the C strings
+             * @param[in] env A reference to the vector containing the C strings
              */
             explicit Manager(std::vector<char *> const &env);
 
