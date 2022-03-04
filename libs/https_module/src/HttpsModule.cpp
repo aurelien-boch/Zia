@@ -26,7 +26,6 @@ namespace modules
         };
 
         _certificatePath = data.certificatePath;
-//        data.certificatePath = _certificatePath;
         if (port < 0)
             throw std::runtime_error("ERROR(modules/Https): Invalid port in configuration file");
         _port = port;

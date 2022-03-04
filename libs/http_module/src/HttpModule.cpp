@@ -98,13 +98,22 @@ namespace modules
             if (errIt == error::errorMessage.end())
                 std::cerr << "Unknown error occurred" << err << std::endl;
             else
-                std::cerr << "Error occurred" << err << std::endl;
+                std::cerr << "Error occurred: " << err << std::endl;
         } else {
             std::shared_ptr<IClient> c = _clients.emplace_back(client);
+            std::string responseString = "HTTP/1.1 200 OK\r\n" // TODO: remove
+                                                               "Content-Length: 42\r\n"
+                                                               "Content-Type: text/html\r\n"
+                                                               "\r\n"
+                                                               "<html>\n"
+                                                               "<body>\n"
+                                                               "Hello World!\n"
+                                                               "</body>\n"
+                                                               "</html>";
+            c->asyncSend(responseString, [] (error::ErrorSocket const &) { std::cout << "Message sent" << std::endl; }); // TODO: remove
             c->asyncReceive([c, this, &requests] (error::ErrorSocket err, std::string &request) mutable {
                 _onPacket(requests, err, request, c);
             });
-            std::cerr << "NEW CONNECTION" << std::endl; // todo: remove
         }
     }
 

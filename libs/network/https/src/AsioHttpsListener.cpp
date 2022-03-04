@@ -14,16 +14,20 @@ namespace network::https
         _sslSocket(ctx, _sslContext),
         _io_context(ctx)
     {
-
         _sslContext.set_options(
                 asio::ssl::context::default_workarounds
-                | asio::ssl::context::no_sslv2
-                | asio::ssl::context::single_dh_use);
+                | asio::ssl::context::no_sslv2);
         _sslContext.set_password_callback(std::bind(&AsioHttpsListener::_getPassword, this));
-        std::cout << "Certificate path: " << _certificateData.certificatePath << std::endl;
-        _sslContext.use_certificate_chain_file(_certificateData.certificatePath);
-        _sslContext.use_private_key_file(_certificateData.certificateKey, asio::ssl::context::pem);
-        _sslContext.use_tmp_dh_file(_certificateData.certificateDhFile);
+        try {
+            std::cout << std::endl << "[ASIO HTTPS LISTENER] Loading certificate \t" << _certificateData.certificatePath << std::endl;
+            _sslContext.use_certificate_chain_file(_certificateData.certificatePath);
+            std::cout << "[ASIO HTTPS LISTENER] Loading key \t\t" << _certificateData.certificateKey << std::endl;
+            _sslContext.use_private_key_file(_certificateData.certificateKey, asio::ssl::context::pem);
+            std::cout << "[ASIO HTTPS LISTENER] Loading dh file \t\t" << _certificateData.certificateDhFile <<std::endl << std::endl;
+            _sslContext.use_tmp_dh_file(_certificateData.certificateDhFile);
+        } catch (std::system_error const &e) {
+            throw std::runtime_error("Error while setting up SSL certificate: " + std::string(e.what()));
+        }
     }
 
     void AsioHttpsListener::run(std::function<void (error::ErrorSocket const &, std::shared_ptr<IClient>)> &&callback) noexcept
@@ -38,11 +42,15 @@ namespace network::https
                 else
                     callback(it->second, nullptr);
             } else {
-                SslSocket s(std::move(peer), _sslContext);
-                auto res = std::make_unique<AsioHttpsClient>(_io_context, std::move(s));
+                try {
+                    SslSocket s(std::move(peer), _sslContext);
+                    auto res = std::make_unique<AsioHttpsClient>(_io_context, std::move(s));
 
-                callback(error::ErrorSocket::SOCKET_NO_ERROR, std::move(res));
-                std::cout << "New client connected" << std::endl;
+                    callback(error::ErrorSocket::SOCKET_NO_ERROR, std::move(res));
+                    std::cout << "New client connected" << std::endl;
+                } catch (std::runtime_error const &e) {
+                    std::cerr << "ERROR(network/AsioHttpsListener): " << e.what() << std::endl;
+                }
             }
             run(std::forward<std::function<void (error::ErrorSocket const &, std::shared_ptr<IClient>)>>(callback));
         });

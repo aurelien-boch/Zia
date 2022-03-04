@@ -41,7 +41,6 @@ namespace network::https
 
             std::string _getPassword() const;
 
-
     };
 }
 
