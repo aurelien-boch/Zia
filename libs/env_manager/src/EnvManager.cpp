@@ -94,7 +94,7 @@ namespace env
         }
     }
 
-    std::string &Manager::getEnvVariable(const char *key)
+    std::string &Manager::getEnvVariable(char const *key)
     {
         try {
             return _internalEnv.at(key);
