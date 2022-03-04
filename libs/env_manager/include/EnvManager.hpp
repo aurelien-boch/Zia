@@ -53,7 +53,7 @@ namespace env
              * @brief Adds a new environment variable with name \bkey and value \bvalue
              * @param [in]key The name of the environment variable
              * @param [in]value The value of the environment variable
-             * @throw If The variable is already defined, a VariableAlreadyDefinedException will be thrown
+             * @throw VariableAlreadyDefinedException if the variable is already defined
              */
             void pushEnvVariable(char const *key, char const *value);
 
