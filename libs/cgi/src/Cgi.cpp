@@ -22,7 +22,7 @@ namespace modules
         _populateEnv(manager, ctx, req);
         res.status_code = ziapi::http::Code::kOK;
         try {
-            execution::Executor child {_cgiPath, {}, manager};
+            execution::Executor child {_cgiPath, {manager.getEnvVariable("PATH_TRANSLATED")}, manager};
 
             if (req.method == "POST" || req.method == "PUT")
                 child << req.body;
@@ -144,16 +144,21 @@ namespace modules
         else {
             for (std::size_t currentIndex {0}; currentIndex < bodyOffset;) {
                 const std::size_t headerEnd = cgiResult.find("\r\n", currentIndex);
-                const std::size_t headerSeparator = cgiResult.find(": ", currentIndex);
+                const std::size_t headerSeparator = cgiResult.find(':', currentIndex);
                 const std::string headerName {cgiResult.substr(currentIndex, headerSeparator - currentIndex)};
-                const std::string headerValue {cgiResult.substr(headerSeparator + 2, headerEnd - headerSeparator - 2)};
+                const std::string headerValue {
+                    cgiResult.substr(
+                        headerSeparator + (cgiResult[headerSeparator + 1] == ' ' ? 2 : 1),
+                        headerEnd - headerSeparator - (cgiResult[headerSeparator + 1] == ' ' ? 2 : 1)
+                    )
+                };
                 auto const &[instance, success] {res.headers.try_emplace(headerName, headerValue)};
 
                 if (!success) {
                     res.status_code = ziapi::http::Code::kInternalServerError;
                     std::cerr << "Failed to set " << headerName << " header";
                 }
-                currentIndex = headerEnd + 2;
+                currentIndex = headerEnd + (cgiResult[headerSeparator + 1] == ' ' ? 2 : 1);
             }
             if (res.headers.contains("Status"))
                 res.status_code = static_cast<ziapi::http::Code>(std::stoi(res.headers["Status"]));

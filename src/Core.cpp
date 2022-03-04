@@ -61,7 +61,7 @@ namespace core
             if (e->ShouldPostProcess(ctx, request, response))
                 e->PostProcess(ctx, request, response);
         response.version = ziapi::http::Version::kV1;
-            responses.Push({std::move(response), std::move(ctx)});
+        responses.Push({std::move(response), std::move(ctx)});
     }
 
     void Core::stop()
