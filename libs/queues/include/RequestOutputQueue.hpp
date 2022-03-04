@@ -33,7 +33,7 @@ namespace modules
             void Wait() noexcept;
 
             /**
-             * @brief Method that stop the waiting of the Wait() method.
+             * @brief Stops the Wait method
              */
             void StopWait() noexcept;
 
