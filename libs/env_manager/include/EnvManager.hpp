@@ -26,7 +26,7 @@ namespace env
         public:
             /**
              * @brief Constructs an Manager from a C array of strings
-             * @param [in]env The C string array
+             * @param[in] env The C string array
              */
             explicit Manager(char const **env);
 
