@@ -119,7 +119,11 @@ namespace modules
             return {};
         return res.st_atime;
 #else
-        return std::chrono::system_clock::to_time_t(std::chrono::file_clock::to_sys(e.last_write_time()));
+        try {
+            return std::chrono::system_clock::to_time_t(std::chrono::file_clock::to_sys(e.last_write_time()));
+        } catch (std::filesystem::filesystem_error const &) {
+            return {};
+        }
 #endif
     }
 
