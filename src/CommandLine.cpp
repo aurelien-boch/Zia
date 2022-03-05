@@ -26,7 +26,7 @@ namespace cli
     {
         std::cout << "Available commands: " << std::endl;
         for (auto const &command : _helpCommands)
-            std::cout << command.first << std::setw(6) << "\t" << command.second << std::endl;
+            std::cout << command.first << std::setw(10) << "\t" << command.second << std::endl;
     }
 
     void CommandLine::_startPipeline()
@@ -40,11 +40,11 @@ namespace cli
                 _pipelinesThreads.try_emplace(_pipelineName, [it]() {
                     try {
                         it->second.run();
-                    } catch (std::runtime_error) {
+                    } catch (std::runtime_error const &e) {
                         std::cerr << "Error: the pipeline has crashed" << std::endl;
+                        return;
                     }
                 });
-                std::cout << "Pipeline " << it->first << " has been started" << std::endl;
             }
         else
             std::cerr << "Error: the pipeline " << _pipelineName << " doesn't exist" << std::endl;
@@ -55,11 +55,15 @@ namespace cli
         auto it = _pipelines.find(_pipelineName);
 
         if (it != _pipelines.end()) {
+            if (!it->second.isRunning()) {
+                std::cerr << "Error: the pipeline is not running" << std::endl;
+                return;
+            }
             try {
                 it->second.stop();
                 std::cout << "Pipeline " << it->first << " has been stopped" << std::endl;
                 _pipelinesThreads.erase(_pipelineName);
-            } catch (std::runtime_error) {
+            } catch (std::runtime_error const &e) {
                 std::cerr << "Error: the pipeline has crashed" << std::endl;
             }
         } else
@@ -71,8 +75,17 @@ namespace cli
         auto it = _pipelines.find(_pipelineName);
 
         if (it != _pipelines.end()) {
-            it->second.config();
-            std::cout << "Pipeline " << _pipelineName << " has been configured" << std::endl;
+            if (it->second.isConfigured()) {
+                std::cerr << "Error: the pipeline is already configured" << std::endl;
+                return;
+            }
+            try {
+                it->second.config();
+                std::cout << "Pipeline " << _pipelineName << " has been configured" << std::endl;
+            } catch (std::runtime_error const &e) {
+                std::cerr << "Error: the configuration of " << _pipelineName << " has failed: " << e.what()
+                          << std::endl;
+            }
         } else
             std::cerr << "Error: the pipeline " << _pipelineName << " doesn't exist" << std::endl;
     }

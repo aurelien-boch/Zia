@@ -1,0 +1,3 @@
+Pipeline plouf has been configured
+Pipeline plouf has been stopped
+Every pipeline has been stopped

@@ -68,12 +68,12 @@ namespace core
     void Core::stop()
     {
         _running = false;
+        _networkModule->Terminate();
         _responses.StopWait();
         _requests.StopWait();
-        _networkModule->Terminate();
     }
 
-    void Core::config() noexcept
+    void Core::config()
     {
         _configLoaded = false;
         _purgeData();
@@ -96,7 +96,7 @@ namespace core
             }
         }
         if (_networkModule == nullptr)
-            std::cerr << "Error, no network module loaded, config failed" << std::endl;
+            throw std::runtime_error{"Error, the network module is not loaded"};
         else
             _configLoaded = true;
     }
@@ -110,6 +110,11 @@ namespace core
     bool Core::isRunning() const noexcept
     {
         return _running;
+    }
+
+    bool Core::isConfigured() const noexcept
+    {
+        return _configLoaded;
     }
 
     void Core::_loadModule(ziapi::config::Node const &cfg, std::string const &path, std::string const &name)

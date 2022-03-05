@@ -14,10 +14,10 @@ namespace cli
 {
     static const std::unordered_map<std::string, std::string> _helpCommands = {
         {"help", "Display this help"},
-        {"start", "Start the pipeline"},
-        {"stop", "Stop the pipeline"},
-        {"config", "Reload the pipeline configuration"},
-        {"hotreload", "Activate or deactivate hot reloading"}};
+        {"start pipelineName", "Start the pipeline"},
+        {"stop pipelineName", "Stop the pipeline"},
+        {"config pipelineName", "Reload the pipeline configuration"},
+        {"hotreload pipelineName", "Activate or deactivate hot reloading"}};
 
     class CommandLine
     {

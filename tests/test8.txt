@@ -1,0 +1,7 @@
+Available commands: 
+hotreload pipelineName         	Activate or deactivate hot reloading
+config pipelineName         	Reload the pipeline configuration
+stop pipelineName         	Stop the pipeline
+start pipelineName         	Start the pipeline
+help         	Display this help
+Every pipeline has been stopped

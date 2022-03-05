@@ -40,7 +40,7 @@ namespace core
             /**
              * @brief Reloads the pipeline
              */
-            void config() noexcept;
+            void config();
 
             /**
              * @brief Activates or deactivates the hot reloading
@@ -51,6 +51,11 @@ namespace core
              * @brief Get the state of the pipeline
              */
             bool isRunning() const noexcept;
+
+            /**
+             * @brief Get the state of the configuration
+             */
+            bool isConfigured() const noexcept;
 
         private:
             bool _running;

@@ -1,2 +1,3 @@
 Pipeline plif has been configured
-Pipeline plif has been started
+Pipeline plif has been stopped
+Every pipeline has been stopped
