@@ -13,17 +13,17 @@ else ()
 endif ()
 
 add_library(
-        HttpFormatter SHARED
+        http_formatter SHARED
         include/HttpFormatter.hpp
         src/HttpFormatter.cpp
 )
 
 target_include_directories(
-        HttpFormatter PUBLIC
+        http_formatter PUBLIC
         include
 )
 
 target_link_libraries(
-        HttpFormatter
+        http_formatter
         ziapi
 )

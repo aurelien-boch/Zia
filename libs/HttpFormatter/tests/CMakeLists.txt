@@ -15,6 +15,6 @@ target_link_libraries(
         HttpFormatter_tests
         PRIVATE
         Catch2::Catch2WithMain
-        HttpFormatter
+        http_formatter
         ziapi
 )

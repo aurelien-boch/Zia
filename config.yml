@@ -8,10 +8,12 @@ modules:
     certificateDhFile: ../certificate/dh2048.pem
     certificateKeyPassword: password
 #    path: http_module.dll
-  staticserve:
-    path: static_serve.dll
+  reverse_proxy:
+    path: reverse_proxy.dll
 #    cgiPath: C:\Program Files\Python310\python.exe
 #    path: cgi.dll
 #    cgiPath: ../../php/php-cgi.exe
     rootDirectory: ../../files
     dirpath: .
+    ip: 142.250.179.110
+    port: 80

@@ -15,18 +15,18 @@ else ()
 endif ()
 
 add_library(
-    ziaHttpParser SHARED
+        http_parser SHARED
         include/HttpParser.hpp
         src/HttpParser.cpp
         include/Exception.hpp)
 
 target_include_directories(
-    ziaHttpParser
+        http_parser
         PUBLIC
         include/
 )
 
 target_link_libraries(
-    ziaHttpParser
+    http_parser
         ziapi
 )
