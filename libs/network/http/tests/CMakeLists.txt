@@ -1,8 +1,8 @@
-set(NAME asioHttpClient_tests)
+set(NAME network_http_tests)
 
 add_executable(
         ${NAME}
-        ${CMAKE_CURRENT_LIST_DIR}/AsioHttpClientTests.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/RequestHelperTests.cpp
 )
 
 target_link_libraries(

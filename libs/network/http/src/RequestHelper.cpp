@@ -6,12 +6,14 @@ namespace network::http
 {
     std::size_t RequestHelper::getContentLength(std::string const &header)
     {
-        std::size_t pos = header.find("Content-Length:");
+        std::string toFind("Content-Length: ");
+        std::size_t pos = header.find(toFind);
         std::size_t bodyLength;
 
         if (pos == std::string::npos)
             throw std::runtime_error{"No Content-Length header"};
-        std::size_t pos2 = header.substr(pos + 16).find("\r\n");
+        pos += toFind.size();
+        std::size_t pos2 = header.substr(pos + toFind.size()).find("\r\n");
 
         if (pos2 == std::string::npos)
             throw std::invalid_argument("Invalid Content-Length header");
