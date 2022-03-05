@@ -21,7 +21,7 @@ The server also comes wit the following features:
 
 Create a `build/` directory:
 ```shell
-mkdir build
+mkdir build/
 ```
 
 ### Conan
@@ -48,7 +48,7 @@ Build the project with cmake:
 cmake --build ./build/
 ```
 
-All the binaries are located in the `build/bin/` directory.
+All the binaries are located in the `./build/bin/` directory.
 
 ## Configuration
 
@@ -84,13 +84,13 @@ Run the `zia` binary (located in the `./build/bin/` directory).
 
 The `cli` enables server and pipelines management. The following commands are available:
 
-| Command    | Argument(s)     | Description                            |
-|------------|-----------------|----------------------------------------|
- | `help`     |                 | Displays the commands list             |
- | `start`    | `pipelineName`  | Starts the pipeline                    |
- | `stop`     | `pipelineeName` | Stops the pipeline                     |
- | `config`   | `pipelineName`  | Reloads the pipeline configuration     |
- | `hotreload`| `pipelineName`  | Activates or deactivates hot reloading |
+| Command    | Argument(s)    | Description                            |
+|------------|----------------|----------------------------------------|
+ | `help`     |                | Displays the commands list             |
+ | `start`    | `pipelineName` | Starts the pipeline                    |
+ | `stop`     | `pipelineName` | Stops the pipeline                     |
+ | `config`   | `pipelineName` | Reloads the pipeline configuration     |
+ | `hotreload`| `pipelineName` | Activates or deactivates hot reloading |
 
 ## Documentation
 
@@ -107,4 +107,25 @@ Generate the Doxygen documentation:
 ```shell
 doxygen Doxyfile
 ```
-All the documentation will be found in the `doc/` directory.
+All the documentation will be found in the `./doc/` directory.
+
+## Notes
+
+### SSL certificate generation
+
+A script is provided to generate SSL certificates. Run:
+```shell
+./docs/https_module/generateCertificate.sh
+```
+
+All the required files will be provided in the `./build/certificate/` directory.
+
+## Credits
+
+[Aurélien BOCH](https://github.com/aurelien-boch) | <aurelien.boch@epitech.eu>
+
+[Benjamin REIGNER](https://github.com/Breigner01) | <benjamin.reigner@epitech.eu>
+
+[Paul BEAUDET](https://github.com/Pepiloto) | <paul.beaudet@epitech.eu>
+
+[Victoire Rabeau](https://github.com/Victoire-Rabeau) | <victoire.rabeau@epitech.eu>
