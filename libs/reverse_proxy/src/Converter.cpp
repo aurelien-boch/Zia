@@ -65,7 +65,7 @@ namespace modules
         response.reason = stringResponse.substr(endCode, end - endCode);
     }
 
-    void Converter::_parseHeaders(ziapi::http::Response &response, const std::string &stringResponse)
+    void Converter::_parseHeaders(ziapi::http::Response &response, std::string const &stringResponse)
     {
         std::size_t beginning = stringResponse.find("\r\n");
         std::size_t end = stringResponse.find("\r\n\r\n");
