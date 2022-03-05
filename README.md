@@ -17,6 +17,14 @@ Note that all the modules based on the `ZiAPI` api (v5.0.0) are compatible with 
 The server also comes wit the following features:
 - A `cli` to manage the server and the pipelines
 
+## Summary
+- [Build the project](#build-the-project)
+- [Configuration](#configuration)
+- [Run](#run)
+- [Documentation](#documentation)
+- [Notes](#notes)
+- [Credits](#credits)
+
 ## Build the project
 
 Create a `build/` directory:
@@ -91,6 +99,40 @@ The `cli` enables server and pipelines management. The following commands are av
  | `stop`     | `pipelineName` | Stops the pipeline                     |
  | `config`   | `pipelineName` | Reloads the pipeline configuration     |
  | `hotreload`| `pipelineName` | Activates or deactivates hot reloading |
+
+### Example
+
+#### pipeline.txt:
+```
+httpServer::../../config.yml::../lib/libhttp_module.so
+```
+#### config.yml:
+```yml
+modules:
+  http:
+    port: 8080
+    path: http_module.dll
+  staticserve:
+    path: static_serve.dll
+    rootDirectory: ../../files
+    dirpath: .
+
+```
+
+#### run:
+
+```shell
+cd ./build/bin/ && ./zia
+```
+
+#### cli:
+
+```
+> config httpServer
+> start httpServer
+> config httpServer
+> stop httpServer
+```
 
 ## Documentation
 
