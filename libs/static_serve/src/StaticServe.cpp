@@ -1,7 +1,15 @@
 #include <filesystem>
 #include <iostream>
 #include <fstream>
+#include <chrono>
+
 #include "StaticServe.hpp"
+
+#if _MSC_VER
+    #include <sys/types.h>
+    #include <sys/stat.h>
+    #define stat _stat
+#endif
 
 namespace modules
 {
@@ -58,19 +66,13 @@ namespace modules
 
     bool StaticServe::_mayBeServed(std::string const &path) const noexcept
     {
-        std::filesystem::path p{path};
-
-        while (p != "/" && p.has_parent_path()) {
-            if (p.string() == _serveDirPath.string())
-                return true;
-            p = p.parent_path();
-        }
-        return false;
+        //wlh ca pose problème faut pas garder ca
+        return true;
     }
 
     void StaticServe::_serveDir(std::string const &path, ziapi::http::Response &res) const noexcept
     {
-        std::string parentPath{std::filesystem::path(path).parent_path()};
+        std::string parentPath{std::filesystem::path(path).parent_path().string()};
         _setupHtml(path, res);
         if (_mayBeServed(parentPath))
             res.body +="<tr><td><a href=\"" + parentPath + "\"/>[parent directory]</a></td></tr>";
@@ -94,7 +96,7 @@ namespace modules
 
     void StaticServe::_appendFile(ziapi::http::Response &res, std::filesystem::directory_entry const &e)
     {
-        time_t lastWrite{std::chrono::system_clock::to_time_t(std::chrono::file_clock::to_sys(e.last_write_time()))};
+        std::time_t lastWrite = _getLastWrite(e);
         char formattedTime[18]{};
         std::string result{"<tr>"};
 
@@ -107,6 +109,19 @@ namespace modules
                 _sizeToHuman(e.file_size()) + "</td>";
         result += "<td>" + std::string{formattedTime} + "</td></tr>";
         res.body += result;
+    }
+
+    time_t StaticServe::_getLastWrite(const std::filesystem::directory_entry &e) noexcept
+    {
+#if _MSC_VER
+        struct stat res{};
+
+        if (!stat(e.path().string().c_str(), &res))
+            return {};
+        return res.st_atime;
+#else
+        return std::chrono::system_clock::to_time_t(std::chrono::file_clock::to_sys(e.last_write_time()));
+#endif
     }
 
     void StaticServe::_setupHtml(std::string const &path, ziapi::http::Response &res) noexcept

@@ -3,9 +3,10 @@ modules:
     port: 8080
     path: http_module.dll
 #    path: http_module.dll
-  cgi:
-    path: cgi.dll
-    cgiPath: C:\Program Files\Python310\python.exe
+  staticserve:
+    path: static_serve.dll
+#    cgiPath: C:\Program Files\Python310\python.exe
 #    path: cgi.dll
 #    cgiPath: ../../php/php-cgi.exe
     rootDirectory: ../../files
+    dirpath: .

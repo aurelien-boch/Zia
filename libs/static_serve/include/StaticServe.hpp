@@ -2,6 +2,8 @@
 #define STATICSERVE_HPP
 
 #include <filesystem>
+#include <array>
+
 #include <ziapi/Module.hpp>
 
 namespace modules
@@ -47,6 +49,8 @@ namespace modules
             static void _serveFile(std::string const &path, ziapi::http::Response &response);
 
             static void _appendFile(ziapi::http::Response &res, std::filesystem::directory_entry const &e) ;
+
+            static time_t _getLastWrite(const std::filesystem::directory_entry &e) noexcept;
     };
 }
 

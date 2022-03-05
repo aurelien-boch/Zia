@@ -122,8 +122,16 @@ namespace modules
         } else {
             const network::Address clientAddress{client->getAddress()};
 
+            ziapi::http::Request req{};
+            try {
+                req = _parser.parse(packet);
+            } catch (std::exception const &) {
+                client->asyncSend("HTTP/1.1 400 Bad request\r\nContent-Length: 0\r\n\r\n", [this, client](const error::ErrorSocket &) {
+                    _clients.erase(std::remove(_clients.begin(), _clients.end(), client), _clients.end());
+                });
+            }
             requests.Push({
-                _parser.parse(packet),
+                req,
                 {
                     {"_client", std::make_any<std::shared_ptr<IClient>>(client)},
                     {"REMOTE_ADDR", std::make_any<std::uint32_t>(clientAddress.ipAddress)},
