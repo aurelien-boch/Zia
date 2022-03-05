@@ -11,7 +11,13 @@ namespace network::https
         _sslContext(asio::ssl::context::tls),
         _sslSocket(io_context, _sslContext),
         _resolver(io_context)
-    {}
+    {
+        try {
+            _sslSocket.handshake(asio::ssl::stream_base::client);
+        } catch (std::system_error const &e) {
+            throw std::runtime_error("Error on handshake: " + std::string(e.what()));
+        }
+    }
 
     AsioHttpsClient::AsioHttpsClient(asio::io_context &io_context, SslSocket &&socket) :
         _sslContext(asio::ssl::context::tls),
