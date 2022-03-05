@@ -18,6 +18,7 @@ namespace network::http
              * @param[in] header the header to parse
              * @return the length of the body
              * @throw std::runtime_error if the header is incorrect
+             * @throw std::invalid_argument if the value is incorrect
              */
             [[nodiscard]] static std::size_t getContentLength(std::string const &header);
 
