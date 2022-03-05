@@ -25,3 +25,6 @@ This section defines the request/response context values the module depends on.
 | `REMOTE_ADDR` | `std::uint32_t`                                      | Read    | The IP Address of the client                                                                |
 
 ## Additional Comments
+
+---
+[Back to README](../../README.md)
