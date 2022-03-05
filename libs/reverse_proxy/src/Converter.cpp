@@ -52,7 +52,7 @@ namespace modules
         return res;
     }
 
-    void Converter::_parseFirstLine(ziapi::http::Response &response, const std::string &stringResponse)
+    void Converter::_parseFirstLine(ziapi::http::Response &response, std::string const &stringResponse)
     {
         std::size_t end{stringResponse.find("\r\n")};
         std::size_t endMethod{stringResponse.find(' ')};
