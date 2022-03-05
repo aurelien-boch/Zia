@@ -5,8 +5,6 @@
 
 #include "AsioHttpsClient.hpp"
 
-// openssl s_client -connect localhost:4443 // TODO: remove
-
 namespace network::https
 {
     AsioHttpsClient::AsioHttpsClient(asio::io_context &io_context, std::string const &certificatePath) :
@@ -22,7 +20,6 @@ namespace network::https
     {
         try {
             _sslSocket.handshake(asio::ssl::stream_base::server);
-            std::cout << "Handshake done" << std::endl; // TODO: remove
         } catch (std::system_error const &e) {
             throw std::runtime_error("Error on handshake: " + std::string(e.what()));
         }
@@ -46,7 +43,7 @@ namespace network::https
         }
     }
 
-    std::string AsioHttpsClient::receive() noexcept // TODO
+    std::string AsioHttpsClient::receive() noexcept
     {
         std::string header;
         std::string body;

@@ -12,8 +12,7 @@ namespace network::http
         _requestBuffer{},
         _bodyLength{},
         _totalBytesRead{},
-        _address{} // TODO: fix segfault here
-        // static_cast<std::uint32_t>(std::stoul(_socket.remote_endpoint().address().to_string())), static_cast<std::uint8_t>(_socket.remote_endpoint().port())}
+        _address{static_cast<std::uint32_t>(std::stoul(_socket.remote_endpoint().address().to_string())), static_cast<std::uint8_t>(_socket.remote_endpoint().port())}
     {}
 
     AsioHttpClient::AsioHttpClient(asio::ip::tcp::socket &socket) :

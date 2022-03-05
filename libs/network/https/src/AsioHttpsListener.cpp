@@ -32,11 +32,9 @@ namespace network::https
 
     void AsioHttpsListener::run(std::function<void (error::ErrorSocket const &, std::shared_ptr<IClient>)> &&callback) noexcept
     {
-        std::cout << "bite" << std::endl; // TODO: remove
         _acceptor.async_accept([this, callback = std::forward<std::function<void (error::ErrorSocket const &, std::shared_ptr<IClient>)>>(callback)] (asio::error_code const &error, asio::ip::tcp::socket peer) mutable
         {
             if (error) {
-                std::cout << "Accepting new client" << std::endl; // TODO: remove
                 const auto it = error::AsioErrorTranslator.find(error);
 
                 if (it == error::AsioErrorTranslator.end())

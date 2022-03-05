@@ -60,7 +60,6 @@ namespace modules
 
     void HttpModule::Run(ziapi::http::IRequestOutputQueue &requests, ziapi::http::IResponseInputQueue &responses)
     {
-        std::cout << "running" << std::endl; // TODO: remove
         if (!_listener)
             throw std::runtime_error("ERROR(modules/Http): Module not configured");
         _listener->run(
@@ -102,16 +101,7 @@ namespace modules
                 std::cerr << "Error occurred: " << err << std::endl;
         } else {
             std::shared_ptr<IClient> c = _clients.emplace_back(client);
-            std::string responseString = "HTTP/1.1 200 OK\r\n" // TODO: remove
-                                                               "Content-Length: 42\r\n"
-                                                               "Content-Type: text/html\r\n"
-                                                               "\r\n"
-                                                               "<html>\n"
-                                                               "<body>\n"
-                                                               "Hello World!\n"
-                                                               "</body>\n"
-                                                               "</html>";
-            c->asyncSend(responseString, [] (error::ErrorSocket const &) { std::cout << "Message sent" << std::endl; }); // TODO: remove
+
             c->asyncReceive([c, this, &requests] (error::ErrorSocket err, std::string &request) mutable {
                 _onPacket(requests, err, request, c);
             });
@@ -175,7 +165,6 @@ namespace modules
                          std::cerr << "ERROR(modules/Http): " << err << std::endl;
                      }
                  }
-                 std::cout << "RESPONSE SENT" << std::endl; // todo: remove
                  _clients.erase(std::remove(_clients.begin(), _clients.end(), client), _clients.end());
              });
         }

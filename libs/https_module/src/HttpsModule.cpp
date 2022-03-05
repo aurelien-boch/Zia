@@ -16,7 +16,6 @@ namespace modules
 
     void HttpsModule::Init(const ziapi::config::Node &cfg)
     {
-        std::cout << "[HTTPS MODULE] Configuration" << std::endl; // TODO: remove
         auto &httpsConfig = cfg["modules"]["https"];
         int port = httpsConfig["port"].AsInt();
         network::https::AsioHttpsListener::CertificateData data{
