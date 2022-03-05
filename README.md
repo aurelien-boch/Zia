@@ -5,10 +5,11 @@ The purpose of the Zia project is to implement an Http server based on the [ZiAP
 ### Available modules
 
 The server comes with several modules, including:
-- a generic `CGI` module
-- a `Logger` module
-- an `Http` module implementing HTTP/1.1 protocol
-- an `Https` module implementing HTTP/1.1 protocol with SSL
+- a generic [CGI](./libs/cgi/README.md) module
+- a [Logger](./libs/Logger/README.md) module
+- an [Http](./libs/http_module/README.md) module implementing HTTP/1.1 protocol
+- an [Https](./libs/https_module/README.md) module implementing HTTP/1.1 protocol with SSL
+- a [Static serve](./libs/static_serve/README.md)
 
 Note that all the modules based on the `ZiAPI` api (v5.0.0) are compatible with our Zia server. 
 
@@ -46,7 +47,7 @@ conan install . --build=missing -if=build/
 **If** you want to build the unit tests:
 
 ```shell
-cmake -DENABLE_TESTING=yes ./build/
+cmake . -DENABLE_TESTING=yes -b ./build/
 ```
 
 #### Project
@@ -127,11 +128,13 @@ cd ./build/bin/ && ./zia
 
 #### cli:
 
+**Note:** The `#` followed by sentences are comments, **they don't have to be written in the cli**
+
 ```
-> config httpServer
-> start httpServer
-> config httpServer
-> stop httpServer
+config httpServer      # first configuration of the pipeline before running
+start httpServer       # start the pipeline
+config httpServer      # config the pipeline while it's running
+stop httpServer        # stop the pipeline
 ```
 
 ## Documentation
@@ -142,6 +145,7 @@ cd ./build/bin/ && ./zia
 - [Logger](./libs/Logger/README.md)
 - [HttpModule](./libs/http_module/README.md)
 - [HttpsModule](./libs/https_module/README.md)
+- [Static serve](./libs/static_serve/README.md)
 
 ### Doxygen documentation
 

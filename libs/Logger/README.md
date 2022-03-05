@@ -24,7 +24,5 @@ This section defines the request/response context values the module depends on.
 | `received_at` | `std::chrono::time_point<std::chrono::system_clock>` | Read    | The time at which the request was <br/>received (`RequestReceptionTime` Module provides it) |
 | `REMOTE_ADDR` | `std::uint32_t`                                      | Read    | The IP Address of the client                                                                |
 
-## Additional Comments
-
 ---
 [Back to README](../../README.md)
