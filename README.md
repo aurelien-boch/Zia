@@ -9,7 +9,8 @@ The server comes with several modules, including:
 - a [Logger](./libs/Logger/README.md) module
 - an [Http](./libs/http_module/README.md) module implementing HTTP/1.1 protocol
 - an [Https](./libs/https_module/README.md) module implementing HTTP/1.1 protocol with SSL
-- a [Static serve](./libs/static_serve/README.md)
+- a [Static serve](./libs/static_serve/README.md) module
+- a [Reverse proxy](./libs/reverse_proxy/README.md) module
 
 Note that all the modules based on the `ZiAPI` api (v5.0.0) are compatible with our Zia server. 
 
@@ -143,9 +144,10 @@ stop httpServer        # stop the pipeline
 
 - [Cgi](./libs/cgi/README.md)
 - [Logger](./libs/Logger/README.md)
-- [HttpModule](./libs/http_module/README.md)
-- [HttpsModule](./libs/https_module/README.md)
+- [Http](./libs/http_module/README.md)
+- [Https](./libs/https_module/README.md)
 - [Static serve](./libs/static_serve/README.md)
+- [Reverse proxy](./libs/reverse_proxy/README.md)
 
 ### Doxygen documentation
 
