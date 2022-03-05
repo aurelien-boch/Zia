@@ -66,7 +66,6 @@ namespace modules
 
     bool StaticServe::_mayBeServed(std::string const &path) const noexcept
     {
-        //wlh ca pose problème faut pas garder ca
         return true;
     }
 
