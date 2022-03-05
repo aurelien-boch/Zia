@@ -60,6 +60,7 @@ namespace modules
 
     void HttpModule::Run(ziapi::http::IRequestOutputQueue &requests, ziapi::http::IResponseInputQueue &responses)
     {
+        std::cout << "running" << std::endl; // TODO: remove
         if (!_listener)
             throw std::runtime_error("ERROR(modules/Http): Module not configured");
         _listener->run(

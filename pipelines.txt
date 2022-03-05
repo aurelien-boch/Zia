@@ -1,1 +1,1 @@
-plouf::../../config.yml::../lib/libhttp_module.so
+plouf::../../config.yml::../lib/libhttps_module.so

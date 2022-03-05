@@ -22,7 +22,7 @@ namespace network::https
     {
         try {
             _sslSocket.handshake(asio::ssl::stream_base::server);
-            std::cout << "Handshake done" << std::endl;
+            std::cout << "Handshake done" << std::endl; // TODO: remove
         } catch (std::system_error const &e) {
             throw std::runtime_error("Error on handshake: " + std::string(e.what()));
         }
@@ -47,7 +47,25 @@ namespace network::https
     }
 
     std::string AsioHttpsClient::receive() noexcept // TODO
-    {}
+    {
+        std::string header;
+        std::string body;
+        std::size_t bodyLength = 0;
+
+        while(header.find("\r\n\r\n") == std::string::npos)
+            _rec(header);
+        http::RequestHelper::cleanHeader(header, body);
+        try {
+            bodyLength = http::RequestHelper::getContentLength(header);
+        } catch (std::runtime_error const &e) {
+            std::cerr << e.what() << std::endl;
+            asyncSend("411 Length Required", [](error::ErrorSocket const &){});
+            return {};
+        }
+        while (body.size() < bodyLength)
+            _rec(body);
+        return (header + body);
+    }
 
 
 void AsioHttpsClient::asyncSend(
@@ -94,7 +112,7 @@ void AsioHttpsClient::asyncSend(
     void AsioHttpsClient::_asyncRec(asio::error_code ec, std::function<void(error::ErrorSocket const &, std::string &)> &&cb, std::size_t bytesRead)
     {
         _requestBuffer += std::string{_buffer, _buffer + bytesRead};
-
+        std::cout << "RECEIVING: " << _buffer << std::endl;
         if (ec) {
             try {
                 cb(error::AsioErrorTranslator.at(ec), _requestBuffer);

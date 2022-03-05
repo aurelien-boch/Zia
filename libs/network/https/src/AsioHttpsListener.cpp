@@ -19,11 +19,11 @@ namespace network::https
                 | asio::ssl::context::no_sslv2);
         _sslContext.set_password_callback(std::bind(&AsioHttpsListener::_getPassword, this));
         try {
-            std::cout << std::endl << "[ASIO HTTPS LISTENER] Loading certificate \t" << _certificateData.certificatePath << std::endl;
+            std::cout << std::endl << "[ASIO HTTPS LISTENER] Loading certificate " << _certificateData.certificatePath << std::endl;
             _sslContext.use_certificate_chain_file(_certificateData.certificatePath);
-            std::cout << "[ASIO HTTPS LISTENER] Loading key \t\t" << _certificateData.certificateKey << std::endl;
+            std::cout << "[ASIO HTTPS LISTENER] Loading key \t  " << _certificateData.certificateKey << std::endl;
             _sslContext.use_private_key_file(_certificateData.certificateKey, asio::ssl::context::pem);
-            std::cout << "[ASIO HTTPS LISTENER] Loading dh file \t\t" << _certificateData.certificateDhFile <<std::endl << std::endl;
+            std::cout << "[ASIO HTTPS LISTENER] Loading dh file \t  " << _certificateData.certificateDhFile <<std::endl << std::endl;
             _sslContext.use_tmp_dh_file(_certificateData.certificateDhFile);
         } catch (std::system_error const &e) {
             throw std::runtime_error("Error while setting up SSL certificate: " + std::string(e.what()));
@@ -32,9 +32,11 @@ namespace network::https
 
     void AsioHttpsListener::run(std::function<void (error::ErrorSocket const &, std::shared_ptr<IClient>)> &&callback) noexcept
     {
+        std::cout << "bite" << std::endl; // TODO: remove
         _acceptor.async_accept([this, callback = std::forward<std::function<void (error::ErrorSocket const &, std::shared_ptr<IClient>)>>(callback)] (asio::error_code const &error, asio::ip::tcp::socket peer) mutable
         {
             if (error) {
+                std::cout << "Accepting new client" << std::endl; // TODO: remove
                 const auto it = error::AsioErrorTranslator.find(error);
 
                 if (it == error::AsioErrorTranslator.end())

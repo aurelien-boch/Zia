@@ -1,7 +1,12 @@
 modules:
-  http:
-    port: 8080
-    path: http_module.dll
+  https:
+#    port: 8080
+    path: ../lib/libhttps_module.so
+    port: 3000
+    certificatePath: ../certificate/server.crt
+    certificateKey: ../certificate/server.key
+    certificateDhFile: ../certificate/dh2048.pem
+    certificateKeyPassword: password
 #    path: http_module.dll
   staticserve:
     path: static_serve.dll
