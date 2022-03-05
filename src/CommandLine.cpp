@@ -41,7 +41,7 @@ namespace cli
                     try {
                         it->second.run();
                     } catch (std::runtime_error const &e) {
-                        std::cerr << "Error: the pipeline has crashed" << std::endl;
+                        std::cerr << "Error: the pipeline has crashed cause: " << e.what() << std::endl;
                         return;
                     }
                 });
@@ -64,7 +64,7 @@ namespace cli
                 std::cout << "Pipeline " << it->first << " has been stopped" << std::endl;
                 _pipelinesThreads.erase(_pipelineName);
             } catch (std::runtime_error const &e) {
-                std::cerr << "Error: the pipeline has crashed" << std::endl;
+                std::cerr << "Error: the pipeline has crashed cause: " << e.what() << std::endl;
             }
         } else
             std::cerr << "Error: the pipeline " << _pipelineName << " doesn't exist" << std::endl;
