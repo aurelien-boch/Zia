@@ -17,7 +17,7 @@ namespace modules
         {ziapi::http::Version::kV3, "HTTP/3.0"},
     };
 
-    std::string Converter::toRawRequest(const ziapi::http::Request &req)
+    std::string Converter::toRawRequest(ziapi::http::Request const &req)
     {
         std::string res{};
 
