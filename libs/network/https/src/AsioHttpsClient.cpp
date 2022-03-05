@@ -115,7 +115,6 @@ void AsioHttpsClient::asyncSend(
     void AsioHttpsClient::_asyncRec(asio::error_code ec, std::function<void(error::ErrorSocket const &, std::string &)> &&cb, std::size_t bytesRead)
     {
         _requestBuffer += std::string{_buffer, _buffer + bytesRead};
-        std::cout << "RECEIVING: " << _buffer << std::endl;
         if (ec) {
             try {
                 cb(error::AsioErrorTranslator.at(ec), _requestBuffer);

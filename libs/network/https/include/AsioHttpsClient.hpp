@@ -17,7 +17,8 @@
 namespace network::https
 {
     /**
-     * @class Implements an Http client with SSL using Asio library
+     * @class AsioHttpsClient
+     * @brief Implements an Http client with SSL using Asio library
      */
     class DllExport AsioHttpsClient : public ITCPClient<std::string, std::string>
     {

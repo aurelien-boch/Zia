@@ -17,7 +17,8 @@
 namespace network::http
 {
     /**
-     * @class Implements an Http client using the Asio library
+     * @class AsioHttpClient
+     * @brief Implements an Http client using the Asio library
      */
     class DllExport AsioHttpClient : public ITCPClient<std::string, std::string>
     {
@@ -52,9 +53,6 @@ namespace network::http
             std::string _requestBuffer;
             std::size_t _bodyLength;
             std::size_t _totalBytesRead;
-
-//            std::string _header;
-//            std::string _body;
 
             char _buffer[257];
 

@@ -19,11 +19,11 @@ namespace network::https
                 | asio::ssl::context::no_sslv2);
         _sslContext.set_password_callback(std::bind(&AsioHttpsListener::_getPassword, this));
         try {
-            std::cout << std::endl << "[ASIO HTTPS LISTENER] Loading certificate " << _certificateData.certificatePath << std::endl;
+//            std::cout << std::endl << "[ASIO HTTPS LISTENER] Loading certificate " << _certificateData.certificatePath << std::endl;
             _sslContext.use_certificate_chain_file(_certificateData.certificatePath);
-            std::cout << "[ASIO HTTPS LISTENER] Loading key \t  " << _certificateData.certificateKey << std::endl;
+//            std::cout << "[ASIO HTTPS LISTENER] Loading key \t  " << _certificateData.certificateKey << std::endl;
             _sslContext.use_private_key_file(_certificateData.certificateKey, asio::ssl::context::pem);
-            std::cout << "[ASIO HTTPS LISTENER] Loading dh file \t  " << _certificateData.certificateDhFile <<std::endl << std::endl;
+//            std::cout << "[ASIO HTTPS LISTENER] Loading dh file \t  " << _certificateData.certificateDhFile <<std::endl << std::endl;
             _sslContext.use_tmp_dh_file(_certificateData.certificateDhFile);
         } catch (std::system_error const &e) {
             throw std::runtime_error("Error while setting up SSL certificate: " + std::string(e.what()));
@@ -47,7 +47,6 @@ namespace network::https
                     auto res = std::make_unique<AsioHttpsClient>(_io_context, std::move(s));
 
                     callback(error::ErrorSocket::SOCKET_NO_ERROR, std::move(res));
-                    std::cout << "New client connected" << std::endl;
                 } catch (std::runtime_error const &e) {
                     std::cerr << "ERROR(network/AsioHttpsListener): " << e.what() << std::endl;
                 }

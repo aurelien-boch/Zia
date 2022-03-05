@@ -6,12 +6,20 @@
 
 #include <ITCPListener.hpp>
 
+#ifdef _WIN32
+    #define DllExport   __declspec( dllexport )
+#else
+    #define DllExport
+#endif
+
+
 namespace network::https
 {
     /**
-     * @class Implements a Http Listener with SSL
+     * @class AsioHttpsListener
+     * @brief Implements a Http Listener with SSL
      */
-    class AsioHttpsListener : public ITCPListener<std::string, std::string>
+    class DllExport AsioHttpsListener : public ITCPListener<std::string, std::string>
     {
         public:
 

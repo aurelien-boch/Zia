@@ -5,9 +5,20 @@
 
 #include <HttpModule.hpp>
 
+#ifdef _WIN32
+    #define DllExport   __declspec( dllexport )
+#else
+    #define DllExport
+#endif
+
+
 namespace modules
 {
-    class HttpsModule : public HttpModule
+    /**
+     * @class HttpsModule
+     * @brief Implements HTTP Module with SSL
+     */
+    class DllExport HttpsModule : public HttpModule
     {
         public:
 
@@ -24,8 +35,6 @@ namespace modules
             [[nodiscard]] inline const char *GetName() const noexcept override;
 
             [[nodiscard]] inline const char *GetDescription() const noexcept override;
-
-//            void Run(ziapi::http::IRequestOutputQueue &requests, ziapi::http::IResponseInputQueue &responses) override;
 
         private:
 

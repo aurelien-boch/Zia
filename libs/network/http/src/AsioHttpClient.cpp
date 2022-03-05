@@ -7,7 +7,7 @@ namespace network::http
 {
     AsioHttpClient::AsioHttpClient(asio::io_context &io_context) :
         ITCPClient{},
-         _socket{io_context},
+        _socket{io_context},
         _buffer{},
         _requestBuffer{},
         _bodyLength{},
@@ -110,23 +110,23 @@ namespace network::http
         return _address;
     }
 
-    void AsioHttpClient::_asyncRec(asio::error_code ec, std::function<void(error::ErrorSocket const &, std::string &)> &&cb, std::size_t bytesRead)
+    void AsioHttpClient::_asyncRec(asio::error_code ec, std::function<void(error::ErrorSocket const &, std::string &)> &&callback, std::size_t bytesRead)
     {
         _requestBuffer += std::string{_buffer, _buffer + bytesRead};
 
         if (ec) {
             try {
-                cb(error::AsioErrorTranslator.at(ec), _requestBuffer);
+                callback(error::AsioErrorTranslator.at(ec), _requestBuffer);
             } catch (std::out_of_range const &) {
                 std::cerr << "ERROR(network/AsioHttpClient): " << ec << std::endl;
             }
         } else {
             if (_requestBuffer.find("\r\n\r\n") != std::string::npos && _bodyLength == 0) {
                 try {
-                    _bodyLength = RequestHelper::getContentLength(_requestBuffer); // body length is now known
-            } catch (std::runtime_error &) { // DISCARDS BODY
-                cb(error::SOCKET_NO_ERROR, _requestBuffer);
-            } catch (std::invalid_argument &) { // invalid header
+                    _bodyLength = RequestHelper::getContentLength(_requestBuffer);
+            } catch (std::runtime_error &) {
+                callback(error::SOCKET_NO_ERROR, _requestBuffer);
+            } catch (std::invalid_argument &) {
                 send("HTTP1/1.1 400 Bad request\r\nContent-Length: 0\r\n\r\n");
             }
         } else
@@ -134,12 +134,12 @@ namespace network::http
                 _totalBytesRead = bytesRead;
                 _requestBuffer += _buffer;
                 if (_totalBytesRead != _bodyLength)
-                    asyncReceive(std::forward<std::function<void (error::ErrorSocket const &, std::string &)>>(cb));
+                    asyncReceive(std::forward<std::function<void (error::ErrorSocket const &, std::string &)>>(callback));
                 else
-                cb(error::SOCKET_NO_ERROR, _requestBuffer);
+                    callback(error::SOCKET_NO_ERROR, _requestBuffer);
             } else
-                asyncReceive(std::forward<std::function<void (error::ErrorSocket const &, std::string &)>>(cb));
+                asyncReceive(std::forward<std::function<void (error::ErrorSocket const &, std::string &)>>(callback));
         }
-        asyncReceive(std::move(cb));
+        asyncReceive(std::move(callback));
     }
 }

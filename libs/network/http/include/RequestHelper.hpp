@@ -17,6 +17,7 @@ namespace network::http
              * @brief Retrieves the size of the body from the Content-Length header
              * @param[in] header the header to parse
              * @return the length of the body
+             * @throw std::runtime_error if the header is incorrect
              */
             [[nodiscard]] static std::size_t getContentLength(std::string const &header);
 
@@ -24,6 +25,7 @@ namespace network::http
              * @brief Cleans the header and fills the body
              * @param[in, out] header the header to clean
              * @param[in, out] body the body to fill
+             * @throw std::runtime_error if the header is incorrect
              */
             static void cleanHeader(std::string &header, std::string &body);
 
