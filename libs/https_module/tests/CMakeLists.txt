@@ -27,4 +27,5 @@ set_target_properties(
 conan_target_link_libraries(
         ${NAME}
         CONAN_PKG::asio
+        CONAN_PKG::openssl
 )

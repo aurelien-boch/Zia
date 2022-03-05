@@ -38,6 +38,7 @@ target_compile_options(
 conan_target_link_libraries(
         ${NAME}
         CONAN_PKG::asio
+        CONAN_PKG::openssl
 )
 
 target_link_libraries(

@@ -56,7 +56,7 @@ namespace network::https
             bodyLength = http::RequestHelper::getContentLength(header);
         } catch (std::runtime_error const &e) {
             std::cerr << e.what() << std::endl;
-            asyncSend("411 Length Required", [](error::ErrorSocket const &){});
+            asyncSend("HTTP/1.1 400 Bad request\r\nContent-Length: 0\r\n\r\n", [](error::ErrorSocket const &){});
             return {};
         }
         while (body.size() < bodyLength)
@@ -123,7 +123,7 @@ void AsioHttpsClient::asyncSend(
                 } catch (std::runtime_error &) { // DISCARDS BODY
                      cb(error::SOCKET_NO_ERROR, _requestBuffer);
                 } catch (std::invalid_argument &) { // invalid header
-                    send("HTTP1/1.1 400 Bad request\r\nContent-Length: 0\r\n\r\n");
+                    send("HTTP/1.1 400 Bad request\r\nContent-Length: 0\r\n\r\n");
                 }
             } else
                 if (_bodyLength != 0) {
