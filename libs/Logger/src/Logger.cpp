@@ -22,7 +22,11 @@ const std::unordered_map<std::string_view, std::string_view> modules::Logger::s_
 
 void modules::Logger::Init(const ziapi::config::Node &cfg)
 {
-    m_pipelineName = cfg["pipelineName"].AsString();
+    try {
+        m_pipelineName = cfg["pipelineName"].AsString();
+    } catch (const std::out_of_range &) {
+        m_pipelineName = "<unknown>";
+    }
 }
 
 inline ziapi::Version modules::Logger::GetVersion() const noexcept
