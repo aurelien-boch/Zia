@@ -46,16 +46,6 @@ namespace modules
         } catch (std::exception const &e) {
             res.status_code = ziapi::http::Code::kInternalServerError;
         }
-//        char buff[8193]{};
-//        std::string zz = Converter::toRawRequest(req);
-//        socket.send(asio::buffer(zz.c_str(), zz.size()));
-//        socket.receive(asio::buffer(&buff, sizeof(char) * 8192));
-//        ziapi::http::Response proxyResponse{Converter::toResponse(sock.receive())};
-//        res.body = proxyResponse.body;
-//        res.status_code = proxyResponse.status_code;
-//        res.headers = proxyResponse.headers;
-//        res.reason = proxyResponse.reason;
-//        res.version = proxyResponse.version;
     }
 
     double ReverseProxy::GetHandlerPriority() const noexcept

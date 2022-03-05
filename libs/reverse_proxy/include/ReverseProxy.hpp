@@ -6,6 +6,10 @@
 
 namespace modules
 {
+    /**
+     * @class ReverseProxy
+     * @brief Implements a basic reverse proxy
+     */
     class ReverseProxy : public ziapi::IHandlerModule
     {
         public:
