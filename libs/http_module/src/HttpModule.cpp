@@ -29,12 +29,14 @@ namespace modules
 
     void HttpModule::Init(const ziapi::config::Node &cfg)
     {
-        auto &httpConfig = cfg["modules"]["http"];
-        int port = httpConfig["port"].AsInt();
+        _port = 80;
+        try {
+            auto &httpConfig = cfg["modules"]["http"];
+            int port = httpConfig["port"].AsInt();
 
-        if (port < 0)
-            throw std::runtime_error("ERROR(modules/Http): Invalid port in configuration file");
-        _port = port;
+            if (port > 0)
+                _port = port;
+        } catch (std::exception const &) {}
         _listener = std::make_unique<network::http::AsioHttpListener>(_service, port);
     }
 
