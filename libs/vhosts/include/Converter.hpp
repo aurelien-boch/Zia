@@ -6,11 +6,23 @@
 
 namespace modules
 {
+    /**
+     * @class Converter
+     * @brief This class parsers and formatters.
+     */
     class Converter
     {
         public:
+            /**
+             * @brief Formats a raw http request from a ziapi::http::Request structure
+             * @param[in] req The http request to stringify.
+             */
             static std::string toRawRequest(ziapi::http::Request const &req);
 
+            /**
+             * @brief Parses a raw http response to a ziapi::http::Response structure
+             * @param[in] response The http response to parse
+             */
             static ziapi::http::Response toResponse(std::string const &response);
 
         private:
