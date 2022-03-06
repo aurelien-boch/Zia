@@ -22,8 +22,7 @@ namespace modules
 
             [[nodiscard]] const char *GetDescription() const noexcept override;
 
-            void
-            Handle(ziapi::http::Context &ctx, const ziapi::http::Request &req, ziapi::http::Response &res) override;
+            void Handle(ziapi::http::Context &ctx, const ziapi::http::Request &req, ziapi::http::Response &res) override;
 
             [[nodiscard]] double GetHandlerPriority() const noexcept override;
 
