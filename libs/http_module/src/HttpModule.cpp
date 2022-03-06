@@ -93,7 +93,7 @@ namespace modules
     void HttpModule::_onConnect(
         ziapi::http::IRequestOutputQueue &requests,
         error::ErrorSocket const &err,
-        std::shared_ptr<IClient> client)
+        std::shared_ptr<IClient> c)
     {
         if (err != error::ErrorSocket::SOCKET_NO_ERROR) {
             const auto errIt = error::errorMessage.find(err);
@@ -103,11 +103,10 @@ namespace modules
             else
                 std::cerr << "Error occurred: " << err << std::endl;
         } else {
-            std::shared_ptr<IClient> c = _clients.emplace_back(client);
-
             c->asyncReceive([c, this, &requests] (error::ErrorSocket err, std::string &request) mutable {
                 _onPacket(requests, err, request, c);
             });
+
         }
     }
 

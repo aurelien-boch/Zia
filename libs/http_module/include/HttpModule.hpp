@@ -54,9 +54,9 @@ namespace modules
             static const ziapi::Version _compatibleApiVersion;
 
 
-        private:
+        protected:
 
-            void _onConnect(
+            virtual void _onConnect(
                     ziapi::http::IRequestOutputQueue &requests,
                     error::ErrorSocket const &err,
                     std::shared_ptr<IClient> client);

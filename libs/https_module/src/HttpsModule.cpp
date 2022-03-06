@@ -64,6 +64,36 @@ namespace modules
     {
         return "A https module that implements Http/1.1 protocol with SSL.";
     }
+
+    void HttpsModule::_onConnect(
+            ziapi::http::IRequestOutputQueue &requests,
+            error::ErrorSocket const &err,
+            std::shared_ptr<IClient> c)
+    {
+        if (err != error::ErrorSocket::SOCKET_NO_ERROR) {
+            const auto errIt = error::errorMessage.find(err);
+
+            if (errIt == error::errorMessage.end())
+                std::cerr << "Unknown error occurred" << err << std::endl;
+            else
+                std::cerr << "Error occurred: " << err << std::endl;
+        } else {
+                std::string responseString = "HTTP/1.1 200 OK\r\n"
+                                             "Content-Length: 42\r\n"
+                                             "Content-Type: text/html\r\n"
+                                             "\r\n"
+                                             "<html>\n"
+                                             "<body>\n"
+                                             "Hello World!\n"
+                                             "</body>\n"
+                                             "</html>";
+             c->asyncSend(responseString, [] (error::ErrorSocket const &) { std::cout << "Message sent" << std::endl; });
+            c->asyncReceive([c, this, &requests] (error::ErrorSocket err, std::string &request) mutable {
+                _onPacket(requests, err, request, c);
+            });
+
+        }
+    }
 }
 
 extern "C" {

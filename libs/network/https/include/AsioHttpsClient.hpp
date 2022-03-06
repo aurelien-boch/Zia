@@ -59,7 +59,7 @@ namespace network::https
             std::string _requestBuffer;
             std::size_t _bodyLength;
             std::size_t _totalBytesRead;
-            char _buffer[257];
+            char _buffer[2049];
 
             void _rec(std::string &str);
 

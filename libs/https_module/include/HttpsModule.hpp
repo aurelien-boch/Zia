@@ -38,6 +38,11 @@ namespace modules
 
         private:
 
+            void _onConnect(
+                    ziapi::http::IRequestOutputQueue &requests,
+                    error::ErrorSocket const &err,
+                    std::shared_ptr<IClient> c) override;
+
             static const ziapi::Version _version;
             static const ziapi::Version _compatibleApiVersion;
 
