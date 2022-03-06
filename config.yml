@@ -1,19 +1,19 @@
 modules:
   http:
-#    port: 8080
+    port: 8080
     path: http_module.dll
-    port: 3000
-    certificatePath: ../certificate/server.crt
-    certificateKey: ../certificate/server.key
-    certificateDhFile: ../certificate/dh2048.pem
-    certificateKeyPassword: password
+#    port: 3000
+#    certificatePath: ../certificate/server.crt
+#    certificateKey: ../certificate/server.key
+#    certificateDhFile: ../certificate/dh2048.pem
+#    certificateKeyPassword: password
 #    path: http_module.dll
-  staticserve:
-    path: static_serve.dll
+  vhosts:
+    path: vhosts.dll
+    localhost: 127.0.0.1:8000
+    zia-php-cgi.epitech: 127.0.0.1:8907
 #    cgiPath: C:\Program Files\Python310\python.exe
 #    path: cgi.dll
 #    cgiPath: ../../php/php-cgi.exe
     rootDirectory: ../../files
     dirpath: .
-    ip: 142.250.179.110
-    port: 80

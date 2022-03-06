@@ -124,21 +124,21 @@ namespace network::http
             if (_requestBuffer.find("\r\n\r\n") != std::string::npos && _bodyLength == 0) {
                 try {
                     _bodyLength = RequestHelper::getContentLength(_requestBuffer);
-            } catch (std::runtime_error &) {
-                callback(error::SOCKET_NO_ERROR, _requestBuffer);
-            } catch (std::invalid_argument &) {
-                send("HTTP1/1.1 400 Bad request\r\nContent-Length: 0\r\n\r\n");
-            }
-        } else
-            if (_bodyLength != 0) {
-                _totalBytesRead = bytesRead;
-                _requestBuffer += _buffer;
-                if (_totalBytesRead < _bodyLength)
-                    asyncReceive(std::forward<std::function<void (error::ErrorSocket const &, std::string &)>>(callback));
-                else
+                } catch (std::runtime_error &) {
                     callback(error::SOCKET_NO_ERROR, _requestBuffer);
+                } catch (std::invalid_argument &) {
+                    send("HTTP/1.1 400 Bad request\r\nContent-Length: 0\r\n\r\n");
+                }
             } else
-                asyncReceive(std::forward<std::function<void (error::ErrorSocket const &, std::string &)>>(callback));
+                if (_bodyLength != 0) {
+                    _totalBytesRead = bytesRead;
+                    _requestBuffer += _buffer;
+                    if (_totalBytesRead < _bodyLength)
+                        asyncReceive(std::forward<std::function<void (error::ErrorSocket const &, std::string &)>>(callback));
+                    else
+                        callback(error::SOCKET_NO_ERROR, _requestBuffer);
+                } else
+                    asyncReceive(std::forward<std::function<void (error::ErrorSocket const &, std::string &)>>(callback));
         }
     }
 }
