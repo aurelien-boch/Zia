@@ -13,7 +13,7 @@ namespace network::http
         if (pos == std::string::npos)
             throw std::runtime_error{"No Content-Length header"};
         pos += toFind.size();
-        std::size_t pos2 = header.substr(pos + toFind.size()).find("\r\n");
+        std::size_t pos2 = header.substr(pos).find("\r\n");
 
         if (pos2 == std::string::npos)
             throw std::invalid_argument("Invalid Content-Length header");
