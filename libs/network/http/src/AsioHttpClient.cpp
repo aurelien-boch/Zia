@@ -133,13 +133,12 @@ namespace network::http
             if (_bodyLength != 0) {
                 _totalBytesRead = bytesRead;
                 _requestBuffer += _buffer;
-                if (_totalBytesRead != _bodyLength)
+                if (_totalBytesRead < _bodyLength)
                     asyncReceive(std::forward<std::function<void (error::ErrorSocket const &, std::string &)>>(callback));
                 else
                     callback(error::SOCKET_NO_ERROR, _requestBuffer);
             } else
                 asyncReceive(std::forward<std::function<void (error::ErrorSocket const &, std::string &)>>(callback));
         }
-        asyncReceive(std::move(callback));
     }
 }

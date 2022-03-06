@@ -1,15 +1,15 @@
 modules:
-  https:
+  http:
 #    port: 8080
-    path: ../lib/libhttps_module.so
+    path: http_module.dll
     port: 3000
     certificatePath: ../certificate/server.crt
     certificateKey: ../certificate/server.key
     certificateDhFile: ../certificate/dh2048.pem
     certificateKeyPassword: password
 #    path: http_module.dll
-  reverse_proxy:
-    path: reverse_proxy.dll
+  staticserve:
+    path: static_serve.dll
 #    cgiPath: C:\Program Files\Python310\python.exe
 #    path: cgi.dll
 #    cgiPath: ../../php/php-cgi.exe

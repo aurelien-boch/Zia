@@ -25,7 +25,7 @@ namespace core
             /**
              * @param[in] filepath Refers to the config of the pipeline
              */
-            Core(std::string &name, std::string &filepath) noexcept;
+            Core(std::string const &name, std::string const &filepath) noexcept;
 
             /**
              * @brief Starts the pipeline

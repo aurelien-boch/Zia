@@ -8,10 +8,10 @@
 
 namespace core
 {
-    Core::Core(std::string &name, std::string &filepath) noexcept :
+    Core::Core(std::string const &name, std::string const &filepath) noexcept :
         _running{false},
         _configLoaded{false},
-        _filepath{std::forward<std::string>(filepath)},
+        _filepath{filepath},
         _parser{_filepath},
         _threadPool{2}
     {}
