@@ -5,8 +5,7 @@ This module implements a directory listing and a simple static serving.
 ## Module Type
 
 The Static serve module implements the following module interfaces:
- - Directory listing
- - Static serving
+ - `IHandlerModule`
 
 ## Configuration
 

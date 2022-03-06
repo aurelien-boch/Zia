@@ -1,29 +1,19 @@
 # Static serve Module Documentation
 
-<!-- Small module description -->
+Serves static files and provides a directory listing.
 
 ## Module Type
 
-The MODULE_NAME module implements the following module interfaces:
-<!-- List it! -->
+The Static serve module implements the following module interfaces:
+ - `IHandlerModule`
 
 ## Configuration
 
 This section defines the configuration values the module depends on.
 
-| Key | Type | Required | Description |
-|-----|------|----------|-------------|
-
-## Context
-
-This section defines the request/response context values the module depends on.
-
-| Key | Type | Actions | Description |
-|-----|------|---------|-------------|
-
-## Additional Comments
-
-<!-- Any information the user should be aware of -->
+| Key       | Type          | Required | Description    |
+|-----------|---------------|----------|----------------|
+| `dirpath` | `std::string` | Yes      | Root dir path  |
 
 ---
 [Back to README](../../README.md)

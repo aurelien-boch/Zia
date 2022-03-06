@@ -148,6 +148,7 @@ stop httpServer        # stop the pipeline
 - [Https](./libs/https_module/README.md)
 - [Static serve](./libs/static_serve/README.md)
 - [Reverse proxy](./libs/reverse_proxy/README.md)
+- [Vhosts](./libs/vhosts/README.md)
 
 ### Doxygen documentation
 
