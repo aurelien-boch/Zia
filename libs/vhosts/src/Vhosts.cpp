@@ -59,6 +59,11 @@ namespace modules
             res = Converter::toResponse(_recvReply(sock));
         } catch (std::out_of_range const &) {
             res.status_code = ziapi::http::Code::kBadRequest;
+        } catch (std::system_error const &) {
+            res.status_code = ziapi::http::Code::kInternalServerError;
+        } catch (std::exception const &e) {
+            std::cerr << e.what() << std::endl;
+            res.status_code = ziapi::http::Code::kInternalServerError;
         }
     }
 
