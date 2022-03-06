@@ -5,7 +5,7 @@ Vhosts module allows you to create simple vhosts
 ## Module Type
 
 The Vhosts module implements the following module interfaces:
- - Vhosts
+ - `IHandlerModule`
 
 ## Configuration
 
