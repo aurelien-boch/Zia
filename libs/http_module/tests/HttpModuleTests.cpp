@@ -17,7 +17,7 @@ TEST_CASE("Config invalid port", "[HttpModule]")
     parser::ConfigParser parser("../libs/http_module/tests/invalidPortConfig.yml");
     modules::HttpModule http;
 
-    REQUIRE_THROWS(http.Init(parser.getConfigMap()));
+    REQUIRE_NOTHROW(http.Init(parser.getConfigMap()));
 }
 
 TEST_CASE("Config no module", "[HttpModule]")

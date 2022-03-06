@@ -16,6 +16,7 @@ namespace modules
 
     void HttpsModule::Init(const ziapi::config::Node &cfg)
     {
+        auto &httpsConfig = cfg["modules"]["https"];
         network::https::AsioHttpsListener::CertificateData data{
             .certificatePath = "../certificate/server.crt",
             .certificateKey = "../certificate/server.key",
@@ -25,25 +26,21 @@ namespace modules
 
         _port = 443;
         try {
-            auto &httpsConfig = cfg["modules"]["https"];
+            int port = httpsConfig["port"].AsInt();
 
-            try {
-                int port = httpsConfig["port"].AsInt();
-
-                _port = (port < 0) ? 443 : port;
-            } catch (std::exception const &) {}
-            try {
-                data.certificatePath = httpsConfig["certificatePath"].AsString();
-            } catch (std::exception const &) {}
-            try {
-                data.certificateKey = httpsConfig["certificateKey"].AsString();
-            } catch (std::exception const &) {}
-            try {
-                data.certificateDhFile = httpsConfig["certificateDhFile"].AsString();
-            } catch (std::exception const &) {}
-            try {
-                .certificateKeyPassword = httpsConfig["certificateKeyPassword"].AsString();
-            } catch (std::exception const &) {}
+            _port = (port < 0) ? 443 : port;
+        } catch (std::exception const &) {}
+        try {
+            data.certificatePath = httpsConfig["certificatePath"].AsString();
+        } catch (std::exception const &) {}
+        try {
+            data.certificateKey = httpsConfig["certificateKey"].AsString();
+        } catch (std::exception const &) {}
+        try {
+            data.certificateDhFile = httpsConfig["certificateDhFile"].AsString();
+        } catch (std::exception const &) {}
+        try {
+            data.certificateKeyPassword = httpsConfig["certificateKeyPassword"].AsString();
         } catch (std::exception const &) {}
         _listener = std::make_unique<network::https::AsioHttpsListener>(_service, _port, data);
     }

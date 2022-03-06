@@ -25,5 +25,9 @@ This section defines the request/response context values the module depends on.
  | `REMOTE_ADDR` | `std::uint32_t`                             | Write        | The client's ip address                        |
  | `PORT`        | `std::uint16_t`                             | Write        | The client's port                              | 
 
+## Additional Comments
+
+If the `port` value is lower than `1024` (like the default value), the program **MUST** run with administrator privileges.
+
 ---
 [Back to README](../../README.md)

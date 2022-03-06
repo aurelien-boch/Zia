@@ -29,15 +29,16 @@ namespace modules
 
     void HttpModule::Init(const ziapi::config::Node &cfg)
     {
+        auto &httpConfig = cfg["modules"]["http"];
+
         _port = 80;
         try {
-            auto &httpConfig = cfg["modules"]["http"];
             int port = httpConfig["port"].AsInt();
 
             if (port > 0)
                 _port = port;
         } catch (std::exception const &) {}
-        _listener = std::make_unique<network::http::AsioHttpListener>(_service, port);
+        _listener = std::make_unique<network::http::AsioHttpListener>(_service, _port);
     }
 
     ziapi::Version HttpModule::GetVersion() const noexcept
