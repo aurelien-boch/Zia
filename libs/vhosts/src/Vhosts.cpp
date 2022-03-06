@@ -58,12 +58,15 @@ namespace modules
             _send(sock, Converter::toRawRequest(req));
             res = Converter::toResponse(_recvReply(sock));
         } catch (std::out_of_range const &) {
-            res.status_code = ziapi::http::Code::kBadRequest;
+            res.Bootstrap(ziapi::http::Code::kBadRequest, ziapi::http::reason::kBadRequest,
+                          ziapi::http::Version::kV1_1);
         } catch (std::system_error const &) {
-            res.status_code = ziapi::http::Code::kInternalServerError;
+            res.Bootstrap(ziapi::http::Code::kInternalServerError, ziapi::http::reason::kInternalServerError,
+                          ziapi::http::Version::kV1_1);
         } catch (std::exception const &e) {
             std::cerr << e.what() << std::endl;
-            res.status_code = ziapi::http::Code::kInternalServerError;
+            res.Bootstrap(ziapi::http::Code::kInternalServerError, ziapi::http::reason::kInternalServerError,
+                          ziapi::http::Version::kV1_1);
         }
     }
 
