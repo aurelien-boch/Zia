@@ -15,6 +15,6 @@ target_link_libraries(
         HttpParser_tests
         PRIVATE
         Catch2::Catch2WithMain
-        ziaHttpParser
+        http_parser
         ziapi
 )
