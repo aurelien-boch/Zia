@@ -11,6 +11,7 @@ The server comes with several modules, including:
 - an [Https](./libs/https_module/README.md) module implementing HTTP/1.1 protocol with SSL
 - a [Static serve](./libs/static_serve/README.md) module
 - a [Reverse proxy](./libs/reverse_proxy/README.md) module
+- a [Virtual host](./libs/vhosts/README.md) module
 
 Note that all the modules based on the `ZiAPI` api (v5.0.0) are compatible with our Zia server. 
 
